@@ -1,0 +1,77 @@
+.helios-hero {
+  position: relative;
+  height: 430px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* bỏ background xám nếu bạn có */
+  background: #000; /* hoặc bỏ hẳn dòng này cũng được */
+}
+
+/* ẢNH PHỦ FULL KHUNG – KHÔNG CÒN 2 DẢI XÁM */
+.hero-bg-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;       /* <-- quan trọng: thay contain bằng cover */
+  object-position: center; /* canh giữa ảnh */
+  filter: brightness(70%); /* tối nhẹ cho chữ dễ đọc */
+}
+
+/* Overlay để chữ nổi hơn (có cũng được, không thích thì giảm opacity) */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 60, 70, 0.35);
+}
+
+/* Text */
+.hero-content {
+  z-index: 2;
+  color: #fff;
+  max-width: 750px;
+}
+
+.hero-title {
+  font-size: 40px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.hero-subtitle {
+  font-size: 18px;
+  margin-bottom: 24px;
+}
+
+/* Button */
+.hero-btn {
+  background: #00c6d2;
+  color: #fff;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-size: 17px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.25s ease;
+}
+
+.hero-btn:hover {
+  background: #0099a5;
+  transform: translateY(-3px);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .helios-hero {
+    height: 360px;
+  }
+  .hero-title {
+    font-size: 28px;
+  }
+  .hero-subtitle {
+    font-size: 15px;
+  }
+}

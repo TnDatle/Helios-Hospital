@@ -1,0 +1,178 @@
+/* ================================
+   SECTION BACKGROUND + TITLE
+================================ */
+.service-section {
+  padding: 60px 0;
+}
+
+.service-title {
+  text-align: center;
+  font-size: 38px;
+  font-weight: 700;
+  color: #444;
+  margin-bottom: 40px;
+  letter-spacing: 1px;
+}
+
+/* ================================
+   WRAPPER FOR SLIDER
+================================ */
+.service-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ================================
+   SLIDER CONTAINER (mask)
+================================ */
+.service-slider-container {
+  width: 1080px;      /* 3 cards x 360px */
+  overflow: hidden;
+  position: relative;
+}
+
+/* ================================
+   TRACK (Dãy slide)
+================================ */
+.service-slider-track {
+  display: flex;
+  gap: 20px;
+  transform: translateX(0);
+  will-change: transform;
+}
+
+/* khi bấm nút, kích hoạt animation */
+.service-slider-track.animating {
+  transition: transform 0.45s ease;
+}
+
+/* ================================
+   CARD – Slide item
+================================ */
+.service-card {
+  width: 340px;
+  min-width: 340px;
+  background: #ffffff;
+  padding: 40px 25px;
+  border-radius: 14px;
+  text-align: center;
+  border: 1px solid #eaeaea;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+  transition: 0.25s ease;
+  cursor: pointer;
+}
+
+.service-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15);
+}
+
+/* Ghost card – dùng để animation mượt */
+.service-card.ghost {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ================================
+   ICON
+================================ */
+.service-icon {
+  width: 85px;
+  height: 75px;
+  margin-bottom: 15px;
+  opacity: 1; 
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+
+/* ================================
+   TEXT ON CARD
+================================ */
+.service-card-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #444;
+  text-transform: capitalize;
+}
+
+.underline {
+  width: 40px;
+  height: 3px;
+  background: #00b8c4;
+  border-radius: 20px;
+  margin: 10px auto 15px auto;
+}
+
+.service-card-desc {
+  font-size: 15px;
+  color: #666;
+  line-height: 1.55;
+}
+
+/* ================================
+   NAVIGATION BUTTONS
+================================ */
+.service-nav {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #00b8c4;
+  border: none;
+  color: #fff;
+  font-size: 22px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  z-index: 5;
+  transition: 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-left {
+  left: -10px;
+}
+
+.nav-right {
+  right: -10px;
+}
+
+.service-nav:hover {
+  background: #009aa3;
+  transform: translateY(-50%) scale(1.12);
+}
+
+/* ================================
+   RESPONSIVE – TABLET
+================================ */
+@media (max-width: 1200px) {
+  .service-slider-container {
+    width: 740px; /* Hiển thị 2 slide */
+  }
+}
+
+/* ================================
+   RESPONSIVE – MOBILE
+================================ */
+@media (max-width: 768px) {
+  .service-slider-container {
+    width: 360px; /* Hiển thị 1 slide */
+  }
+
+  .service-nav {
+    display: none; /* Mobile dùng vuốt tay */
+  }
+
+  .service-card {
+    padding: 30px 20px;
+  }
+
+  .service-icon {
+    width: 80px;
+    height: 80px;
+  }
+}

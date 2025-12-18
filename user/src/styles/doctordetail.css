@@ -1,0 +1,124 @@
+.doctor-detail {
+  margin-top: 40px;
+}
+
+/* ===== HEADER ===== */
+.doctor-header {
+  display: flex;
+  gap: 40px;
+}
+
+.doctor-avatar img {
+  width: 260px;
+  border-radius: 6px;
+}
+
+.doctor-main-info {
+  flex: 1;
+}
+
+.doctor-name {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 11px;
+}
+
+.doctor-role{
+  font-size: 20px;
+  font-style: italic;
+}
+
+/* ===== TAG ===== */
+.specialty-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #eefaf9;
+  color: #1bb3a9;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.specialty-tag .dot {
+  width: 16px;
+  height: 6px;
+  background: #1bb3a9;
+  border-radius: 4px;
+}
+
+.doctor-main-info hr {
+  margin: 20px 0;
+  border: none;
+  border-top: 1px solid #e5e5e5;
+}
+
+/* ===== INTRO ===== */
+.intro-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #1bb3a9;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+/* ===== SECTION ===== */
+.doctor-section {
+  margin-top: 40px;
+}
+
+.section-title {
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* ===== TABLE ===== */
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+
+.schedule-table thead {
+  background: #33c6f3;
+  color: white;
+  text-align: center;
+}
+
+.schedule-table th,
+.schedule-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.schedule-table td {
+  background: #fff;
+}
+
+.schedule-table .empty {
+  text-align: center;
+  padding: 20px;
+}
+
+/* ===== NOTE ===== */
+.note {
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+/* ===== BOOKING ===== */
+.booking h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #1bb3a9;
+  margin-bottom: 10px;
+}
+
+.booking p {
+  font-size: 14px;
+  line-height: 1.6;
+}

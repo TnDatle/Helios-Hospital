@@ -1,0 +1,89 @@
+/* ===== SECTION ===== */
+.overview-section {
+  padding: 70px 0;
+  background: #f9fafb; /* đồng bộ tone với section khác */
+}
+
+/* ===== TITLE — ĐỒNG BỘ VỚI SERVICE TITLE ===== */
+.overview-title {
+  text-align: center;
+  font-size: 18x;
+  font-weight: bolder;
+  color: #444;                   
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+
+.overview-desc {
+  max-width: 900px;
+  margin: 0 auto 45px auto;
+  font-size: 16px;
+  color: #555;
+  line-height: 1.65;
+}
+
+/* ===== STATS ===== */
+.overview-stats {
+  margin-bottom: 45px;
+}
+
+.stat-item {
+  padding: 25px 10px;
+}
+
+.stat-icon {
+  width: 70px;        
+  height: 60px;
+  margin-bottom: 10px;
+  opacity: 1;          /* rõ hơn */
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.08)); /* shadow nhẹ hơn để icon sắc nét */
+}
+
+
+.stat-number {
+  font-size: 34px;
+  font-weight: 800;
+  color: #444;
+}
+
+.stat-text {
+  font-size: 15px;
+  color: #666;
+  margin-top: 4px;
+}
+
+/* Divider giống layout bệnh viện */
+.border-item {
+  border-left: 1px solid #e5e5e5;
+  border-right: 1px solid #e5e5e5;
+}
+
+/* ===== BUTTON ===== */
+.overview-btn {
+  background: #00b8c4;
+  color: #fff;
+  border: none;
+  padding: 12px 38px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: 0.25s ease;
+}
+
+.overview-btn:hover {
+  background: #0098a3;
+  transform: translateY(-2px);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .border-item {
+    border: none;
+  }
+  .stat-item {
+    margin-bottom: 30px;
+  }
+}

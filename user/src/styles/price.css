@@ -1,0 +1,168 @@
+/* ============================
+   PRICE BANNER (Banner Trang)
+============================ */
+.price-banner {
+  background-size: cover;
+  background-position: center;
+  padding: 100px 0;
+  position: relative;
+  color: white;
+}
+
+/* Overlay cho banner để chữ nổi */
+.price-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.60);
+}
+
+.price-banner .banner-title,
+.price-banner .breadcrumb {
+  position: relative;
+  z-index: 2;
+}
+
+/* ============================
+   TITLES
+============================ */
+.section-title {
+  font-size: 32px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #333;
+  margin-bottom: 24px;
+  position: relative;
+  letter-spacing: 0.5px;
+}
+
+.section-title::after {
+  content: "";
+  width: 60px;
+  height: 3px;
+  background: #00b8c4;
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  border-radius: 10px;
+}
+
+/* ============================
+   PRICE TABLE
+============================ */
+.price-header {
+  background: #00b8c4;
+  padding: 14px;
+  color: #fff;
+  font-weight: 700;
+  text-align: center;
+  border-radius: 6px 6px 0 0;
+  font-size: 17px;
+  letter-spacing: 0.3px;
+}
+
+table {
+  background: white;
+  border-radius: 0 0 6px 6px;
+  overflow: hidden;
+}
+
+table td {
+  font-size: 16px;
+  padding: 14px;
+  vertical-align: middle;
+  color: #444;
+}
+
+table tr:nth-child(even) td {
+  background: #fafafa;
+}
+
+/* ============================
+   PRICE BOX — “Xem chi tiết”
+============================ */
+.price-box {
+  border: 1px solid #e5e5e5;
+  padding: 22px 20px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.25s ease;
+}
+
+.price-box:hover {
+  border-color: #00b8c4;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+}
+
+.price-box-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #333;
+  max-width: 85%;
+}
+
+/* ============================
+   BUTTON “Xem chi tiết”
+============================ */
+.detail-btn {
+  background: #00b8c4;
+  border: none;
+  padding: 8px 20px;
+  color: #fff;
+  font-size: 14px;
+  border-radius: 6px;
+  transition: 0.25s ease;
+  font-weight: 600;
+}
+
+.detail-btn:hover {
+  background: #00909b;
+  transform: translateY(-2px);
+}
+
+/* ============================
+   SUB SECTION TITLES
+============================ */
+.sub-section-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 45px;
+  margin-bottom: 15px;
+}
+
+.unit-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 22px 0 12px;
+  padding-left: 6px;
+  border-left: 4px solid #00b8c4;
+}
+
+/* ============================
+   RESPONSIVE
+============================ */
+@media (max-width: 768px) {
+  .price-box {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .detail-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .section-title {
+    font-size: 26px;
+  }
+
+  table td {
+    font-size: 15px;
+  }
+}

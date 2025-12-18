@@ -1,0 +1,91 @@
+/* ================================
+   BANNER SECTION
+================================ */
+.time-banner {
+  width: 100%;
+  height: 300px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+
+.banner-overlay {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 140, 160, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.banner-title {
+  font-size: 48px;
+  font-weight: 800;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+
+/* ================================
+   BREADCRUMB
+================================ */
+.breadcrumb {
+  font-size: 14px;
+  color: #666;
+}
+
+/* ================================
+   MAIN CONTENT
+================================ */
+.time-content {
+  padding: 50px 0 80px 0;
+}
+
+/* Title giống toàn website */
+.section-title {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 800;
+  color: #444;
+  text-transform: uppercase;
+  position: relative;
+}
+
+.section-title::after {
+  content: "";
+  width: 60px;
+  height: 4px;
+  background: #00b8c4;
+  display: block;
+  margin: 14px auto 0 auto;
+  border-radius: 20px;
+}
+
+/* ================================
+   TIME BLOCK
+================================ */
+.time-block {
+  padding: 20px 40px;
+}
+
+.time-location {
+  font-size: 22px;
+  font-weight: 800;
+  color: #7bbf4d; /* màu xanh lá giống hình */
+  margin-bottom: 5px;
+}
+
+.time-sub {
+  font-size: 16px;
+  color: #777;
+  margin-bottom: 15px;
+}
+
+.time-block p {
+  font-size: 17px;
+  color: #444;
+  margin: 6px 0;
+}
