@@ -1,0 +1,94 @@
+/* =========================
+   STAFF HEADER
+   ========================= */
+
+.staff-header {
+  height: 84px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* =========================
+   BRAND (LOGO + NAME)
+   ========================= */
+
+.staff-brand-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.staff-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Logo */
+.staff-hospital-logo {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+/* Text block */
+.staff-brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.staff-dept-text {
+  font-size: 11px;
+  font-weight: 500;
+  color: #6b7280;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.staff-hospital-name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f766e; /* xanh y tế */
+}
+
+/* =========================
+   RIGHT ACTIONS
+   ========================= */
+
+.staff-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Role badge */
+.staff-role {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #e0f2f1;
+  color: #065f46;
+  letter-spacing: 0.4px;
+}
+
+/* Logout button */
+.staff-logout {
+  background: transparent;
+  border: 1px solid #d1d5db;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  color: #374151;
+  transition: background 0.2s ease;
+}
+
+.staff-logout:hover {
+  background: #f3f4f6;
+}

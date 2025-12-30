@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
 
 function Header() {
+  // 🔹 TẠM GIẢ LẬP LOGIN (sau này thay bằng auth context)
+  const isLoggedIn = false;
+  const userName = "Nguyễn Văn A";
+
   return (
     <header className="helios-header">
 
@@ -28,6 +32,43 @@ function Header() {
 
           {/* Search icon */}
           <i className="bi bi-search fs-5"></i>
+
+          {/* ===== LOGIN AREA ===== */}
+          {!isLoggedIn ? (
+            <Link
+              to="/dang-nhap"
+              className="btn btn-outline-primary btn-sm"
+            >
+              Đăng nhập
+            </Link>
+          ) : (
+            <div className="dropdown">
+              <button
+                className="btn btn-outline-secondary btn-sm dropdown-toggle"
+                data-bs-toggle="dropdown"
+              >
+                 {userName}
+              </button>
+              <ul className="dropdown-menu dropdown-menu-end">
+                <li>
+                  <Link className="dropdown-item" to="/ho-so">
+                    Hồ sơ cá nhân
+                  </Link>
+                </li>
+                <li>
+                  <Link className="dropdown-item" to="/lich-hen-cua-toi">
+                    Lịch hẹn của tôi
+                  </Link>
+                </li>
+                <li><hr className="dropdown-divider" /></li>
+                <li>
+                  <button className="dropdown-item text-danger">
+                    Đăng xuất
+                  </button>
+                </li>
+              </ul>
+            </div>
+          )}
         </nav>
       </div>
 
