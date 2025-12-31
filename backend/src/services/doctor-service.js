@@ -1,72 +1,54 @@
 import { db } from "../config/firebase.js";
-import Doctor from "../models/doctor-model.js";
-import {
-  doctorListCache,
-  doctorDetailCache,
-  getCache,
-  setCache,
-} from "../cache/doctor-cache.js";
+import { DoctorModel } from "../models/doctor-model.js";
 
-export const fetchDoctors = async (department) => {
-  const cacheKey = department || "__ALL__";
+// FE gửi tên khoa → map sang departmentId DB
+const departmentMap = {
+  "Ngoai Tong Quat": "ngoai-tong-quat",
+  "Ngoai Tiet Nieu": "ngoai-tiet-nieu",
+  "Tim Mach": "tim-mach",
+};
 
-  const cached = getCache(doctorListCache, cacheKey);
-  if (cached) return cached;
+/**
+ * Lấy danh sách bác sĩ
+ * FE KHÔNG đổi gì
+ */
+export const fetchDoctors = async (departmentFromFE) => {
+  console.log("[Service] departmentFromFE:", departmentFromFE);
 
-  const depDocRef = db.collection("Doctor").doc("Departments");
-  let doctors = [];
+  let query = db.collection("Doctor");
 
-  if (department) {
-    const snapshot = await depDocRef
-      .collection(department)
-      .get();
+  if (departmentFromFE) {
+    const departmentId =
+      departmentMap[departmentFromFE] || departmentFromFE;
 
-    doctors = snapshot.docs.map((doc) =>
-      Doctor.fromFirestore(doc, department).toListJSON()
-    );
-  } else {
-    const departments = await depDocRef.listCollections();
-    const snapshots = await Promise.all(
-      departments.map((dep) => dep.get())
-    );
+    console.log("[Service] mapped departmentId:", departmentId);
 
-    doctors = snapshots.flatMap((snap, index) =>
-      snap.docs.map((doc) =>
-        Doctor.fromFirestore(doc, departments[index].id).toListJSON()
-      )
-    );
+    query = query.where("departmentId", "==", departmentId);
   }
 
-  setCache(doctorListCache, cacheKey, doctors);
-  return doctors;
+  const snapshot = await query.get();
+
+  console.log("[Service] snapshot size:", snapshot.size);
+
+  return snapshot.docs.map((doc) =>
+    DoctorModel.fromFirestore(doc, departmentFromFE)
+  );
 };
 
-export const fetchDoctorDetail = async (department, id) => {
-  const cacheKey = `${department}_${id}`;
 
-  const cached = getCache(doctorDetailCache, cacheKey);
-  if (cached) return cached;
+/**
+ * Lấy chi tiết 1 bác sĩ
+ */
+export const fetchDoctorDetail = async (doctorId) => {
+  const docRef = db.collection("Doctor").doc(doctorId);
+  const snap = await docRef.get();
 
-  const snapshot = await db
-    .collection("Doctor")
-    .doc("Departments")
-    .collection(department)
-    .doc(id)
-    .get();
+  if (!snap.exists) return null;
 
-  if (!snapshot.exists) return null;
-
-  const doctor = Doctor.fromFirestore(
-    snapshot,
-    department
-  ).toDetailJSON();
-
-  setCache(doctorDetailCache, cacheKey, doctor);
-  return doctor;
+  return DoctorModel.fromFirestore(snap);
 };
 
-export const warmUpDoctorCache = async () => {
-  console.log("Warming up doctor cache...");
-  await fetchDoctors();
-  console.log("Doctor cache ready");
-};
+/**
+ * Cache – tạm để trống cho khỏi crash
+ */
+export const warmUpDoctorCache = async () => {};

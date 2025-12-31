@@ -4,7 +4,7 @@ import fileUpload from "express-fileupload";
 
 import "./src/config/firebase.js";
 import doctorRoutes from "./src/routes/doctor-routes.js";
-import { warmUpDoctorCache } from "./src/services/doctor-service.js";
+// import { warmUpDoctorCache } from "./src/services/doctor-service.js";
 import locationRoutes from "./src/routes/location-routes.js";
 const app = express();
 
@@ -20,5 +20,5 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, async () => {
   console.log(`Backend running on port ${PORT}`);
-  await warmUpDoctorCache();
+  // await warmUpDoctorCache();
 });

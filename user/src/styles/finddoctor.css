@@ -158,3 +158,15 @@
   border-radius: 12px;
 }
 
+
+/* Bác sĩ thường */
+.doctor-card h3.role-doctor {
+  color: #2563eb; /* xanh */
+  background: rgba(37, 99, 235, 0.1);
+}
+
+/* Trưởng khoa / Phó khoa */
+.doctor-card h3.role-lead {
+  color: #dc2626; /* đỏ */
+  background: rgba(220, 38, 38, 0.1);
+}

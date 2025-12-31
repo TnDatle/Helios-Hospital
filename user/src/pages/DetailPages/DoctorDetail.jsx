@@ -8,26 +8,22 @@ const DoctorDetail = () => {
   const { department, id } = useParams();
   const location = useLocation();
 
-  // ===== ƯU TIÊN DATA TỪ TRANG TRƯỚC =====
+  /**
+   * =====================================================
+   * INIT DOCTOR (ƯU TIÊN DATA TỪ TRANG TRƯỚC)
+   * =====================================================
+   */
   const [doctor, setDoctor] = useState(() => {
-    return location.state
-      ? {
-          name: location.state.name || location.state.DocName || "",
-          role: location.state.role || "",
-          specialty: location.state.specialty || "",
-          schedule: {
-            day: location.state.weekday || "",
-            time: [
-              location.state.shiftmorning,
-              location.state.shiftafternoon,
-            ]
-              .filter(Boolean)
-              .join(" | "),
-            room: location.state.room || "",
-            location: "Khu Khám bệnh Trụ sở chính",
-          },
-        }
-      : null;
+    if (!location.state) return null;
+
+    return {
+      id,
+      name: location.state.name || location.state.DocName || "",
+      role: location.state.role || "",
+      specialty: location.state.specialty || "",
+      department: location.state.department || "",
+      // ❗ KHÔNG dựng schedule ở đây
+    };
   });
 
   const [loading, setLoading] = useState(!doctor);
@@ -35,11 +31,11 @@ const DoctorDetail = () => {
 
   /**
    * =====================================================
-   * FETCH DETAIL (CHỈ KHI CHƯA CÓ DATA)
+   * FETCH DOCTOR DETAIL (CHỈ KHI CHƯA CÓ DATA)
    * =====================================================
    */
   useEffect(() => {
-    if (doctor) return; // không fetch lại
+    if (doctor) return;
 
     const controller = new AbortController();
 
@@ -58,7 +54,13 @@ const DoctorDetail = () => {
         const json = await res.json();
 
         if (json.success) {
-          setDoctor(json.data);
+          setDoctor({
+            id: json.data.id,
+            name: json.data.name,
+            role: json.data.role,
+            specialty: json.data.specialty,
+            department: json.data.department,
+          });
         } else {
           setError("Không tìm thấy thông tin bác sĩ");
         }
@@ -77,16 +79,24 @@ const DoctorDetail = () => {
     return () => controller.abort();
   }, [department, id, doctor]);
 
-  // ===== LOADING =====
+  /**
+   * =====================================================
+   * LOADING / ERROR
+   * =====================================================
+   */
   if (loading) {
     return <p className="loading">Đang tải thông tin bác sĩ…</p>;
   }
 
-  // ===== ERROR =====
   if (error || !doctor) {
     return <p className="error-text">{error || "Dữ liệu không tồn tại"}</p>;
   }
 
+  /**
+   * =====================================================
+   * RENDER
+   * =====================================================
+   */
   return (
     <div className="doctor-detail container">
       {/* ===== HEADER ===== */}
@@ -135,20 +145,12 @@ const DoctorDetail = () => {
             </tr>
           </thead>
           <tbody>
-            {doctor.schedule?.day ? (
-              <tr>
-                <td>{doctor.schedule.day}</td>
-                <td>{doctor.schedule.time}</td>
-                <td>{doctor.schedule.room}</td>
-                <td>{doctor.schedule.location}</td>
-              </tr>
-            ) : (
-              <tr>
-                <td colSpan="4" className="empty">
-                  Chưa có lịch khám
-                </td>
-              </tr>
-            )}
+            {/* ❗ DB MỚI: lịch chưa load ở đây */}
+            <tr>
+              <td colSpan="4" className="empty">
+                Chưa có lịch khám
+              </td>
+            </tr>
           </tbody>
         </table>
 

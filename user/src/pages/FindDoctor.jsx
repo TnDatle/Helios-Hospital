@@ -3,6 +3,12 @@ import { useNavigate } from "react-router-dom";
 
 const API_URL = "http://localhost:5000/api/doctors";
 
+// ưu tiên vai trò
+const ROLE_PRIORITY = {
+  "Trưởng khoa": 1,
+  "Phó khoa": 2,
+};
+
 const FindDoctor = () => {
   const navigate = useNavigate();
 
@@ -14,7 +20,7 @@ const FindDoctor = () => {
 
   /**
    * =====================================================
-   * FETCH DOCTORS (MEMOIZED)
+   * FETCH DOCTORS (BACKEND FILTER THEO KHOA)
    * =====================================================
    */
   const fetchDoctors = useCallback(async (signal) => {
@@ -26,10 +32,6 @@ const FindDoctor = () => {
 
       if (department) {
         params.append("department", department);
-      }
-
-      if (keyword.trim()) {
-        params.append("keyword", keyword.trim());
       }
 
       const res = await fetch(`${API_URL}?${params.toString()}`, { signal });
@@ -48,8 +50,7 @@ const FindDoctor = () => {
     } finally {
       setLoading(false);
     }
-  }, [department, keyword]);
-
+  }, [department]);
 
   /**
    * =====================================================
@@ -65,31 +66,62 @@ const FindDoctor = () => {
 
   /**
    * =====================================================
-   * HANDLE SEARCH CLICK
+   * FILTER + SEARCH + SORT (LOGIC FE)
    * =====================================================
    */
-  const handleSearch = () => {
-    const controller = new AbortController();
-    fetchDoctors(controller.signal);
-  };
+  const processedDoctors = useMemo(() => {
+    let list = [...doctors];
+
+    // 🔍 tìm theo TÊN bác sĩ hoặc CHUYÊN MÔN
+    if (keyword.trim()) {
+      const kw = keyword.toLowerCase();
+
+      list = list.filter((d) => {
+        const name =
+          (d.name || d.DocName || "").toLowerCase();
+        const specialty =
+          (d.specialty || "").toLowerCase();
+
+        return (
+          name.includes(kw) ||
+          specialty.includes(kw)
+        );
+      });
+    }
+
+    // 🔽 sắp xếp theo vai trò
+    list.sort((a, b) => {
+      const aPriority = ROLE_PRIORITY[a.role] || 99;
+      const bPriority = ROLE_PRIORITY[b.role] || 99;
+
+      if (aPriority !== bPriority) {
+        return aPriority - bPriority;
+      }
+
+      // cùng level → sort theo tên
+      return (a.name || "").localeCompare(b.name || "");
+    });
+
+    return list;
+  }, [doctors, keyword]);
 
   /**
    * =====================================================
-   * MEMO RENDER LIST
+   * RENDER LIST
    * =====================================================
    */
   const doctorList = useMemo(() => {
     if (loading) return <p>Đang tải danh sách bác sĩ...</p>;
-    if (!loading && doctors.length === 0)
+    if (!loading && processedDoctors.length === 0)
       return <p>Không tìm thấy bác sĩ phù hợp</p>;
 
-    return doctors.map((doctor) => (
+    return processedDoctors.map((doctor) => (
       <div
         className="doctor-card"
         key={`${doctor.department}_${doctor.id}`}
         onClick={() =>
           navigate(`/tim-bac-si/${doctor.department}/${doctor.id}`, {
-            state: doctor, //  dùng lại data, tránh fetch lại
+            state: doctor,
           })
         }
       >
@@ -100,10 +132,18 @@ const FindDoctor = () => {
         <p className="specialty">{doctor.department}</p>
         <h3>{doctor.name || doctor.DocName}</h3>
         <h3>{doctor.specialty}</h3>
-        <h3>{doctor.role}</h3>
+        <h3
+          className={
+            doctor.role === "Trưởng khoa" || doctor.role === "Phó khoa"
+              ? "role-lead"
+              : "role-doctor"
+          }
+        >
+          {doctor.role || "Bác sĩ"}
+        </h3>
       </div>
     ));
-  }, [doctors, loading, navigate, department]);
+  }, [processedDoctors, loading, navigate]);
 
   return (
     <div className="find-doctor">
@@ -135,20 +175,18 @@ const FindDoctor = () => {
 
         <input
           type="text"
-          placeholder="Tên bác sĩ"
+          placeholder="Tìm theo tên bác sĩ hoặc chuyên môn"
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
         />
 
-        <button onClick={handleSearch} disabled={loading}>
+        <button disabled={loading}>
           {loading ? "ĐANG TÌM..." : "TÌM BÁC SĨ"}
         </button>
       </div>
 
-      {/* ===== ERROR ===== */}
       {error && <p className="error-text">{error}</p>}
 
-      {/* ===== LIST ===== */}
       <div className="doctor-list container">{doctorList}</div>
     </div>
   );

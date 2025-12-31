@@ -6,7 +6,10 @@ import {
 
 const router = express.Router();
 
+// Lấy danh sách bác sĩ (có thể filter theo khoa)
 router.get("/", findDoctors);
-router.get("/:department/:id", getDoctorDetail);
+
+// Lấy chi tiết 1 bác sĩ
+router.get("/:id", getDoctorDetail);
 
 export default router;

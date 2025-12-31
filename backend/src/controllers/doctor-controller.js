@@ -5,35 +5,37 @@ import {
 
 export const findDoctors = async (req, res) => {
   try {
+    console.log("[API] query:", req.query);
+
     const { department } = req.query;
     const doctors = await fetchDoctors(department);
 
+    console.log("[API] doctors length:", doctors.length);
+
     res.json({
       success: true,
-      total: doctors.length,
       data: doctors,
     });
   } catch (err) {
     console.error("[findDoctors]", err);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    });
+    res.status(500).json({ success: false });
   }
 };
 
+
+
 export const getDoctorDetail = async (req, res) => {
   try {
-    const { department, id } = req.params;
+    const { id } = req.params;
 
-    if (!department || !id) {
+    if (!id) {
       return res.status(400).json({
         success: false,
-        message: "department and id are required",
+        message: "doctorId is required",
       });
     }
 
-    const doctor = await fetchDoctorDetail(department, id);
+    const doctor = await fetchDoctorDetail(id);
 
     if (!doctor) {
       return res.status(404).json({
@@ -54,3 +56,4 @@ export const getDoctorDetail = async (req, res) => {
     });
   }
 };
+
