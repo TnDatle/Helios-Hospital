@@ -3,6 +3,7 @@ import StepDepartment from "./BookingPages/StepDepartment";
 import StepDoctor from "./BookingPages/StepDoctor";
 import StepSchedule from "./BookingPages/StepSchedule";
 import StepConfirm from "./BookingPages/StepConfirm";
+import StepPatient from "./BookingPages/StepPatient";
 
 export default function Booking() {
   const [step, setStep] = useState(1);
@@ -10,6 +11,7 @@ export default function Booking() {
     department: null,
     doctor: null,
     schedule: null,
+    patient: null,
   });
 
   return (
@@ -61,11 +63,22 @@ export default function Booking() {
           )}
 
 
-          {/* STEP 4: XÁC NHẬN */}
+          {/* STEP 4: Chọn mối quan hệ*/}
           {step === 4 && (
+            <StepPatient
+              onBack={() => setStep(3)}
+              onSelect={(patient) => {
+                setData({ ...data, patient });
+                setStep(5);
+              }}
+            />
+          )}
+
+           {/* STEP 5: XÁC NHẬN */}
+          {step === 5 && (
             <StepConfirm
               data={data}
-              onBack={() => setStep(3)}
+              onBack={() => setStep(4)}
             />
           )}
         </div>

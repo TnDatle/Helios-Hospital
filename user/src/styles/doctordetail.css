@@ -64,6 +64,14 @@
   margin-bottom: 8px;
 }
 
+.intro-text {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #374151;
+  white-space: pre-line;
+}
+
+
 /* ===== SECTION ===== */
 .doctor-section {
   margin-top: 40px;
@@ -91,7 +99,8 @@
 .schedule-table td {
   padding: 10px;
   border: 1px solid #ddd;
-  font-size: 14px;
+  font-size: 15px;
+  /* text-align: center; */
 }
 
 .schedule-table td {

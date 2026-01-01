@@ -15,11 +15,39 @@ const SHIFT_TIME = {
   AFTERNOON: "13:00 – 16:00",
 };
 
+/**
+ * =====================================================
+ * SINH NGÀY THEO THỨ (14 NGÀY TỚI)
+ * =====================================================
+ */
+function getNextDatesByWeekday(weekday, days = 14) {
+  const result = [];
+  const today = new Date();
+
+  for (let i = 0; i < days; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+
+    const jsDay = d.getDay() === 0 ? 7 : d.getDay();
+
+    if (jsDay === weekday) {
+      result.push({
+        date: d.toISOString().slice(0, 10), // yyyy-mm-dd
+        label: d.toLocaleDateString("vi-VN"),
+      });
+    }
+  }
+
+  return result;
+}
 
 export default function StepSchedule({ doctor, onBack, onSelect }) {
   const [schedules, setSchedules] = useState([]);
-  const [selected, setSelected] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // chọn ca + ngày
+  const [selectedSchedule, setSelectedSchedule] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
 
   useEffect(() => {
     if (!doctor?.id) return;
@@ -36,8 +64,6 @@ export default function StepSchedule({ doctor, onBack, onSelect }) {
         console.error("Fetch schedules error:", err);
         setLoading(false);
       });
-
-    console.log("[StepSchedule] doctor =", doctor);
   }, [doctor]);
 
   const morningSchedules = useMemo(
@@ -56,7 +82,6 @@ export default function StepSchedule({ doctor, onBack, onSelect }) {
     [schedules]
   );
 
-
   if (loading) {
     return <p>Đang tải lịch làm việc...</p>;
   }
@@ -70,7 +95,7 @@ export default function StepSchedule({ doctor, onBack, onSelect }) {
       </div>
 
       <div className="schedule-columns">
-        {/* CA SÁNG */}
+        {/* ================= CA SÁNG ================= */}
         <div className="schedule-column">
           <h5 className="schedule-title">Ca sáng</h5>
 
@@ -78,15 +103,33 @@ export default function StepSchedule({ doctor, onBack, onSelect }) {
             <div
               key={s.id}
               className={`booking-card ${
-                selected?.id === s.id ? "selected" : ""
+                selectedSchedule?.id === s.id ? "selected" : ""
               }`}
-              onClick={() => setSelected(s)}
             >
               <h6>{WEEKDAY_LABEL[s.weekday]}</h6>
               <p className="sub">{SHIFT_TIME[s.shiftId]}</p>
               <p className="sub">Phòng: {s.room}</p>
-            </div>
 
+              <div className="date-list">
+                {getNextDatesByWeekday(s.weekday).map((d) => (
+                  <button
+                    key={d.date}
+                    className={`date-chip ${
+                      selectedSchedule?.id === s.id &&
+                      selectedDate === d.date
+                        ? "active"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setSelectedSchedule(s);
+                      setSelectedDate(d.date);
+                    }}
+                  >
+                    {d.label}
+                  </button>
+                ))}
+              </div>
+            </div>
           ))}
 
           {morningSchedules.length === 0 && (
@@ -94,7 +137,7 @@ export default function StepSchedule({ doctor, onBack, onSelect }) {
           )}
         </div>
 
-        {/* CA CHIỀU */}
+        {/* ================= CA CHIỀU ================= */}
         <div className="schedule-column">
           <h5 className="schedule-title">Ca chiều</h5>
 
@@ -102,13 +145,32 @@ export default function StepSchedule({ doctor, onBack, onSelect }) {
             <div
               key={s.id}
               className={`booking-card ${
-                selected?.id === s.id ? "selected" : ""
+                selectedSchedule?.id === s.id ? "selected" : ""
               }`}
-              onClick={() => setSelected(s)}
             >
               <h6>{WEEKDAY_LABEL[s.weekday]}</h6>
               <p className="sub">{SHIFT_TIME[s.shiftId]}</p>
               <p className="sub">Phòng: {s.room}</p>
+
+              <div className="date-list">
+                {getNextDatesByWeekday(s.weekday).map((d) => (
+                  <button
+                    key={d.date}
+                    className={`date-chip ${
+                      selectedSchedule?.id === s.id &&
+                      selectedDate === d.date
+                        ? "active"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setSelectedSchedule(s);
+                      setSelectedDate(d.date);
+                    }}
+                  >
+                    {d.label}
+                  </button>
+                ))}
+              </div>
             </div>
           ))}
 
@@ -118,14 +180,21 @@ export default function StepSchedule({ doctor, onBack, onSelect }) {
         </div>
       </div>
 
+      {/* ================= ACTIONS ================= */}
       <div className="booking-actions">
         <button className="booking-btn" onClick={onBack}>
           Quay lại
         </button>
+
         <button
           className="booking-btn primary"
-          disabled={!selected}
-          onClick={() => onSelect(selected)}
+          disabled={!selectedSchedule || !selectedDate}
+          onClick={() =>
+            onSelect({
+              ...selectedSchedule,
+              date: selectedDate, // 🔥 NGÀY THẬT
+            })
+          }
         >
           Tiếp tục
         </button>

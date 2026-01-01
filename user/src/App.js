@@ -32,6 +32,7 @@ import "./styles/departments.css";
 import "./styles/time.css"
 import "./styles/price.css";
 import "./styles/auth.css"
+import "./styles/bookingsuccesmodel.css"
 
 function App() {
   return (

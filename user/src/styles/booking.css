@@ -211,24 +211,25 @@
 
 /* Summary card */
 .booking-summary {
-  border: 1px dashed #cbd5e1;
-  border-radius: var(--bk-radius);
-  padding: 14px;
-  background: #fbfdff;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 12px;
 }
 
 .booking-summary p {
-  margin: 0 0 8px;
-  color: var(--bk-text);
+  font-size: 15px;
+  margin-bottom: 8px;
+  color: #1f2937;
 }
 
-.booking-summary p:last-child {
-  margin-bottom: 0;
+.booking-summary .note {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #6b7280;
 }
 
-.booking-summary strong {
-  font-weight: 900;
-}
 
 /* Footer buttons */
 .booking-actions {
@@ -326,6 +327,35 @@
     border-color 0.15s ease, background 0.15s ease;
 }
 
+
+.date-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.date-chip {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.date-chip:hover {
+  border-color: #93c5fd;
+  background: #f0f7ff;
+}
+
+.date-chip.active {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+}
+
+
 /* subtle lift on hover */
 .schedule-column .booking-card:hover {
   transform: translateY(-2px);
@@ -376,3 +406,88 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* =========================
+   STEP PATIENT
+========================= */
+
+.patient-type {
+  display: flex;
+  gap: 24px;
+  margin: 16px 0 20px;
+  flex-wrap: wrap;
+}
+
+.patient-type label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--bk-text);
+}
+
+.patient-type input[type="radio"] {
+  accent-color: var(--bk-primary);
+  cursor: pointer;
+}
+
+/* ===== FORM ===== */
+.patient-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+/* input / select */
+.patient-form input,
+.patient-form select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--bk-border);
+  font-size: 14px;
+  background: #fff;
+  color: var(--bk-text);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.patient-form input::placeholder {
+  color: #9ca3af;
+}
+
+.patient-form input:focus,
+.patient-form select:focus {
+  outline: none;
+  border-color: var(--bk-primary);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+}
+
+/* full width fields */
+.patient-form input[name="cccd"],
+.patient-form input[name="bhyt"] {
+  grid-column: span 2;
+}
+
+/* ===== NOTE TEXT ===== */
+.patient-note {
+  font-size: 13px;
+  color: #ff0000;
+  margin-top: -6px;
+  margin-bottom: 16px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .patient-form {
+    grid-template-columns: 1fr;
+  }
+
+  .patient-form input[name="cccd"],
+  .patient-form input[name="bhyt"] {
+    grid-column: span 1;
+  }
+}
+
