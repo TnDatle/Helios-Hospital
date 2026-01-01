@@ -49,6 +49,29 @@ export const fetchDoctorDetail = async (doctorId) => {
 };
 
 /**
+ * Lấy thông tin bác sĩ trong phần Booking
+ */
+export const fetchDoctorsForBooking = async (departmentId) => {
+  if (!departmentId) return [];
+
+  const snapshot = await db
+    .collection("Doctor")
+    .where("departmentId", "==", departmentId)
+    .where("isActive", "==", true)
+    .get();
+
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    name: doc.data().name,
+    specialty: doc.data().specialty,
+    role: doc.data().role,
+  }));
+};
+
+/**
  * Cache – tạm để trống cho khỏi crash
  */
 export const warmUpDoctorCache = async () => {};
+
+
+

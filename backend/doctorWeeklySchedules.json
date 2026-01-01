@@ -1,0 +1,321 @@
+[
+  {
+    "doctorId": "clCyLCl4CeyxHspzwwjt",
+    "doctorName": "PGS.TS.BS. Nguyễn Hoàn",
+    "weekday": 1,
+    "shiftId": "MORNING",
+    "room": "TN-001"
+  },
+  {
+    "doctorId": "clCyLCl4CeyxHspzwwjt",
+    "doctorName": "PGS.TS.BS. Nguyễn Hoàn",
+    "weekday": 1,
+    "shiftId": "AFTERNOON",
+    "room": "TN-001"
+  },
+  {
+    "doctorId": "clCyLCl4CeyxHspzwwjt",
+    "doctorName": "PGS.TS.BS. Nguyễn Hoàn",
+    "weekday": 3,
+    "shiftId": "MORNING",
+    "room": "TN-001"
+  },
+  {
+    "doctorId": "clCyLCl4CeyxHspzwwjt",
+    "doctorName": "PGS.TS.BS. Nguyễn Hoàn",
+    "weekday": 3,
+    "shiftId": "AFTERNOON",
+    "room": "TN-001"
+  },
+  {
+    "doctorId": "clCyLCl4CeyxHspzwwjt",
+    "doctorName": "PGS.TS.BS. Nguyễn Hoàn",
+    "weekday": 5,
+    "shiftId": "MORNING",
+    "room": "TN-001"
+  },
+  {
+    "doctorId": "clCyLCl4CeyxHspzwwjt",
+    "doctorName": "PGS.TS.BS. Nguyễn Hoàn",
+    "weekday": 5,
+    "shiftId": "AFTERNOON",
+    "room": "TN-001"
+  },
+
+  {
+    "doctorId": "t8cS5pdLpIB6mbjnuTQF",
+    "doctorName": "TS.BS. Nguyễn Quang Anh",
+    "weekday": 2,
+    "shiftId": "MORNING",
+    "room": "TN-001"
+  },
+  {
+    "doctorId": "t8cS5pdLpIB6mbjnuTQF",
+    "doctorName": "TS.BS. Nguyễn Quang Anh",
+    "weekday": 2,
+    "shiftId": "AFTERNOON",
+    "room": "TN-001"
+  },
+  {
+    "doctorId": "t8cS5pdLpIB6mbjnuTQF",
+    "doctorName": "TS.BS. Nguyễn Quang Anh",
+    "weekday": 4,
+    "shiftId": "MORNING",
+    "room": "TN-001"
+  },
+  {
+    "doctorId": "t8cS5pdLpIB6mbjnuTQF",
+    "doctorName": "TS.BS. Nguyễn Quang Anh",
+    "weekday": 4,
+    "shiftId": "AFTERNOON",
+    "room": "TN-001"
+  },
+
+  {
+    "doctorId": "he4uXfHvS1P0PfSODysD",
+    "doctorName": "THS.BS.CKI. Trần Quang Huy",
+    "weekday": 6,
+    "shiftId": "MORNING",
+    "room": "TN-001"
+  },
+
+  {
+    "doctorId": "YO6TbAzWIfpAkM6noq6g",
+    "doctorName": "TS.BS. Lê Anh Tuấn",
+    "weekday": 1,
+    "shiftId": "MORNING",
+    "room": "TN-002"
+  },
+  {
+    "doctorId": "YO6TbAzWIfpAkM6noq6g",
+    "doctorName": "TS.BS. Lê Anh Tuấn",
+    "weekday": 1,
+    "shiftId": "AFTERNOON",
+    "room": "TN-002"
+  },
+  {
+    "doctorId": "YO6TbAzWIfpAkM6noq6g",
+    "doctorName": "TS.BS. Lê Anh Tuấn",
+    "weekday": 3,
+    "shiftId": "MORNING",
+    "room": "TN-002"
+  },
+  {
+    "doctorId": "YO6TbAzWIfpAkM6noq6g",
+    "doctorName": "TS.BS. Lê Anh Tuấn",
+    "weekday": 3,
+    "shiftId": "AFTERNOON",
+    "room": "TN-002"
+  },
+  {
+    "doctorId": "YO6TbAzWIfpAkM6noq6g",
+    "doctorName": "TS.BS. Lê Anh Tuấn",
+    "weekday": 5,
+    "shiftId": "MORNING",
+    "room": "TN-002"
+  },
+  {
+    "doctorId": "YO6TbAzWIfpAkM6noq6g",
+    "doctorName": "TS.BS. Lê Anh Tuấn",
+    "weekday": 5,
+    "shiftId": "AFTERNOON",
+    "room": "TN-002"
+  },
+
+  {
+    "doctorId": "Sccj2l507fSTokmzcnr9",
+    "doctorName": "THS.BS.CKII. Trần Thiện Thanh",
+    "weekday": 2,
+    "shiftId": "MORNING",
+    "room": "TN-002"
+  },
+  {
+    "doctorId": "Sccj2l507fSTokmzcnr9",
+    "doctorName": "THS.BS.CKII. Trần Thiện Thanh",
+    "weekday": 2,
+    "shiftId": "AFTERNOON",
+    "room": "TN-002"
+  },
+  {
+    "doctorId": "Sccj2l507fSTokmzcnr9",
+    "doctorName": "THS.BS.CKII. Trần Thiện Thanh",
+    "weekday": 4,
+    "shiftId": "MORNING",
+    "room": "TN-002"
+  },
+  {
+    "doctorId": "Sccj2l507fSTokmzcnr9",
+    "doctorName": "THS.BS.CKII. Trần Thiện Thanh",
+    "weekday": 4,
+    "shiftId": "AFTERNOON",
+    "room": "TN-002"
+  },
+
+  {
+    "doctorId": "wx6GZNdoZcCtWSex8gYb",
+    "doctorName": "THS.BS.CKI. Trần Quang Hiếu",
+    "weekday": 6,
+    "shiftId": "MORNING",
+    "room": "TN-002"
+  },
+
+  {
+    "doctorId": "VCE2tRa3qgmaoBrS9GbC",
+    "doctorName": "THS.BS.CKII. Lê Thanh Tuyền",
+    "weekday": 1,
+    "shiftId": "MORNING",
+    "room": "TN-003"
+  },
+  {
+    "doctorId": "VCE2tRa3qgmaoBrS9GbC",
+    "doctorName": "THS.BS.CKII. Lê Thanh Tuyền",
+    "weekday": 1,
+    "shiftId": "AFTERNOON",
+    "room": "TN-003"
+  },
+  {
+    "doctorId": "VCE2tRa3qgmaoBrS9GbC",
+    "doctorName": "THS.BS.CKII. Lê Thanh Tuyền",
+    "weekday": 3,
+    "shiftId": "MORNING",
+    "room": "TN-003"
+  },
+  {
+    "doctorId": "VCE2tRa3qgmaoBrS9GbC",
+    "doctorName": "THS.BS.CKII. Lê Thanh Tuyền",
+    "weekday": 3,
+    "shiftId": "AFTERNOON",
+    "room": "TN-003"
+  },
+  {
+    "doctorId": "VCE2tRa3qgmaoBrS9GbC",
+    "doctorName": "THS.BS.CKII. Lê Thanh Tuyền",
+    "weekday": 5,
+    "shiftId": "MORNING",
+    "room": "TN-003"
+  },
+  {
+    "doctorId": "VCE2tRa3qgmaoBrS9GbC",
+    "doctorName": "THS.BS.CKII. Lê Thanh Tuyền",
+    "weekday": 5,
+    "shiftId": "AFTERNOON",
+    "room": "TN-003"
+  },
+
+  {
+    "doctorId": "R4EZM6MN1qfjStseBKdM",
+    "doctorName": "THS.BS. Trần Thị Trang",
+    "weekday": 2,
+    "shiftId": "MORNING",
+    "room": "TN-003"
+  },
+  {
+    "doctorId": "R4EZM6MN1qfjStseBKdM",
+    "doctorName": "THS.BS. Trần Thị Trang",
+    "weekday": 2,
+    "shiftId": "AFTERNOON",
+    "room": "TN-003"
+  },
+  {
+    "doctorId": "R4EZM6MN1qfjStseBKdM",
+    "doctorName": "THS.BS. Trần Thị Trang",
+    "weekday": 4,
+    "shiftId": "MORNING",
+    "room": "TN-003"
+  },
+  {
+    "doctorId": "R4EZM6MN1qfjStseBKdM",
+    "doctorName": "THS.BS. Trần Thị Trang",
+    "weekday": 4,
+    "shiftId": "AFTERNOON",
+    "room": "TN-003"
+  },
+
+  {
+    "doctorId": "H6cexnXHTuqaU8s6j2pN",
+    "doctorName": "THS.BS.CKII. Đinh Thị Ngọc Xuân",
+    "weekday": 6,
+    "shiftId": "MORNING",
+    "room": "TN-003"
+  },
+
+  {
+    "doctorId": "zkH6M80y9naMjNz35pLD",
+    "doctorName": "THS.BS.CKI. Đặng Quang Tuấn",
+    "weekday": 1,
+    "shiftId": "MORNING",
+    "room": "TN-004"
+  },
+  {
+    "doctorId": "zkH6M80y9naMjNz35pLD",
+    "doctorName": "THS.BS.CKI. Đặng Quang Tuấn",
+    "weekday": 1,
+    "shiftId": "AFTERNOON",
+    "room": "TN-004"
+  },
+  {
+    "doctorId": "zkH6M80y9naMjNz35pLD",
+    "doctorName": "THS.BS.CKI. Đặng Quang Tuấn",
+    "weekday": 3,
+    "shiftId": "MORNING",
+    "room": "TN-004"
+  },
+  {
+    "doctorId": "zkH6M80y9naMjNz35pLD",
+    "doctorName": "THS.BS.CKI. Đặng Quang Tuấn",
+    "weekday": 3,
+    "shiftId": "AFTERNOON",
+    "room": "TN-004"
+  },
+  {
+    "doctorId": "zkH6M80y9naMjNz35pLD",
+    "doctorName": "THS.BS.CKI. Đặng Quang Tuấn",
+    "weekday": 5,
+    "shiftId": "MORNING",
+    "room": "TN-004"
+  },
+  {
+    "doctorId": "zkH6M80y9naMjNz35pLD",
+    "doctorName": "THS.BS.CKI. Đặng Quang Tuấn",
+    "weekday": 5,
+    "shiftId": "AFTERNOON",
+    "room": "TN-004"
+  },
+
+  {
+    "doctorId": "CIUa6zefCsRt7aLuEPsj",
+    "doctorName": "THS.BS.CKII. Đỗ Trang Nguyên",
+    "weekday": 2,
+    "shiftId": "MORNING",
+    "room": "TN-004"
+  },
+  {
+    "doctorId": "CIUa6zefCsRt7aLuEPsj",
+    "doctorName": "THS.BS.CKII. Đỗ Trang Nguyên",
+    "weekday": 2,
+    "shiftId": "AFTERNOON",
+    "room": "TN-004"
+  },
+  {
+    "doctorId": "CIUa6zefCsRt7aLuEPsj",
+    "doctorName": "THS.BS.CKII. Đỗ Trang Nguyên",
+    "weekday": 4,
+    "shiftId": "MORNING",
+    "room": "TN-004"
+  },
+  {
+    "doctorId": "CIUa6zefCsRt7aLuEPsj",
+    "doctorName": "THS.BS.CKII. Đỗ Trang Nguyên",
+    "weekday": 4,
+    "shiftId": "AFTERNOON",
+    "room": "TN-004"
+  },
+
+  {
+    "doctorId": "PVctZs4qNMML6FXBoz09",
+    "doctorName": "THS.BS. Phan Bảo Long",
+    "weekday": 6,
+    "shiftId": "MORNING",
+    "room": "TN-004"
+  }
+]

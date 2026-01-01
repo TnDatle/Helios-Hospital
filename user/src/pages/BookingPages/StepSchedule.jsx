@@ -1,71 +1,121 @@
-import { useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
-const schedules = [
-  {
-    id: "s01",
-    departmentId: "dep01",
-    date: "20/12/2025",
-    session: "Ca sáng",
-    time: "06:30 – 11:30",
-    room: "Phòng 101",
-    current: 8,
-    max: 20,
-  },
-  {
-    id: "s02",
-    departmentId: "dep01",
-    date: "20/12/2025",
-    session: "Ca chiều",
-    time: "13:00 – 16:00",
-    room: "Phòng 202",
-    current: 20,
-    max: 20,
-  },
-];
+const WEEKDAY_LABEL = {
+  1: "Thứ 2",
+  2: "Thứ 3",
+  3: "Thứ 4",
+  4: "Thứ 5",
+  5: "Thứ 6",
+  6: "Thứ 7",
+  7: "Chủ nhật",
+};
 
-export default function StepSchedule({ department, onBack, onSelect }) {
+const SHIFT_TIME = {
+  MORNING: "06:30 – 11:30",
+  AFTERNOON: "13:00 – 16:00",
+};
+
+
+export default function StepSchedule({ doctor, onBack, onSelect }) {
+  const [schedules, setSchedules] = useState([]);
   const [selected, setSelected] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const list = schedules.filter(
-    (s) => s.departmentId === department.id
+  useEffect(() => {
+    if (!doctor?.id) return;
+
+    fetch(`http://localhost:5000/api/schedules/${doctor.id}`, {
+      cache: "no-store",
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        setSchedules(res.data || []);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Fetch schedules error:", err);
+        setLoading(false);
+      });
+
+    console.log("[StepSchedule] doctor =", doctor);
+  }, [doctor]);
+
+  const morningSchedules = useMemo(
+    () =>
+      schedules
+        .filter((s) => s.shiftId === "MORNING")
+        .sort((a, b) => a.weekday - b.weekday),
+    [schedules]
   );
+
+  const afternoonSchedules = useMemo(
+    () =>
+      schedules
+        .filter((s) => s.shiftId === "AFTERNOON")
+        .sort((a, b) => a.weekday - b.weekday),
+    [schedules]
+  );
+
+
+  if (loading) {
+    return <p>Đang tải lịch làm việc...</p>;
+  }
 
   return (
     <>
       <h4>Chọn lịch khám</h4>
+
       <div className="booking-meta">
-        Khoa: <strong>{department.name}</strong>
+        Bác sĩ: <strong>{doctor.name}</strong>
       </div>
 
-      <div className="booking-grid">
-        {list.map((s) => {
-          const isFull = s.current >= s.max;
+      <div className="schedule-columns">
+        {/* CA SÁNG */}
+        <div className="schedule-column">
+          <h5 className="schedule-title">Ca sáng</h5>
 
-          return (
+          {morningSchedules.map((s) => (
             <div
               key={s.id}
               className={`booking-card ${
                 selected?.id === s.id ? "selected" : ""
-              } ${isFull ? "disabled" : ""}`}
-              onClick={() => !isFull && setSelected(s)}
+              }`}
+              onClick={() => setSelected(s)}
             >
-              <h5>{s.session}</h5>
-              <p className="sub">Ngày: {s.date}</p>
-              <p className="sub">Giờ: {s.time}</p>
+              <h6>{WEEKDAY_LABEL[s.weekday]}</h6>
+              <p className="sub">{SHIFT_TIME[s.shiftId]}</p>
               <p className="sub">Phòng: {s.room}</p>
-
-              <span
-                className={`booking-badge ${
-                  isFull ? "danger" : "success"
-                }`}
-              >
-                {isFull
-                  ? "Đã đủ bệnh nhân"
-                  : `Còn ${s.max - s.current} suất`}
-              </span>
             </div>
-          );
-        })}
+
+          ))}
+
+          {morningSchedules.length === 0 && (
+            <p className="empty">Không có lịch ca sáng</p>
+          )}
+        </div>
+
+        {/* CA CHIỀU */}
+        <div className="schedule-column">
+          <h5 className="schedule-title">Ca chiều</h5>
+
+          {afternoonSchedules.map((s) => (
+            <div
+              key={s.id}
+              className={`booking-card ${
+                selected?.id === s.id ? "selected" : ""
+              }`}
+              onClick={() => setSelected(s)}
+            >
+              <h6>{WEEKDAY_LABEL[s.weekday]}</h6>
+              <p className="sub">{SHIFT_TIME[s.shiftId]}</p>
+              <p className="sub">Phòng: {s.room}</p>
+            </div>
+          ))}
+
+          {afternoonSchedules.length === 0 && (
+            <p className="empty">Không có lịch ca chiều</p>
+          )}
+        </div>
       </div>
 
       <div className="booking-actions">

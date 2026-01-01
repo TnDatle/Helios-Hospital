@@ -52,7 +52,7 @@ function Footer() {
           {/* COLUMN 4 */}
           <div className="col-md-3 mb-4">
             <h5 className="footer-title">ĐĂNG KÝ NHẬN TIN</h5>
-            <p>Nhập email để nhận thông tin mới nhất từ Bệnh viện Helios:</p>
+            <p>Nhập email để nhận thông tin mới nhất từ Bệnh viện Helios Việt Nam:</p>
 
             <div className="footer-email-box d-flex">
               <input type="email" placeholder="Email của bạn…" />
