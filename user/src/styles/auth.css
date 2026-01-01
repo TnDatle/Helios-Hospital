@@ -113,3 +113,56 @@
 .auth-footer a:hover {
   text-decoration: underline;
 }
+
+
+.form-error {
+  color: #dc2626;
+  font-size: 13px;
+  margin-top: 4px;
+  display: block;
+}
+
+.input-error {
+  border: 1px solid #dc2626 !important;
+  background: #fef2f2;
+}
+
+.auth-note {
+  font-size: 13px;
+  color: #92400e;
+  background: #fffbeb;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+/* SUCCESS MODAL */
+.success-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.success-modal {
+  background: #fff;
+  padding: 24px 28px;
+  border-radius: 10px;
+  text-align: center;
+  width: 90%;
+  max-width: 380px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.success-modal h3 {
+  margin-bottom: 12px;
+  color: #065f46;
+}
+
+.success-modal p {
+  font-size: 14px;
+  color: #374151;
+}

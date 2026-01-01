@@ -14,6 +14,7 @@ import TimMach from "./pages/DepartmentsPages/TimMach";
 // Import Header Pages
 import DangNhap  from "./pages/AuthPages/Login"
 import DangKy  from "./pages/AuthPages/Register"
+import HoanThanhHoSo from "./pages/AuthPages/CompleteProfile";
 import GioiThieu from "./pages/About";
 import GioKhamBenh from "./pages/Time";
 import BangGia from "./pages/Price";
@@ -71,6 +72,7 @@ function App() {
         <Route path="/lien-he" element={<div className='container py-5'>Liên hệ</div>} />
         <Route path="/dang-nhap" element={<DangNhap />} />
         <Route path="/dang-ky" element={<DangKy />} />
+         <Route path="/complete-profile" element={<HoanThanhHoSo />} />
 
         {/* ===== BOTTOM MENU ===== */}
         <Route path="/tim-bac-si" element={<div className='container py-5'>Tìm bác sĩ</div>} />

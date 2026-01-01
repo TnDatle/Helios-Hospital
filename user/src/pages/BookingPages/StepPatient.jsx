@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  getProvinces,
-  getCommunes,
-} from "../../API/location-api";
+import { getProvinces, getCommunes } from "../../API/location-api";
 
 export default function StepPatient({ onBack, onSelect }) {
   const [type, setType] = useState("SELF");
@@ -15,31 +12,23 @@ export default function StepPatient({ onBack, onSelect }) {
     phone: "",
     cccd: "",
     bhyt: "",
-
     province: "",
-    district: "",
     ward: "",
     address: "",
   });
 
   const [provinces, setProvinces] = useState([]);
-  const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
 
   /* =====================
      LOAD PROVINCES
   ===================== */
   useEffect(() => {
-    const fetchProvinces = async () => {
-      try {
-        const data = await getProvinces();
-        setProvinces(data || []);
-      } catch (err) {
-        console.error("Load provinces error:", err);
-      }
-    };
-
-    fetchProvinces();
+    getProvinces()
+      .then((data) => setProvinces(data || []))
+      .catch((err) =>
+        console.error("Load provinces error:", err)
+      );
   }, []);
 
   /* =====================
@@ -56,39 +45,15 @@ export default function StepPatient({ onBack, onSelect }) {
     setPatient((prev) => ({
       ...prev,
       province: code,
-      district: "",
       ward: "",
     }));
-
-    setDistricts([]);
     setWards([]);
 
     if (!code) return;
 
     try {
       const data = await getCommunes(code);
-      setDistricts(data.districts || []);
-    } catch (err) {
-      console.error("Load districts error:", err);
-    }
-  };
-
-  const handleDistrictChange = async (e) => {
-    const code = e.target.value;
-
-    setPatient((prev) => ({
-      ...prev,
-      district: code,
-      ward: "",
-    }));
-
-    setWards([]);
-
-    if (!code) return;
-
-    try {
-      const data = await getCommunes(code);
-      setWards(data.wards || []);
+      setWards(data || []);
     } catch (err) {
       console.error("Load wards error:", err);
     }
@@ -100,7 +65,6 @@ export default function StepPatient({ onBack, onSelect }) {
       !patient.dob ||
       !patient.phone ||
       !patient.province ||
-      !patient.district ||
       !patient.ward ||
       !patient.address
     ) {
@@ -135,7 +99,7 @@ export default function StepPatient({ onBack, onSelect }) {
         <label>
           <input
             type="radio"
-            checked={type !== "SELF"}
+            checked={type === "OTHER"}
             onChange={() => setType("OTHER")}
           />
           Đăng ký cho người thân
@@ -168,7 +132,7 @@ export default function StepPatient({ onBack, onSelect }) {
           <option value="OTHER">Khác</option>
         </select>
 
-        {type !== "SELF" && (
+        {type === "OTHER" && (
           <select
             name="relationship"
             value={patient.relationship}
@@ -217,19 +181,6 @@ export default function StepPatient({ onBack, onSelect }) {
         </select>
 
         <select
-          value={patient.district}
-          onChange={handleDistrictChange}
-          disabled={!districts.length}
-        >
-          <option value="">Chọn Quận / Huyện</option>
-          {districts.map((d) => (
-            <option key={d.code} value={d.code}>
-              {d.name}
-            </option>
-          ))}
-        </select>
-
-        <select
           value={patient.ward}
           onChange={(e) =>
             setPatient((prev) => ({
@@ -256,11 +207,9 @@ export default function StepPatient({ onBack, onSelect }) {
       </div>
 
       <p className="patient-note">
-        * Thông tin người khám cần chính xác theo giấy tờ tùy thân để thuận tiện
-        khi làm thủ tục khám bệnh.
+        * Thông tin người khám cần chính xác theo giấy tờ tùy thân.
       </p>
 
-      {/* ===== ACTION ===== */}
       <div className="booking-actions">
         <button className="booking-btn" onClick={onBack}>
           Quay lại

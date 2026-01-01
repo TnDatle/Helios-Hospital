@@ -40,7 +40,7 @@ function Login() {
 
         <div className="auth-footer">
           <span>Chưa có tài khoản?</span>
-          <Link to="/dang-ky">Đăng ký khám bệnh</Link>
+          <Link to="/dang-ky">Đăng ký tài khoản</Link>
         </div>
       </div>
     </div>
