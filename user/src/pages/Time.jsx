@@ -4,20 +4,26 @@ function Time() {
 
       {/* ====== BANNER ====== */}
       <div
-        className="time-banner"
-        style={{ backgroundImage: "url('/icons/time-banner.jpg')" }}
-        >
-        <div className="banner-overlay">
-            <h1 className="banner-title">GIỜ KHÁM BỆNH</h1>
+        className="page-banner"
+        style={{
+          backgroundImage: 'url("/icons/time-banner.jpg")',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          padding: "90px 0",
+          color: "#fff",
+        }}
+      >
+        <div className="container">
+          <div className="breadcrumb">
+            <span>Trang chủ / </span>
+            <span>Giờ khám bệnh</span>
+          </div>
+
+          <h1 className="banner-title">GIỜ KHÁM BỆNH</h1>
+
         </div>
       </div>
 
-      {/* ====== BREADCRUMB ====== */}
-      <div className="container mt-3">
-        <div className="breadcrumb">
-          <span>Trang chủ/ Giờ khám bệnh</span>
-        </div>
-      </div>
 
       {/* ====== MAIN CONTENT ====== */}
       <div className="container time-content">

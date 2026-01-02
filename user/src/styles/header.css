@@ -160,3 +160,71 @@
   white-space: nowrap;
   padding-left: 14px;
 }
+
+
+/* ===== HEADER ACCOUNT ===== */
+.account-dropdown {
+  position: relative;
+}
+
+/* Nút email */
+.account-dropdown .dropdown-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #f8fafc;
+  border: 1px solid #d1d5db;
+  color: #1f2937;
+}
+
+.account-dropdown .dropdown-toggle:hover {
+  background: #eef2f7;
+}
+
+/* Dropdown menu */
+.account-dropdown .dropdown-menu {
+  min-width: 200px;
+  padding: 6px 0;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* Item */
+.account-dropdown .dropdown-item {
+  font-size: 14px;
+  padding: 10px 16px;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.account-dropdown .dropdown-item:hover {
+  background: #f3f4f6;
+}
+
+/* Divider */
+.account-dropdown .dropdown-divider {
+  margin: 6px 0;
+}
+
+/* Logout */
+.account-dropdown .dropdown-item.text-danger {
+  color: #dc2626 !important;
+}
+
+.account-dropdown .dropdown-item.text-danger:hover {
+  background: #fee2e2;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .account-dropdown .dropdown-menu {
+    right: 0;
+    left: auto;
+  }
+}

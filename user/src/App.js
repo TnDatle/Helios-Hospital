@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Booking from "./pages/Booking";
 import MyAppointments from "./pages/MyAppointments";
-import TimBacSi from "./pages/FindDoctor";
 import ChiTietBacSi from "./pages/DetailPages/DoctorDetail";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -15,6 +14,8 @@ import TimMach from "./pages/DepartmentsPages/TimMach";
 import DangNhap  from "./pages/AuthPages/Login"
 import DangKy  from "./pages/AuthPages/Register"
 import HoanThanhHoSo from "./pages/AuthPages/CompleteProfile";
+import TimBacSi from "./pages/FindDoctor";
+import LichKhamBenh from "./pages/Schedule";
 import GioiThieu from "./pages/About";
 import GioKhamBenh from "./pages/Time";
 import BangGia from "./pages/Price";
@@ -47,7 +48,7 @@ function App() {
         <Route path="/" element={<Home />} />
 
         {/* ===== ĐẶT LỊCH ===== */}
-        <Route path="/booking" element={<Booking />} />
+        <Route path="/dat-lich" element={<Booking />} />
         <Route path="/my-appointments" element={<MyAppointments />} />
 
         {/* ===== CÁC KHOA ===== */}
@@ -60,6 +61,7 @@ function App() {
         <Route path="/bang-gia" element={<BangGia />} />
         <Route path="/tim-bac-si" element={<TimBacSi />} />
         <Route path="/tim-bac-si/:department/:id" element={<ChiTietBacSi />} />
+        <Route path="/lich-kham-benh" element={<LichKhamBenh />} />
         {/* Placeholder – tạo sau nếu cần */}
         <Route path="/gioi-thieu" element={<GioiThieu />} />
         <Route path="/dieu-tri" element={<div className='container py-5'>Điều trị</div>} />
@@ -72,13 +74,7 @@ function App() {
         <Route path="/lien-he" element={<div className='container py-5'>Liên hệ</div>} />
         <Route path="/dang-nhap" element={<DangNhap />} />
         <Route path="/dang-ky" element={<DangKy />} />
-         <Route path="/complete-profile" element={<HoanThanhHoSo />} />
-
-        {/* ===== BOTTOM MENU ===== */}
-        <Route path="/tim-bac-si" element={<div className='container py-5'>Tìm bác sĩ</div>} />
-        <Route path="/lich-kham" element={<div className='container py-5'>Lịch khám bệnh</div>} />
-        <Route path="/dat-lich" element={<Booking />} />
-        <Route path="/bang-gia" element={<div className='container py-5'>Bảng giá dịch vụ</div>} />
+        <Route path="/complete-profile" element={<HoanThanhHoSo />} />
 
       </Routes>
 

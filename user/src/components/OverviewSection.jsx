@@ -1,3 +1,4 @@
+ import { Link } from "react-router-dom";
 import "../styles/overview.css";
 
 function OverviewSection() {
@@ -39,8 +40,10 @@ function OverviewSection() {
 
       </div>
 
-      <button className="overview-btn">XEM THÊM</button>
 
+      <Link to="/gioi-thieu" className="overview-btn">
+        XEM THÊM
+      </Link>
     </div>
   );
 }

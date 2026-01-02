@@ -39,12 +39,9 @@ const getDoctorIntro = (doctor) => {
 
   return `
   ${doctor.name} hiện đang công tác tại ${departmentName} với chuyên môn là ${doctor.specialty}.
-  Bác sĩ tham gia tiếp nhận, thăm khám và tư vấn cho người bệnh theo
-  quy trình chuyên môn của khoa.
+  Bác sĩ tham gia tiếp nhận, thăm khám và tư vấn cho người bệnh theo quy trình chuyên môn của khoa.
 
-  Lịch làm việc của bác sĩ được cập nhật định kỳ trên hệ thống để
-  người bệnh thuận tiện theo dõi và đăng ký khám.
-  `;
+  Lịch làm việc của bác sĩ được cập nhật định kỳ trên hệ thống để người bệnh thuận tiện theo dõi và đăng ký khám.`;
 };
 
 
@@ -270,6 +267,9 @@ const DoctorDetail = () => {
           <strong>Ghi chú:</strong> Lịch khám mang tính chất định kỳ hàng tuần.
           Ngày khám cụ thể sẽ được xác nhận khi đặt lịch.
         </p>
+        <p className="note">
+          <strong>Lịch khám có thể thay đổi theo lịch công tác của bác sĩ</strong>
+        </p>
       </div>
 
       {/* ===== BOOKING CTA ===== */}
@@ -279,8 +279,8 @@ const DoctorDetail = () => {
         </h3>
         <p>
           Quý khách vui lòng sang trang đặt lịch để chọn{" "}
-          <strong>ngày khám cụ thể</strong>. Nhân viên CSKH sẽ liên hệ xác nhận
-          qua điện thoại hoặc Zalo <strong>0999 099 099</strong>.
+          <strong>ngày khám cụ thể</strong>. Tin nhắn CSKH sẽ gửi thông tin xác nhận lịch của quý khách
+          qua số điện thoại đã đăng ký.
         </p>
       </div>
     </div>

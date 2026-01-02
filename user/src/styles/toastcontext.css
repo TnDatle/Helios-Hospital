@@ -1,0 +1,34 @@
+/* ===== TOAST NOTIFICATION ===== */
+.toast-notify {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  min-width: 260px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+  animation: slideIn 0.3s ease;
+}
+
+.toast-notify.success {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+}
+
+.toast-notify.error {
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

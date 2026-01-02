@@ -1,4 +1,7 @@
-import { fetchSchedulesByDoctor } from "../services/schedule-service.js";
+import {
+  fetchPublicScheduleGrouped,
+  fetchSchedulesByDoctor,
+} from "../services/schedule-service.js";
 
 export const getDoctorSchedules = async (req, res) => {
   try {
@@ -17,3 +20,15 @@ export const getDoctorSchedules = async (req, res) => {
 };
 
 
+export const getPublicSchedules = async (req, res) => {
+  try {
+    const data = await fetchPublicScheduleGrouped();
+    res.json({ success: true, data });
+  } catch (err) {
+    console.error("[getPublicSchedules]", err);
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
