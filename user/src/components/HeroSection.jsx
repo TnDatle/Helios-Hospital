@@ -19,7 +19,7 @@ function HeroSection() {
           Chăm sóc tận tâm – Công nghệ hiện đại – Đặt lịch khám nhanh chóng
         </p>
 
-        <a href="/booking" className="hero-btn">
+        <a href="/dat-lich" className="hero-btn">
           Đặt lịch ngay
         </a>
       </div>

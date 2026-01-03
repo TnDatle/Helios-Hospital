@@ -1,11 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../auth/useAuth";
+
+// Các bước đăng nhập 
 import StepDepartment from "./BookingPages/StepDepartment";
 import StepDoctor from "./BookingPages/StepDoctor";
 import StepSchedule from "./BookingPages/StepSchedule";
-import StepConfirm from "./BookingPages/StepConfirm";
 import StepPatient from "./BookingPages/StepPatient";
+import StepConfirm from "./BookingPages/StepConfirm";
 
 export default function Booking() {
+  const navigate = useNavigate();
+  const { user, loading } = useAuth();
+
   const [step, setStep] = useState(1);
   const [data, setData] = useState({
     department: null,
@@ -14,13 +21,31 @@ export default function Booking() {
     patient: null,
   });
 
+  // ===============================
+  //  RÀNG BUỘC ĐĂNG NHẬP
+  // ===============================
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/dang-nhap", {
+        state: { from: "/dat-lich" }, // quay lại sau login
+        replace: true,
+      });
+    }
+  }, [user, loading, navigate]);
+
+  // Check auth
+  if (loading) return null; // hoặc spinner
+
+  // Chưa login thì không render gì cả
+  if (!user) return null;
+
   return (
     <div className="booking-page">
       <div className="container">
-        <div className="booking-title">Đặt lịch khám</div>
+        <h2 className="booking-title">Đặt lịch khám</h2>
 
         <div className="booking-section">
-          {/* STEP 1: CHỌN KHOA */}
+          {/* ===== STEP 1: CHỌN KHOA ===== */}
           {step === 1 && (
             <StepDepartment
               onSelect={(department) => {
@@ -28,13 +53,14 @@ export default function Booking() {
                   department,
                   doctor: null,
                   schedule: null,
+                  patient: null,
                 });
                 setStep(2);
               }}
             />
           )}
 
-          {/* STEP 2: CHỌN BÁC SĨ */}
+          {/* ===== STEP 2: CHỌN BÁC SĨ ===== */}
           {step === 2 && (
             <StepDoctor
               department={data.department}
@@ -50,7 +76,7 @@ export default function Booking() {
             />
           )}
 
-          {/* STEP 3: CHỌN LỊCH */}
+          {/* ===== STEP 3: CHỌN LỊCH ===== */}
           {step === 3 && (
             <StepSchedule
               doctor={data.doctor}
@@ -62,8 +88,7 @@ export default function Booking() {
             />
           )}
 
-
-          {/* STEP 4: Chọn mối quan hệ*/}
+          {/* ===== STEP 4: CHỌN NGƯỜI KHÁM ===== */}
           {step === 4 && (
             <StepPatient
               onBack={() => setStep(3)}
@@ -74,7 +99,7 @@ export default function Booking() {
             />
           )}
 
-           {/* STEP 5: XÁC NHẬN */}
+          {/* ===== STEP 5: XÁC NHẬN ===== */}
           {step === 5 && (
             <StepConfirm
               data={data}

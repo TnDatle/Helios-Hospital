@@ -412,10 +412,16 @@
    STEP PATIENT
 ========================= */
 
+/* ===== STEP PATIENT - TYPE ===== */
+
 .patient-type {
   display: flex;
   gap: 24px;
   margin: 16px 0 20px;
+  padding: 14px 16px;
+  background: #f8fafc;
+  border: 1px solid var(--bk-border);
+  border-radius: 12px;
   flex-wrap: wrap;
 }
 
@@ -423,7 +429,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 14px;
   cursor: pointer;
   color: var(--bk-text);
 }
@@ -433,7 +440,24 @@
   cursor: pointer;
 }
 
+
 /* ===== FORM ===== */
+.patient-form-wrapper {
+  background: #ffffff;
+  border: 1px solid var(--bk-border);
+  border-radius: 18px;
+  padding: 18px 20px 20px;
+  box-shadow: var(--bk-shadow-sm);
+  margin-bottom: 24px;
+}
+
+.patient-form-title {
+  font-size: 15px;
+  font-weight: 800;
+  margin-bottom: 14px;
+  color: var(--bk-text);
+}
+
 .patient-form {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -444,26 +468,29 @@
 /* input / select */
 .patient-form input,
 .patient-form select {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 12px;
+  background: #ffffff;
+  border-radius: 14px;
   border: 1px solid var(--bk-border);
+  padding: 12px 14px;
   font-size: 14px;
-  background: #fff;
-  color: var(--bk-text);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease,
+    background 0.15s ease;
 }
 
-.patient-form input::placeholder {
-  color: #9ca3af;
-}
-
+/* focus */
 .patient-form input:focus,
 .patient-form select:focus {
-  outline: none;
   border-color: var(--bk-primary);
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
+
+/* disabled */
+.patient-form input:disabled,
+.patient-form select:disabled {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
 
 /* full width fields */
 .patient-form input[name="cccd"],
@@ -479,6 +506,32 @@
   margin-bottom: 16px;
 }
 
+
+/* ===== SELECT RELATIVE ===== */
+
+.patient-select-relative {
+  margin: 0 0 20px;
+}
+
+.patient-select-relative select {
+  width: 100%;
+  max-width: 420px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--bk-border);
+  font-size: 14px;
+  background: #ffffff;
+  color: var(--bk-text);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.patient-select-relative select:focus {
+  outline: none;
+  border-color: var(--bk-primary);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+}
+
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .patient-form {
@@ -490,4 +543,124 @@
     grid-column: span 1;
   }
 }
+
+
+/* =========================
+   MY APPOINTMENTS - TABS
+========================= */
+
+.tab-group {
+  display: flex;
+  gap: 12px;
+  margin: 16px 0 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tab {
+  padding: 10px 20px;
+  border: none;
+  background: transparent;
+  font-weight: 700;
+  font-size: 15px;
+  color: #64748b;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.15s ease;
+}
+
+.tab:hover {
+  color: #2563eb;
+}
+
+.tab.active {
+  color: #2563eb;
+}
+
+.tab.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 3px;
+  background: #2563eb;
+  border-radius: 3px 3px 0 0;
+}
+
+/* =========================
+   SECTION TITLE
+========================= */
+
+.patient-page h4 {
+  font-size: 17px;
+  font-weight: 800;
+  margin: 24px 0 12px;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* =========================
+   EMPTY TEXT
+========================= */
+
+.patient-page p {
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* =========================
+   APPOINTMENT CARD TWEAK
+   (reuse patient-card)
+========================= */
+
+.patient-card {
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.patient-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+}
+
+/* =========================
+   STATUS BADGE
+========================= */
+
+.booking-badge {
+  font-weight: 700;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.booking-badge.success {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.booking-badge.danger {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 640px) {
+  .tab-group {
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .tab {
+    white-space: nowrap;
+  }
+}
+
 

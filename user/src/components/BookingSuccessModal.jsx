@@ -1,7 +1,15 @@
 import { createPortal } from "react-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function BookingSuccessModal({ open, onClose }) {
+  const navigate = useNavigate();
+
   if (!open) return null;
+
+  const handleClose = () => {
+    onClose();       // đóng modal
+    navigate("/");   // quay về trang chủ
+  };
 
   return createPortal(
     <div className="success-overlay">
@@ -23,11 +31,14 @@ export default function BookingSuccessModal({ open, onClose }) {
           Vui lòng kiểm tra tin nhắn để nắm rõ thông tin lịch khám.
         </p>
 
-        <button className="booking-btn success" onClick={onClose}>
+        <button
+          className="booking-btn success"
+          onClick={handleClose}
+        >
           Đã hiểu
         </button>
       </div>
     </div>,
-    document.body 
+    document.body
   );
 }

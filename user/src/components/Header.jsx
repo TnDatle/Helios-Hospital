@@ -78,7 +78,11 @@ function Header() {
                   Hồ sơ bệnh nhân
                 </Link>
               </li>
-
+              <li>
+                <Link className="dropdown-item" to="/my-appointments">
+                  Lịch hẹn của tôi
+                </Link>
+              </li>
               <li>
                 <hr className="dropdown-divider" />
               </li>

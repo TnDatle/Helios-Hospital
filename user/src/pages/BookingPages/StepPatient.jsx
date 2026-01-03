@@ -1,35 +1,156 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getProvinces, getCommunes } from "../../API/location-api";
+import {
+  getSelfPatientByOwner,
+  getPatientsByOwner,
+} from "../../API/patient-api";
+import { useAuth } from "../../auth/useAuth";
+
+const RELATIONSHIP_LABEL = {
+  FATHER: "Cha",
+  MOTHER: "Mẹ",
+  SPOUSE: "Vợ / Chồng",
+  CHILD: "Con",
+  OTHER: "Người thân khác",
+};
 
 export default function StepPatient({ onBack, onSelect }) {
-  const [type, setType] = useState("SELF");
+  const { user } = useAuth();
 
-  const [patient, setPatient] = useState({
+  /* =====================
+     MODE STATE
+  ===================== */
+  const [type, setType] = useState("SELF"); // SELF | OTHER
+  const [otherMode, setOtherMode] = useState("SELECT"); // SELECT | NEW
+  const [loadingProfile, setLoadingProfile] = useState(false);
+
+  /* =====================
+     FORM STATE
+  ===================== */
+  const emptyPatient = {
     fullName: "",
     dob: "",
     gender: "MALE",
-    relationship: "SELF",
     phone: "",
     cccd: "",
     bhyt: "",
+    relationship: "",
     province: "",
     ward: "",
     address: "",
-  });
+  };
 
+  const [patient, setPatient] = useState(emptyPatient);
+
+  const isFilled = (v) => !!v;
+
+  /* =====================
+     LOCATION STATE + CACHE
+  ===================== */
   const [provinces, setProvinces] = useState([]);
   const [wards, setWards] = useState([]);
 
+  const wardsCache = useRef({});
+  const selfProfileCache = useRef(null);
+
   /* =====================
-     LOAD PROVINCES
+     RELATIVES (SELECT MODE)
+  ===================== */
+  const [relatives, setRelatives] = useState([]);
+  const [selectedRelative, setSelectedRelative] = useState(null);
+
+  /* =====================
+     LOAD PROVINCES (1 LẦN)
   ===================== */
   useEffect(() => {
     getProvinces()
       .then((data) => setProvinces(data || []))
-      .catch((err) =>
-        console.error("Load provinces error:", err)
-      );
+      .catch(console.error);
   }, []);
+
+  /* =====================
+     LOAD SELF PROFILE (CACHE)
+  ===================== */
+  useEffect(() => {
+    if (!user || type !== "SELF" || !provinces.length) return;
+
+    const loadSelfPatient = async () => {
+      setLoadingProfile(true);
+
+      let profile = selfProfileCache.current;
+      if (!profile) {
+        profile = await getSelfPatientByOwner(user.uid);
+        selfProfileCache.current = profile;
+      }
+
+      if (!profile) {
+        setPatient(emptyPatient);
+        setWards([]);
+        setLoadingProfile(false);
+        return;
+      }
+
+      const provinceObj = provinces.find(
+        (p) => p.name === profile.address?.province
+      );
+      const provinceCode = provinceObj?.code || "";
+
+      setPatient({
+        fullName: profile.fullName || "",
+        dob: profile.dob || "",
+        gender: profile.gender || "MALE",
+        phone: profile.phone || "",
+        cccd: profile.cccd || "",
+        bhyt: profile.bhyt || "",
+        relationship: "",
+        province: provinceCode,
+        ward: "",
+        address: profile.address?.detail || "",
+      });
+
+      if (provinceCode) {
+        let wardsData = wardsCache.current[provinceCode];
+        if (!wardsData) {
+          wardsData = await getCommunes(provinceCode);
+          wardsCache.current[provinceCode] = wardsData || [];
+        }
+        setWards(wardsData || []);
+
+        const wardObj = wardsData?.find(
+          (w) => w.name === profile.address?.commune
+        );
+        if (wardObj) {
+          setPatient((prev) => ({ ...prev, ward: wardObj.code }));
+        }
+      }
+
+      setLoadingProfile(false);
+    };
+
+    loadSelfPatient();
+  }, [user?.uid, type, provinces.length]);
+
+  /* =====================
+     LOAD RELATIVES (SELECT)
+  ===================== */
+  useEffect(() => {
+    if (!user || type !== "OTHER" || otherMode !== "SELECT") return;
+
+    getPatientsByOwner(user.uid).then((data) => {
+      setRelatives(data.filter((p) => !p.isDefault));
+    });
+  }, [type, otherMode, user?.uid]);
+
+  /* =====================
+     SWITCH MODE
+  ===================== */
+  useEffect(() => {
+    if (type === "OTHER") {
+      setPatient(emptyPatient);
+      setWards([]);
+      setSelectedRelative(null);
+    }
+  }, [type]);
 
   /* =====================
      HANDLERS
@@ -47,34 +168,72 @@ export default function StepPatient({ onBack, onSelect }) {
       province: code,
       ward: "",
     }));
-    setWards([]);
 
-    if (!code) return;
-
-    try {
-      const data = await getCommunes(code);
-      setWards(data || []);
-    } catch (err) {
-      console.error("Load wards error:", err);
+    if (!code) {
+      setWards([]);
+      return;
     }
+
+    if (wardsCache.current[code]) {
+      setWards(wardsCache.current[code]);
+      return;
+    }
+
+    const data = await getCommunes(code);
+    wardsCache.current[code] = data || [];
+    setWards(data || []);
   };
 
+  /* =====================
+     SUBMIT
+  ===================== */
   const handleSubmit = () => {
+    /* ===== OTHER → SELECT ===== */
+    if (type === "OTHER" && otherMode === "SELECT") {
+      if (!selectedRelative) {
+        alert("Vui lòng chọn người thân");
+        return;
+      }
+      onSelect(selectedRelative);
+      return;
+    }
+
+    /* ===== VALIDATE FORM ===== */
     if (
       !patient.fullName ||
       !patient.dob ||
       !patient.phone ||
       !patient.province ||
       !patient.ward ||
-      !patient.address
+      !patient.address ||
+      (type === "OTHER" && !patient.relationship)
     ) {
-      alert("Vui lòng nhập đầy đủ thông tin người khám và địa chỉ");
+      alert("Vui lòng nhập đầy đủ thông tin người khám");
       return;
     }
 
+    const provinceObj = provinces.find(
+      (p) => p.code === patient.province
+    );
+    const wardObj = wards.find(
+      (w) => w.code === patient.ward
+    );
+
     onSelect({
-      ...patient,
-      relationship: type,
+      ownerUid: user.uid,
+      fullName: patient.fullName,
+      dob: patient.dob,
+      gender: patient.gender,
+      phone: patient.phone,
+      cccd: patient.cccd,
+      bhyt: patient.bhyt || "",
+      isDefault: type === "SELF",
+      relationship: type === "OTHER" ? patient.relationship : null,
+      address: {
+        province: provinceObj?.name || "",
+        commune: wardObj?.name || "",
+        detail: patient.address,
+      },
     });
   };
 
@@ -85,7 +244,7 @@ export default function StepPatient({ onBack, onSelect }) {
     <>
       <h4>Thông tin người khám</h4>
 
-      {/* ===== CHỌN ĐỐI TƯỢNG ===== */}
+      {/* ===== SELF / OTHER ===== */}
       <div className="patient-type">
         <label>
           <input
@@ -106,119 +265,150 @@ export default function StepPatient({ onBack, onSelect }) {
         </label>
       </div>
 
-      {/* ===== FORM ===== */}
-      <div className="patient-form">
-        <input
-          name="fullName"
-          placeholder="Họ và tên (theo CCCD)"
-          value={patient.fullName}
-          onChange={handleChange}
-        />
+      {/* ===== OTHER MODE ===== */}
+      {type === "OTHER" && (
+        <div className="patient-type" style={{ marginTop: 12 }}>
+          <label>
+            <input
+              type="radio"
+              checked={otherMode === "SELECT"}
+              onChange={() => setOtherMode("SELECT")}
+            />
+            Chọn người thân đã lưu
+          </label>
 
-        <input
-          type="date"
-          name="dob"
-          value={patient.dob}
-          onChange={handleChange}
-        />
+          <label>
+            <input
+              type="radio"
+              checked={otherMode === "NEW"}
+              onChange={() => setOtherMode("NEW")}
+            />
+            Nhập người thân mới
+          </label>
+        </div>
+      )}
 
+      {loadingProfile && <p>Đang tải hồ sơ...</p>}
+
+      {/* ===== SELECT RELATIVE ===== */}
+      {type === "OTHER" && otherMode === "SELECT" && (
         <select
-          name="gender"
-          value={patient.gender}
-          onChange={handleChange}
-        >
-          <option value="MALE">Nam</option>
-          <option value="FEMALE">Nữ</option>
-          <option value="OTHER">Khác</option>
-        </select>
-
-        {type === "OTHER" && (
-          <select
-            name="relationship"
-            value={patient.relationship}
-            onChange={handleChange}
-          >
-            <option value="FATHER">Cha</option>
-            <option value="MOTHER">Mẹ</option>
-            <option value="CHILD">Con</option>
-            <option value="SPOUSE">Vợ / Chồng</option>
-            <option value="OTHER">Người thân khác</option>
-          </select>
-        )}
-
-        <input
-          name="phone"
-          placeholder="Số điện thoại liên hệ"
-          value={patient.phone}
-          onChange={handleChange}
-        />
-
-        <input
-          name="cccd"
-          placeholder="CCCD (12 số)"
-          value={patient.cccd}
-          onChange={handleChange}
-        />
-
-        <input
-          name="bhyt"
-          placeholder="Mã BHYT (nếu có)"
-          value={patient.bhyt}
-          onChange={handleChange}
-        />
-
-        {/* ===== ĐỊA CHỈ ===== */}
-        <select
-          value={patient.province}
-          onChange={handleProvinceChange}
-        >
-          <option value="">Chọn Tỉnh / Thành phố</option>
-          {provinces.map((p) => (
-            <option key={p.code} value={p.code}>
-              {p.name}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={patient.ward}
+          value={selectedRelative?.id || ""}
           onChange={(e) =>
-            setPatient((prev) => ({
-              ...prev,
-              ward: e.target.value,
-            }))
+            setSelectedRelative(
+              relatives.find((r) => r.id === e.target.value)
+            )
           }
-          disabled={!wards.length}
         >
-          <option value="">Chọn Phường / Xã</option>
-          {wards.map((w) => (
-            <option key={w.code} value={w.code}>
-              {w.name}
+          <option value="">Chọn người thân</option>
+          {relatives.map((r) => (
+            <option key={r.id} value={r.id}>
+              {r.fullName} ({RELATIONSHIP_LABEL[r.relationship]})
             </option>
           ))}
         </select>
+      )}
 
-        <input
-          name="address"
-          placeholder="Số nhà, tên đường"
-          value={patient.address}
-          onChange={handleChange}
-        />
-      </div>
+      {/* ===== FORM (SELF / OTHER-NEW) ===== */}
+      {(type === "SELF" || otherMode === "NEW") && (
+        <div className="patient-form-wrapper">
+          <div className="patient-form-title">
+            Thông tin chi tiết
+          </div>
+        <div className="patient-form">
+          <input
+            name="fullName"
+            placeholder="Họ và Tên"
+            value={patient.fullName}
+            onChange={handleChange}
+            disabled={type === "SELF" && isFilled(patient.fullName)}
+          />
 
-      <p className="patient-note">
-        * Thông tin người khám cần chính xác theo giấy tờ tùy thân.
-      </p>
+          <input
+            type="date"
+            name="dob"
+            value={patient.dob}
+            onChange={handleChange}
+            disabled={type === "SELF" && isFilled(patient.dob)}
+          />
+
+          <select
+            name="gender"
+            value={patient.gender}
+            onChange={handleChange}
+            disabled={type === "SELF" && isFilled(patient.gender)}
+          >
+            <option value="MALE">Nam</option>
+            <option value="FEMALE">Nữ</option>
+            <option value="OTHER">Khác</option>
+          </select>
+
+          {type === "OTHER" && (
+            <select
+              name="relationship"
+              value={patient.relationship}
+              onChange={handleChange}
+            >
+              <option value="">Chọn mối quan hệ</option>
+              <option value="FATHER">Cha</option>
+              <option value="MOTHER">Mẹ</option>
+              <option value="SPOUSE">Vợ / Chồng</option>
+              <option value="CHILD">Con</option>
+              <option value="OTHER">Người thân khác</option>
+            </select>
+          )}
+
+          <input
+            name="phone"
+            placeholder="Số điện thoại"
+            value={patient.phone}
+            onChange={handleChange}
+            disabled={type === "SELF" && isFilled(patient.phone)}
+          />
+
+          <select
+            value={patient.province}
+            onChange={handleProvinceChange}
+          >
+            <option value="">Chọn Tỉnh / Thành</option>
+            {provinces.map((p) => (
+              <option key={p.code} value={p.code}>
+                {p.name}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={patient.ward}
+            onChange={(e) =>
+              setPatient((prev) => ({ ...prev, ward: e.target.value }))
+            }
+            disabled={!wards.length}
+          >
+            <option value="">Chọn Phường / Xã</option>
+            {wards.map((w) => (
+              <option key={w.code} value={w.code}>
+                {w.name}
+              </option>
+            ))}
+          </select>
+
+          <input
+            name="address"
+            placeholder="Số nhà, tên đường"
+            value={patient.address}
+            onChange={handleChange}
+          />
+        </div>
+        </div>
+      )}
 
       <div className="booking-actions">
         <button className="booking-btn" onClick={onBack}>
           Quay lại
         </button>
 
-        <button
-          className="booking-btn primary"
-          onClick={handleSubmit}
-        >
+        <button className="booking-btn primary" onClick={handleSubmit}>
           Tiếp tục
         </button>
       </div>

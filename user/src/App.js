@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Booking from "./pages/Booking";
-import MyAppointments from "./pages/MyAppointments";
+import MyAppointments from "./pages/Profiles/MyAppointments";
+import HoSoBenhNhan from "./pages/Profiles/PatientsProfile";
 import ChiTietBacSi from "./pages/DetailPages/DoctorDetail";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -35,6 +36,7 @@ import "./styles/time.css"
 import "./styles/price.css";
 import "./styles/auth.css"
 import "./styles/bookingsuccesmodel.css"
+import "./styles/patient.css"
 
 function App() {
   return (
@@ -50,6 +52,7 @@ function App() {
         {/* ===== ĐẶT LỊCH ===== */}
         <Route path="/dat-lich" element={<Booking />} />
         <Route path="/my-appointments" element={<MyAppointments />} />
+        <Route path="/ho-so-benh-nhan" element={<HoSoBenhNhan />} />
 
         {/* ===== CÁC KHOA ===== */}
         <Route path="/ngoai-tong-quat" element={<NgoaiTongQuat />} />
