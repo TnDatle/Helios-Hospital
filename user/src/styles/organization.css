@@ -1,0 +1,210 @@
+/* =====================================================
+   PAGE
+===================================================== */
+.organization-page {
+  padding: 60px 20px 100px;
+  background: #ffffff;
+}
+
+/* ===== TITLE ===== */
+.org-title {
+  text-align: center;
+  font-size: 30px;
+  font-weight: 700;
+  color: #0f766e;
+  margin-bottom: 80px;
+}
+
+/* =====================================================
+   LEVEL
+===================================================== */
+.org-level {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 64px;
+  margin-bottom: 80px;
+  position: relative;
+}
+
+/* =====================================================
+   GIÁM ĐỐC
+===================================================== */
+.org-top {
+  margin-bottom: 70px;
+  position: relative;
+}
+
+/* Line từ Giám đốc xuống */
+.org-top::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 2px;
+  height: 40px;
+  background: #cbd5e1;
+  transform: translateX(-50%);
+}
+
+/* =====================================================
+   COLUMN
+===================================================== */
+.org-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  position: relative;
+}
+
+.org-column::before {
+  content: "";
+  position: absolute;
+  top: 52px;         /* bắt đầu sau box section */
+  bottom: 0;
+  width: 2px;
+  background: #cbd5e1;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* =====================================================
+   BOX
+===================================================== */
+.org-box {
+  min-width: 260px;
+  padding: 14px 20px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.45;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+  position: relative;
+  z-index: 2;
+}
+
+/* ===== GIÁM ĐỐC ===== */
+.org-box.main {
+  background: linear-gradient(135deg, #0f766e, #14b8a6);
+  color: #ffffff;
+  font-weight: 600;
+  border: none;
+}
+
+/* ===== PHÓ GIÁM ĐỐC ===== */
+.org-box.pho {
+  border: 1px solid #c7d2fe;
+  font-weight: 500;
+}
+
+/* =====================================================
+   LINE PHÓ GIÁM ĐỐC (FIX CHUẨN)
+===================================================== */
+
+/* Line dọc từ line ngang xuống box */
+.org-box.pho::before {
+  content: "";
+  position: absolute;
+  top: -36px;
+  left: 50%;
+  width: 2px;
+  height: 36px;
+  background: #cbd5e1;
+  transform: translateX(-50%);
+}
+
+/* Line ngang kéo từ box trái */
+.org-level.pho-giam-doc
+  .org-column:first-child
+  .org-box.pho::after {
+  content: "";
+  position: absolute;
+  top: -36px;
+  left: 50%;
+  width: calc(100% + 64px);
+  height: 2px;
+  background: #cbd5e1;
+}
+
+/* Line ngang kéo từ box phải */
+.org-level.pho-giam-doc
+  .org-column:last-child
+  .org-box.pho::after {
+  content: "";
+  position: absolute;
+  top: -36px;
+  right: 50%;
+  width: calc(100% + 64px);
+  height: 2px;
+  background: #cbd5e1;
+}
+
+/* Box giữa KHÔNG vẽ line ngang */
+.org-level.pho-giam-doc
+  .org-column:nth-child(2)
+  .org-box.pho::after {
+  display: none;
+}
+
+
+
+/* =====================================================
+   KHỐI / PHÒNG
+===================================================== */
+.org-box.section {
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+  border: none;
+}
+
+.org-box.sub {
+  background: #f8fafc;
+  color: #1f2937;
+}
+
+/* =====================================================
+   LINE: PHÓ GIÁM ĐỐC → KHỐI
+===================================================== */
+
+/* Column của KHỐI (level ngay sau pho-giam-doc) */
+.org-level:has(.org-box.pho) + .org-level .org-column::before {
+  content: "";
+  position: absolute;
+  top: -80px;          /* KÉO LÊN THÊM */
+  left: 50%;
+  width: 2px;
+  height: 80px;        /* DÀI HƠN */
+  background: #cbd5e1;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+@media (max-width: 1024px) {
+  .org-level {
+    flex-wrap: wrap;
+    gap: 40px;
+  }
+
+  .org-box.pho::before,
+  .org-box.pho::after {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .org-title {
+    font-size: 24px;
+  }
+
+  .org-box {
+    min-width: 100%;
+  }
+}

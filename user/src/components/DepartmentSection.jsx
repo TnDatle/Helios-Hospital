@@ -22,6 +22,24 @@ function ServiceSection() {
       image: "/services/tim.jpg",
       slug: "tim-mach-mach-mau",
     },
+    {
+      name: "UNG BƯỚU",
+      desc: "Khám, chẩn đoán và điều trị các bệnh lý ung thư theo phác đồ chuyên môn, kết hợp theo dõi và chăm sóc toàn diện cho người bệnh.",
+      image: "/services/ungbuou.jpeg",
+      slug: "ung-buou",
+    },
+    {
+      name: "LỌC MÁU - NỘI THẬN",
+      desc: "Khám và điều trị các bệnh lý thận, quản lý bệnh thận mạn và thực hiện các phương pháp lọc máu nhằm duy trì và cải thiện chức năng thận.",
+      image: "/services/noithan.jpg",
+      slug: "noi-than",
+    },
+    {
+      name: "XÉT NGHIỆM",
+      desc: "Thực hiện các xét nghiệm cận lâm sàng phục vụ công tác chẩn đoán, theo dõi diễn tiến bệnh và đánh giá hiệu quả điều trị.",
+      image: "/services/xetnghiem.jpg",
+      slug: "xet-nghiem",
+    },
   ];
 
   return (

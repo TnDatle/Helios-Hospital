@@ -80,9 +80,74 @@
   transition: color 0.25s ease;
 }
 
-.top-menu i:hover {
-  color: #0091a7;
+
+.top-menu .nav-link-custom {
+  position: relative;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1f2937;
+  text-decoration: none;
+  padding: 6px 0;
+  cursor: pointer;
 }
+
+
+/* gạch xanh */
+.top-menu .nav-link-custom::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0;                 
+  height: 2px;
+  background-color: #1fb6b6;
+  transition: width 0.25s ease;
+}
+
+/* hover */
+.top-menu .nav-link-custom:hover::after {
+  width: 100%;
+}
+
+.top-menu .nav-link-custom:hover {
+  color: #0f766e;
+}
+
+
+/* dropdown giới thiệu */
+.nav-dropdown {
+  position: relative;
+}
+
+.nav-dropdown:hover > .dropdown-menu {
+  display: block;
+  top: 100%;
+}
+
+.nav-dropdown > .nav-link-custom::after {
+  content: none !important;
+}
+
+.nav-dropdown .dropdown-menu {
+  border-radius: 6px;
+  padding: 8px 0;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+
+/* item */
+.nav-dropdown .dropdown-item {
+  font-size: 14px;
+  padding: 8px 16px;
+  color: #1f2937;
+}
+
+/* hover item */
+.nav-dropdown .dropdown-item:hover {
+  background-color: #e6f7f7;
+  color: #0f766e;
+}
+
 
 /* ---------- LOGIN BUTTON ---------- */
 .top-menu .btn {

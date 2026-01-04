@@ -1,5 +1,3 @@
-import "./../styles/about.css";
-
 function About() {
   return (
     <div className="about-page">
@@ -13,7 +11,7 @@ function About() {
 
         <div className="banner-content container">
           <div className="breadcrumb">
-            <span> Giới Thiệu &gt; Tổng quan bệnh viện</span>
+            <span> Giới Thiệu/Tổng quan bệnh viện</span>
           </div>
 
           <h1 className="banner-title">TỔNG QUAN BỆNH VIỆN</h1>
@@ -97,8 +95,11 @@ function About() {
             <ul className="about-list">
                 <li>Khoa Ngoại Tổng Quát với đội ngũ phẫu thuật viên giàu kinh nghiệm.</li>
                 <li>Khoa Ngoại Tiết Niệu – thế mạnh lâu năm của bệnh viện.</li>
-                <li>Khoa Tim Mạch & Mạch Máu – chuyên sâu về can thiệp mạch và phẫu thuật mạch máu.</li>
-                <li>Phòng Công tác xã hội hỗ trợ thông tin và kết nối người bệnh.</li>
+                <li>Khoa Tim Mạch & Mạch Máu – chuyên sâu về can thiệp tim mạch và phẫu thuật mạch máu.</li>
+                <li>Khoa Ung Bướu – chuyên sâu trong chẩn đoán, điều trị và xạ trị các bệnh lý ung thư.</li>
+                <li>Khoa Nội Thận – Lọc Máu – điều trị các bệnh lý thận và thực hiện lọc máu cho bệnh nhân suy thận.</li>
+                <li>Phòng Công tác Xã hội hỗ trợ thông tin, tư vấn và kết nối người bệnh.</li>
+
             </ul>
 
             <p>

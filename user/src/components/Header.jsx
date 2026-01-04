@@ -45,12 +45,43 @@ function Header() {
         </Link>
 
         <nav className="top-menu d-flex align-items-center gap-4">
-          <Link to="/gioi-thieu">Giới thiệu</Link>
-          <Link to="/truyen-thong">Truyền thông</Link>
-          <Link to="/dao-tao">Đào tạo</Link>
-          <Link to="/van-ban">Văn bản</Link>
-          <Link to="/tuyen-dung">Tuyển dụng</Link>
-          <Link to="/lien-he">Liên hệ</Link>
+          <div className="dropdown nav-dropdown">
+            <span
+              className="nav-link-custom dropdown-toggle"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Giới thiệu
+            </span>
+
+            <ul className="dropdown-menu">
+              <li>
+                <Link className="dropdown-item" to="/tong-quan">
+                  Tổng quan bệnh viện
+                </Link>
+              </li>
+              <li>
+                <Link className="dropdown-item" to="/co-cau-to-chuc">
+                  Cơ cấu tổ chức
+                </Link>
+              </li>
+              <li>
+                <Link className="dropdown-item" to="/chinh-sach-chat-luong">
+                  Chính sách chất lượng
+                </Link>
+              </li>
+              <li>
+                <Link className="dropdown-item" to="/duong-day-nong">
+                  Đường dây nóng
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <Link to="/truyen-thong" className="nav-link-custom">Truyền thông</Link>
+          <Link to="/dao-tao" className="nav-link-custom">Đào tạo</Link>
+          <Link to="/van-ban" className="nav-link-custom">Văn bản</Link>
+          <Link to="/tuyen-dung" className="nav-link-custom">Tuyển dụng</Link>
+          <Link to="/lien-he" className="nav-link-custom">Liên hệ</Link>
 
           <i className="bi bi-search fs-5"></i>
 

@@ -6,10 +6,14 @@ import HoSoBenhNhan from "./pages/Profiles/PatientsProfile";
 import ChiTietBacSi from "./pages/DetailPages/DoctorDetail";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+
+//Import Departments Pages
 import NgoaiTongQuat from "./pages/DepartmentsPages/NgoaiTongQuat";
 import NgoaiTietNieu from "./pages/DepartmentsPages/NgoaiTietNieu";
 import TimMach from "./pages/DepartmentsPages/TimMach";
-
+import UngBuou from "./pages/DepartmentsPages/UngBuou";
+import NoiThan from "./pages/DepartmentsPages/NoiThan";
+import XetNghiem from "./pages/DepartmentsPages/XetNghiem";
 
 // Import Header Pages
 import DangNhap  from "./pages/AuthPages/Login"
@@ -17,13 +21,16 @@ import DangKy  from "./pages/AuthPages/Register"
 import HoanThanhHoSo from "./pages/AuthPages/CompleteProfile";
 import TimBacSi from "./pages/FindDoctor";
 import LichKhamBenh from "./pages/Schedule";
-import GioiThieu from "./pages/About";
+import TongQuan from "./pages/AboutPages/About";
+import CoCauToChuc from "./pages/AboutPages/Organization"
 import GioKhamBenh from "./pages/Time";
 import BangGia from "./pages/Price";
 
 // Import CSS Modules
 import "./styles/header.css";
 import "./styles/footer.css";
+import "./styles/about.css";
+import "./styles/organization.css"
 import "./styles/hero.css";
 import "./styles/finddoctor.css";
 import "./styles/doctordetail.css";
@@ -58,6 +65,9 @@ function App() {
         <Route path="/ngoai-tong-quat" element={<NgoaiTongQuat />} />
         <Route path="/ngoai-tiet-nieu" element={<NgoaiTietNieu />} />
         <Route path="/tim-mach-mach-mau" element={<TimMach />} />
+        <Route path="/ung-buou" element={<UngBuou />} />
+        <Route path="/noi-than" element={<NoiThan />} />
+        <Route path="/xet-nghiem" element={<XetNghiem />} />
 
         {/* ===== MENU HEADER ===== */}
         <Route path="/gio-kham" element={<GioKhamBenh />} />
@@ -66,7 +76,8 @@ function App() {
         <Route path="/tim-bac-si/:department/:id" element={<ChiTietBacSi />} />
         <Route path="/lich-kham-benh" element={<LichKhamBenh />} />
         {/* Placeholder – tạo sau nếu cần */}
-        <Route path="/gioi-thieu" element={<GioiThieu />} />
+        <Route path="/tong-quan" element={<TongQuan />} />
+        <Route path="/co-cau-to-chuc" element={<CoCauToChuc />} />
         <Route path="/dieu-tri" element={<div className='container py-5'>Điều trị</div>} />
         <Route path="/dich-vu" element={<div className='container py-5'>Dịch vụ</div>} />
         <Route path="/huong-dan" element={<div className='container py-5'>Hướng dẫn</div>} />

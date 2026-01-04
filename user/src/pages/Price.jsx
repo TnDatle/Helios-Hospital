@@ -85,7 +85,7 @@ function Price() {
             </tr>
             <tr>
               <td>
-                2. Phòng khám chuyên gia (B040, B041 – Giáo sư, Tiến sĩ, BS CKII)
+                2. Phòng khám chuyên gia ( 001 – Giáo sư, Tiến sĩ, BS CKII)
               </td>
               <td className="text-end">250.000 đồng</td>
             </tr>
