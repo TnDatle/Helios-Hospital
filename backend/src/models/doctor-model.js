@@ -1,3 +1,4 @@
+import { db } from "../config/firebase.js";
 
 export class DoctorModel {
   static fromFirestore(doc, departmentFromFE = "") {
@@ -12,5 +13,12 @@ export class DoctorModel {
       departmentId: data.departmentId || "",
       isActive: data.isActive ?? true,
     };
+  }
+
+    static async update(id, data) {
+    await db.collection("Doctor").doc(id).update({
+      ...data,
+      updatedAt: new Date(),
+    });
   }
 }

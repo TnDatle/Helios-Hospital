@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import "../styles/schedule.css";
 
+/* ===== LABEL ===== */
 const WEEKDAY_LABEL = {
   1: "Thứ 2",
   2: "Thứ 3",
@@ -20,10 +20,32 @@ const SHIFT_TIME = {
   AFTERNOON: "13:00 – 16:00",
 };
 
+const WEEKDAY_SEQUENCE = [1, 3, 5, 2, 4, 6];
+
+const normalizeDay = (day) => {
+  // nếu là số string: "1" -> 1
+  if (!isNaN(day)) return Number(day);
+
+  // nếu là "thu2", "thu3"...
+  if (typeof day === "string") {
+    const match = day.match(/\d+/);
+    if (match) return Number(match[0]) - 1; 
+  }
+
+  return null;
+};
+
+
 export default function Schedule() {
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [openDept, setOpenDept] = useState(null);
 
+  const toggleDept = (deptId) => {
+    setOpenDept((prev) => (prev === deptId ? null : deptId));
+  };
+
+  /* ===== FETCH DATA ===== */
   useEffect(() => {
     fetch("http://localhost:5000/api/schedules", {
       cache: "no-store",
@@ -35,7 +57,6 @@ export default function Schedule() {
           return;
         }
 
-        // GROUP THEO KHOA (1 khoa = 1 bảng)
         const groupedByDepartment = res.data.reduce((acc, row) => {
           if (!acc[row.departmentId]) {
             acc[row.departmentId] = {
@@ -64,23 +85,21 @@ export default function Schedule() {
       <div
         className="page-banner"
         style={{
-            backgroundImage: 'url("/icons/hand-banner.jpg")',
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            padding: "90px 0",
-            color: "#fff",
+          backgroundImage: 'url("/icons/hand-banner.jpg")',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          padding: "90px 0",
+          color: "#fff",
         }}
-        >
+      >
         <div className="container">
-            <div className="breadcrumb">
+          <div className="breadcrumb">
             <span>Trang chủ / </span>
             <span>Lịch khám</span>
-            </div>
-
-            <h1 className="banner-title">LỊCH KHÁM BỆNH</h1>
+          </div>
+          <h1 className="banner-title">LỊCH KHÁM BỆNH</h1>
         </div>
-        </div>
-
+      </div>
 
       {/* ===== CONTENT ===== */}
       <div className="container">
@@ -91,70 +110,88 @@ export default function Schedule() {
         )}
 
         {!loading &&
-          groups.map((group) => (
-            <div
-              key={group.departmentId}
-              className="schedule-section"
-            >
-              <h3 className="department-title">
-                {group.departmentName}
-              </h3>
+          groups.map((group) => {
+            const isOpen = openDept === group.departmentId;
 
-              <table className="schedule-table">
-                <thead>
-                  <tr>
-                    <th>BÁC SĨ</th>
-                    <th>CHUYÊN MÔN</th>
-                    <th>PHÒNG</th>
-                    <th>LỊCH TRONG TUẦN</th>
-                  </tr>
-                </thead>
+            return (
+              <div
+                key={group.departmentId}
+                className={`schedule-section ${isOpen ? "open" : ""}`}
+              >
+                {/* ===== HEADER KHOA ===== */}
+                <div
+                  className="department-header"
+                  onClick={() => toggleDept(group.departmentId)}
+                >
+                  <h3 className="department-title">
+                    {group.departmentName}
+                  </h3>
+                  <button className="toggle-btn">
+                    {isOpen ? "Thu gọn ▲" : "Xem lịch ▼"}
+                  </button>
+                </div>
 
-                <tbody>
-                  {group.doctors.map((row) => (
-                    <tr key={row.doctorId}>
-                      <td>{row.doctorName}</td>
-                      <td>{row.specialty}</td>
-                      <td>{row.room}</td>
+                {/* ===== TABLE ===== */}
+                {isOpen && (
+                  <table className="schedule-table">
+                    <thead>
+                      <tr>
+                        <th>BÁC SĨ</th>
+                        <th>CHUYÊN MÔN</th>
+                        <th>PHÒNG</th>
+                        <th>LỊCH TRONG TUẦN</th>
+                      </tr>
+                    </thead>
 
-                      {/* ===== LỊCH GOM TRONG 1 Ô ===== */}
-                      <td>
-                        {row.schedule &&
-                        Object.keys(row.schedule).length >
-                          0 ? (
-                          Object.entries(row.schedule)
-                            .sort((a, b) => a[0] - b[0])
-                            .map(([day, shifts]) => (
-                              <div
-                                key={day}
-                                className="schedule-inline"
-                              >
-                                <strong>
-                                  {WEEKDAY_LABEL[day]}:
-                                </strong>{" "}
-                                {shifts.map((s) => (
-                                  <span
-                                    key={s}
-                                    className={`shift-badge ${s.toLowerCase()}`}
+                    <tbody>
+                      {group.doctors.map((row) => (
+                        <tr key={row.doctorId}>
+                          <td>{row.doctorName}</td>
+                          <td>{row.specialty}</td>
+                          <td>{row.room}</td>
+
+                          <td>
+                            {row.schedule &&
+                            Object.keys(row.schedule).length > 0 ? (
+                              Object.entries(row.schedule)
+                                .sort(
+                                  ([dayA], [dayB]) =>
+                                    WEEKDAY_SEQUENCE.indexOf(normalizeDay(dayA)) -
+                                    WEEKDAY_SEQUENCE.indexOf(normalizeDay(dayB))
+                                )
+                                .map(([day, shifts]) => (
+                                  <div
+                                    key={day}
+                                    className="schedule-inline"
                                   >
-                                    {SHIFT_LABEL[s]} (
-                                    {SHIFT_TIME[s]})
-                                  </span>
-                                ))}
-                              </div>
-                            ))
-                        ) : (
-                          <span className="empty">
-                            Chưa có lịch
-                          </span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ))}
+                                    <strong>
+                                      {WEEKDAY_LABEL[day]}:
+                                    </strong>{" "}
+                                    {shifts.map((s) => (
+                                      <span
+                                        key={s}
+                                        className={`shift-badge ${s.toLowerCase()}`}
+                                      >
+                                        {SHIFT_LABEL[s]} (
+                                        {SHIFT_TIME[s]})
+                                      </span>
+                                    ))}
+                                  </div>
+                                ))
+                            ) : (
+                              <span className="empty">
+                                Chưa có lịch
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+            );
+          })}
       </div>
     </div>
   );

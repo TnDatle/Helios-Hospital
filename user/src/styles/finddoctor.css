@@ -107,6 +107,7 @@
 
 /* ===== CARD ===== */
 .doctor-card {
+  margin-top: 10px;
   background: #ffffff;
   border-radius: 6px;
   padding: 25px 15px;
@@ -137,7 +138,7 @@
 }
 
 .doctor-card h3:nth-of-type(1) {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 700;
   color: #1f2937;
 }

@@ -16,6 +16,21 @@ import Schedule from "./pages/doctor/Schedule";
 // admin
 import AdminPage from "./pages/admin/AdminPage";
 import Dashboard from "./pages/admin/Dashboard";
+import Users from "./pages/admin/Users";
+import Department from "./pages/admin/Department";
+import Role from "./pages/admin/Role";
+import Schedules from "./pages/admin/Schedules";
+import News from "./pages/admin/News";
+import AuditLogs from "./pages/admin/AuditLogs";
+import Setting from "./pages/admin/Setting";
+
+//css
+import "./styles/index.css";
+import "./styles/staff-layout.css";
+import "./styles/reception/reception.css";
+import "./styles/doctor/doctor.css";
+import "./styles/admin/admin.css";
+import "./styles/login.css";
 
 function App() {
   return (
@@ -37,8 +52,15 @@ function App() {
           <Route path="/staff/doctor" element={<Schedule />} />
         </Route>
 
-        <Route element={<AdminPage />}>
-          <Route path="/staff/admin" element={<Dashboard />} />
+        <Route path="/staff/admin" element={<AdminPage />}>
+          <Route index element={<Dashboard />} />
+          <Route path="users" element={<Users />} />
+          <Route path="departments" element={<Department />} />
+          <Route path="roles" element={<Role />} />
+          <Route path="schedules" element={<Schedules />} />
+          <Route path="news" element={<News />} />
+          <Route path="logs" element={<AuditLogs />} />
+          <Route path="settings" element={<Setting />} />
         </Route>
       </Route>
     </Routes>

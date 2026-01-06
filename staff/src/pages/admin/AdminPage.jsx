@@ -9,35 +9,35 @@ function AdminPage() {
 
         <nav className="admin-menu">
           <NavLink to="/staff/admin" end>
-            📊 Dashboard
+             Dashboard
           </NavLink>
 
           <NavLink to="/staff/admin/users">
-            👥 Quản lý người dùng
+             Quản lý người dùng
           </NavLink>
 
           <NavLink to="/staff/admin/roles">
-            🔐 Phân quyền
+             Phân quyền
           </NavLink>
 
           <NavLink to="/staff/admin/departments">
-            🏥 Khoa phòng
+             Khoa phòng - Bác Sĩ
           </NavLink>
 
           <NavLink to="/staff/admin/schedules">
-            🗓️ Lịch làm việc
+             Lịch làm việc
           </NavLink>
 
-          <NavLink to="/staff/admin/reports">
-            📈 Báo cáo – Thống kê
+          <NavLink to="/staff/admin/news">
+            Tin tức
           </NavLink>
-
+          
           <NavLink to="/staff/admin/logs">
-            📜 Nhật ký hệ thống
+             Nhật ký hệ thống
           </NavLink>
 
           <NavLink to="/staff/admin/settings">
-            ⚙️ Cấu hình hệ thống
+             Cấu hình hệ thống
           </NavLink>
         </nav>
       </aside>

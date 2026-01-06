@@ -1,8 +1,10 @@
-import {
+import { 
+  DoctorService,
   fetchDoctors,
   fetchDoctorDetail,
 } from "../services/doctor-service.js";
 
+//Tìm bác sĩ 
 export const findDoctors = async (req, res) => {
   try {
     console.log("[API] query:", req.query);
@@ -22,7 +24,7 @@ export const findDoctors = async (req, res) => {
   }
 };
 
-
+//Lấy chi tiết bác sĩ 
 
 export const getDoctorDetail = async (req, res) => {
   try {
@@ -57,3 +59,44 @@ export const getDoctorDetail = async (req, res) => {
   }
 };
 
+// Cập nhật thông tin bác sĩ
+
+export const updateDoctor = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = req.body;
+
+    await DoctorService.updateDoctor(id, data);
+
+    res.json({ message: "Cập nhật bác sĩ thành công" });
+  } catch (err) {
+    console.error("UPDATE DOCTOR ERROR:", err);
+    res.status(400).json({ message: err.message });
+  }
+};
+
+//Thêm bác sĩ mới 
+
+export const createDoctor = async (req, res) => {
+  try {
+    const doctor = await DoctorService.createDoctor(req.body);
+
+    res.status(201).json({
+      success: true,
+      data: doctor,
+    });
+  } catch (err) {
+    console.error("CREATE DOCTOR ERROR:", err);
+    res.status(400).json({ message: err.message });
+  }
+};
+
+//Hàm xóa bác sĩ 
+export const deleteDoctor = async (req, res) => {
+  try {
+    await DoctorService.deleteDoctor(req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};

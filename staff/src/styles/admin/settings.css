@@ -1,0 +1,19 @@
+@import "./admin.css";
+
+.setting-group {
+  margin-bottom: 20px;
+}
+
+.setting-group label {
+  font-size: 14px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.setting-group input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+}

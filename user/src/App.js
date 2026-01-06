@@ -1,9 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Booking from "./pages/Booking";
-import MyAppointments from "./pages/Profiles/MyAppointments";
-import HoSoBenhNhan from "./pages/Profiles/PatientsProfile";
-import ChiTietBacSi from "./pages/DetailPages/DoctorDetail";
+
+//Import Components
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
@@ -16,10 +13,15 @@ import NoiThan from "./pages/DepartmentsPages/NoiThan";
 import XetNghiem from "./pages/DepartmentsPages/XetNghiem";
 
 // Import Header Pages
+import Home from "./pages/Home";
+import Booking from "./pages/Booking";
 import DangNhap  from "./pages/AuthPages/Login"
 import DangKy  from "./pages/AuthPages/Register"
+import MyAppointments from "./pages/Profiles/MyAppointments";
+import HoSoBenhNhan from "./pages/Profiles/PatientsProfile";
 import HoanThanhHoSo from "./pages/AuthPages/CompleteProfile";
 import TimBacSi from "./pages/FindDoctor";
+import ChiTietBacSi from "./pages/DetailPages/DoctorDetail";
 import LichKhamBenh from "./pages/Schedule";
 import TongQuan from "./pages/AboutPages/About";
 import CoCauToChuc from "./pages/AboutPages/Organization"
@@ -39,11 +41,13 @@ import "./styles/home.css";
 import "./styles/service.css";
 import "./styles/sections.css";
 import "./styles/departments.css";
+import "./styles/schedule.css";
 import "./styles/time.css"
 import "./styles/price.css";
 import "./styles/auth.css"
 import "./styles/bookingsuccesmodel.css"
 import "./styles/patient.css"
+
 
 function App() {
   return (

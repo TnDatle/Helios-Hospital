@@ -1,0 +1,12 @@
+@import "./admin.css";
+
+.audit-item {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 12px 0;
+  font-size: 14px;
+}
+
+.audit-time {
+  color: #64748b;
+  font-size: 12px;
+}

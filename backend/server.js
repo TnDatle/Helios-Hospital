@@ -8,6 +8,7 @@ import departmentRoutes  from "./src/routes/department-routes.js";
 import scheduleRoutes from "./src/routes/schedule-routes.js";
 import locationRoutes from "./src/routes/location-routes.js";
 import bookingDoctorRoutes from "./src/routes/booking-doctor-routes.js";
+import authRoute from "./src/routes/auth-routes.js";
 const app = express();
 
 app.use(cors());
@@ -20,6 +21,7 @@ app.use("/api/doctors", doctorRoutes);
 app.use("/api/schedules", scheduleRoutes);
 app.use("/api/locations", locationRoutes);
 app.use("/api/booking", bookingDoctorRoutes);
+app.use("/api/auth", authRoute);
 
 const PORT = process.env.PORT || 5000;
 

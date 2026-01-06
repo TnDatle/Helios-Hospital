@@ -1,7 +1,7 @@
 import admin from "firebase-admin";
 import dotenv from "dotenv";
 
-// 🔥 BẮT BUỘC: load .env
+//  BẮT BUỘC: load .env
 dotenv.config();
 
 // Check sớm cho dễ debug
@@ -25,4 +25,5 @@ if (!admin.apps.length) {
   });
 }
 
+export { admin };
 export const db = admin.firestore();

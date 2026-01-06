@@ -13,7 +13,7 @@ const DEPARTMENT_LABEL = {
   "ngoai-tong-quat": "Ngoại Tổng Quát",
   "ngoai-tiet-nieu": "Ngoại Tiết Niệu",
   "tim-mach": "Tim Mạch & Mạch Máu",
-  "ung-buu": "Ung Bứu",
+  "ung-buou": "Ung Bướu",
   "noi-than": "Lọc Máu & Nội Thận",
 };
 
@@ -174,8 +174,9 @@ const FindDoctor = () => {
           />
 
           <p className="specialty">
-            {DEPARTMENT_LABEL[departmentSlug] || doctor.department}
+            Khoa {DEPARTMENT_LABEL[departmentSlug] || doctor.department}
           </p>
+
 
           <h3>{doctor.name || doctor.DocName}</h3>
           <h3>{doctor.specialty}</h3>
@@ -214,13 +215,12 @@ const FindDoctor = () => {
       <div className="find-doctor-search container">
         <select value={department} onChange={(e) => setDepartment(e.target.value)}>
           <option value="">Tất cả</option>
-          <option value="Ngoai Tong Quat">Ngoại tổng quát</option>
-          <option value="Ngoai Tiet Nieu">Ngoại tiết niệu</option>
-          <option value="Tim Mach">Tim mạch & Mạch máu</option>
-          <option value="Ung Buou">Ung Bướu</option>
-          <option value="Noi Than">Lọc Máu - Nội Thận</option>
+          <option value="ngoai-tong-quat">Ngoại tổng quát</option>
+          <option value="ngoai-tiet-nieu">Ngoại tiết niệu</option>
+          <option value="tim-mach">Tim mạch & Mạch máu</option>
+          <option value="ung-buou">Ung Bướu</option>
+          <option value="noi-than">Lọc Máu - Nội Thận</option>
         </select>
-
         <input
           type="text"
           placeholder="Tìm theo tên bác sĩ hoặc chuyên môn"
