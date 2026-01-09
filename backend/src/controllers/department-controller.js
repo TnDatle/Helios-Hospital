@@ -14,3 +14,20 @@ export const getDepartments = async (req, res) => {
     res.status(500).json({ success: false });
   }
 };
+
+
+export const createDepartment = async (req, res) => {
+  try {
+    const { name } = req.body;
+
+    if (!name) {
+      return res.status(400).json({ message: "Tên khoa không hợp lệ" });
+    }
+
+    const department = await Department.create({ name });
+
+    res.status(201).json({ data: department });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

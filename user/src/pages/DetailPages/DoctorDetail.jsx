@@ -24,6 +24,8 @@ const DEPARTMENT_LABEL = {
   "ngoai-tiet-nieu": "khoa Ngoại Tiết Niệu",
   "tim-mach": "khoa Tim Mạch",
   "ngoai-tong-quat": "khoa Ngoại Tổng Quát",
+  "ung-buou": "khoa Ung Bướu",
+  "noi-than": "khoa Lọc Máu - Nội Thận",
 };
 
 

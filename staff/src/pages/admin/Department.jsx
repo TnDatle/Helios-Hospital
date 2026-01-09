@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import "../../styles/admin/departments.css";
 
+/* =====================
+   CONST
+===================== */
 const ROLE_OPTIONS = ["Bác sĩ", "Phó khoa", "Trưởng khoa"];
 const ROLE_PRIORITY = {
   "Trưởng khoa": 1,
@@ -8,6 +11,9 @@ const ROLE_PRIORITY = {
   "Bác sĩ": 3,
 };
 
+/* =====================
+   COMPONENT
+===================== */
 export default function Departments() {
   const [departments, setDepartments] = useState([]);
   const [doctors, setDoctors] = useState([]);
@@ -15,17 +21,47 @@ export default function Departments() {
 
   const [keyword, setKeyword] = useState("");
 
-  // NEW: modal state
-  const [showCreate, setShowCreate] = useState(false);
+  /* ===== MODAL STATE ===== */
+  const [showCreateDoctor, setShowCreateDoctor] = useState(false);
   const [viewDoctor, setViewDoctor] = useState(null);
   const [editDoctor, setEditDoctor] = useState(null);
 
-  const [form, setForm] = useState({
+  const [showCreateDept, setShowCreateDept] = useState(false);
+  const [editDept, setEditDept] = useState(null);
+
+  /* ===== TOAST ===== */
+  const [toast, setToast] = useState({
+    open: false,
+    message: "",
+    type: "success", // success | error
+  });
+
+  /* ===== FORM ===== */
+  const [doctorForm, setDoctorForm] = useState({
     name: "",
     specialty: "",
     role: "Bác sĩ",
+    departmentId: "",
   });
 
+  const [deptForm, setDeptForm] = useState({
+    name: "",
+  });
+
+  /* =====================
+     TOAST HELPER
+  ===================== */
+  const showToast = (message, type = "success") => {
+    setToast({ open: true, message, type });
+
+    setTimeout(() => {
+      setToast({ open: false, message: "", type });
+    }, 2500);
+  };
+
+  /* =====================
+     FETCH DATA
+  ===================== */
   useEffect(() => {
     Promise.all([
       fetch("http://localhost:5000/api/departments").then((r) => r.json()),
@@ -37,7 +73,9 @@ export default function Departments() {
     });
   }, []);
 
-  /* ===== FILTER + SORT ===== */
+  /* =====================
+     FILTER + SORT DOCTOR
+  ===================== */
   const doctorsInDept = useMemo(() => {
     let list = doctors.filter(
       (d) => d.departmentId === activeDept?.id
@@ -62,135 +100,169 @@ export default function Departments() {
     return list;
   }, [doctors, activeDept, keyword]);
 
-  /* ===== CREATE ===== */
- const handleCreate = async (e) => {
-  e.preventDefault();
+  /* =====================
+     DEPARTMENT CRUD
+  ===================== */
+  const handleCreateDepartment = async (e) => {
+    e.preventDefault();
 
-  if (!form.departmentId) {
-    alert("Vui lòng chọn khoa");
-    return;
-  }
+    if (!deptForm.name.trim()) {
+      showToast("Tên khoa không được để trống", "error");
+      return;
+    }
 
-  const payload = {
-    name: form.name,
-    specialty: form.specialty,
-    departmentId: form.departmentId,
+    try {
+      const res = await fetch("http://localhost:5000/api/departments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: deptForm.name }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || "Tạo khoa thất bại");
+      }
+
+      const { data } = await res.json();
+
+      // cập nhật list khoa
+      setDepartments((prev) => [...prev, data]);
+
+      // tự động chọn khoa vừa tạo
+      setActiveDept(data);
+
+      // reset form + đóng modal
+      setDeptForm({ name: "" });
+      setShowCreateDept(false);
+
+      // thông báo
+      showToast("Thêm khoa thành công");
+    } catch (err) {
+      showToast(err.message, "error");
+    }
   };
 
-  if (form.role !== "Bác sĩ") {
-    payload.role = form.role;
-  }
 
-  try {
+  const handleUpdateDepartment = async (e) => {
+    e.preventDefault();
+    if (!editDept.name.trim()) {
+      showToast("Tên khoa không hợp lệ", "error");
+      return;
+    }
+
+    await fetch(
+      `http://localhost:5000/api/departments/${editDept.id}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: editDept.name }),
+      }
+    );
+
+    setDepartments((prev) =>
+      prev.map((d) =>
+        d.id === editDept.id ? { ...d, name: editDept.name } : d
+      )
+    );
+
+    setActiveDept((prev) =>
+      prev?.id === editDept.id ? { ...prev, name: editDept.name } : prev
+    );
+
+    setEditDept(null);
+    showToast("Cập nhật khoa thành công");
+  };
+
+  const handleDeleteDepartment = async (dept) => {
+    const hasDoctor = doctors.some(
+      (d) => d.departmentId === dept.id
+    );
+
+    if (hasDoctor) {
+      showToast("Không thể xoá khoa vì vẫn còn bác sĩ", "error");
+      return;
+    }
+
+    if (!window.confirm(`Xoá khoa "${dept.name}"?`)) return;
+
+    await fetch(
+      `http://localhost:5000/api/departments/${dept.id}`,
+      { method: "DELETE" }
+    );
+
+    setDepartments((prev) => prev.filter((d) => d.id !== dept.id));
+    setActiveDept(null);
+    showToast("Xoá khoa thành công");
+  };
+
+  /* =====================
+     DOCTOR CRUD
+  ===================== */
+  const handleCreateDoctor = async (e) => {
+    e.preventDefault();
+
     const res = await fetch("http://localhost:5000/api/doctors", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(doctorForm),
     });
 
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.message || "Tạo bác sĩ thất bại");
-    }
+    const { data } = await res.json();
+    setDoctors((prev) => [...prev, data]);
+    setShowCreateDoctor(false);
 
-    const { data: newDoctor } = await res.json();
-
-    setDoctors((prev) => [...prev, newDoctor]);
-
-    alert("Thêm bác sĩ thành công");
-
-    setForm({
-      name: "",
-      specialty: "",
-      role: "Bác sĩ",
-      departmentId: "",
-    });
-
-    setShowCreate(false);
-  } catch (err) {
-    alert("" + err.message);
-  }
-};
-
-
-
-  /* ===== UPDATE ===== */
-  const handleUpdate = async (e) => {
-  e.preventDefault();
-
-  const payload = {
-    name: editDoctor.name,
-    specialty: editDoctor.specialty,
+    showToast("Thêm bác sĩ thành công");
   };
 
-  if (editDoctor.role !== editDoctor._originalRole) {
-    if (editDoctor.role === "Bác sĩ") {
-      payload.role = null;
-    } else {
-      payload.role = editDoctor.role;
-    }
-  }
+  const handleUpdateDoctor = async (e) => {
+    e.preventDefault();
 
-  try {
-    const res = await fetch(
+    await fetch(
       `http://localhost:5000/api/doctors/${editDoctor.id}`,
       {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(editDoctor),
       }
     );
 
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.message || "Cập nhật thất bại");
-    }
-
     setDoctors((prev) =>
-      prev.map((d) =>
-        d.id === editDoctor.id ? { ...d, ...payload } : d
-      )
+      prev.map((d) => (d.id === editDoctor.id ? editDoctor : d))
     );
 
-    alert("Cập nhật bác sĩ thành công");
     setEditDoctor(null);
-  } catch (err) {
-    alert(" " + err.message);
-  }
-};
+    showToast("Cập nhật bác sĩ thành công");
+  };
 
-//Hàm xóa bác sĩ
+  const handleDeleteDoctor = async (id) => {
+    if (!window.confirm("Xoá bác sĩ này?")) return;
 
- const handleDelete = async (id) => {
-  if (!window.confirm("Bạn chắc chắn muốn xoá bác sĩ này?")) return;
-
-  try {
-    const res = await fetch(
+    await fetch(
       `http://localhost:5000/api/doctors/${id}`,
       { method: "DELETE" }
     );
 
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.message || "Xoá thất bại");
-    }
-
     setDoctors((prev) => prev.filter((d) => d.id !== id));
-    alert(" Xoá bác sĩ thành công");
-  } catch (err) {
-    alert("" + err.message);
-  }
-};
+    showToast("Xoá bác sĩ thành công");
+  };
 
-
+  /* =====================
+     RENDER
+  ===================== */
   return (
     <div className="admin-page">
       <h1 className="admin-title">Khoa & Bác sĩ</h1>
 
       <div className="dept-layout">
-        {/* ===== LEFT ===== */}
+        {/* ===== SIDEBAR ===== */}
         <aside className="dept-sidebar">
-          <h3>Khoa phòng</h3>
+          <div className="dept-header">
+            <h3>Khoa phòng</h3>
+            <button onClick={() => setShowCreateDept(true)}>
+              + Thêm khoa
+            </button>
+          </div>
+
           <ul>
             {departments.map((d) => (
               <li
@@ -198,143 +270,165 @@ export default function Departments() {
                 className={activeDept?.id === d.id ? "active" : ""}
                 onClick={() => setActiveDept(d)}
               >
-                {d.name}
+                <span className="dept-name">{d.name}</span>
+
+                <div
+                  className="dept-actions"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <button onClick={() => setEditDept(d)}>✏️</button>
+                  <button onClick={() => handleDeleteDepartment(d)}>🗑️</button>
+                </div>
               </li>
             ))}
           </ul>
         </aside>
 
-        {/* ===== RIGHT ===== */}
+        {/* ===== CONTENT ===== */}
         <section className="dept-content">
-          {/* TOOLBAR */}
           <div className="toolbar">
             <input
-              className="search"
-              placeholder="Tìm theo tên, chuyên môn, chức vụ…"
+              placeholder="Tìm bác sĩ..."
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
             />
-
             <button
-              className="btn-primary"
               onClick={() => {
-                setForm({
+                setDoctorForm({
                   name: "",
                   specialty: "",
                   role: "Bác sĩ",
                   departmentId: activeDept?.id || "",
                 });
-                setShowCreate(true);
+                setShowCreateDoctor(true);
               }}
             >
               + Thêm bác sĩ
             </button>
           </div>
 
-          {/* TABLE */}
           <table className="doctor-table">
             <thead>
               <tr>
                 <th>Tên</th>
                 <th>Chuyên môn</th>
                 <th>Chức vụ</th>
-                <th width="140">Thao tác</th>
+                <th>Thao tác</th>
               </tr>
             </thead>
             <tbody>
-              {doctorsInDept.length ? (
-                doctorsInDept.map((d) => (
-                  <tr key={d.id}>
-                    <td>{d.name}</td>
-                    <td>{d.specialty}</td>
-                    <td>
-                      <span className={`role ${(d.role || "Bác sĩ").replace(/\s/g, "")}`}>
-                        {d.role || "Bác sĩ"}
-                      </span>
-                    </td>
-                    <td className="actions">
-                      <button onClick={() => setViewDoctor(d)}>Xem</button>
-                      <button
-                        onClick={() =>
-                          setEditDoctor({
-                            ...d,
-                            role: d.role || "Bác sĩ",
-                            _originalRole: d.role || "Bác sĩ", 
-                          })
-                        }
-                      >
-                        Sửa
-                      </button>
-                      <button
-                        className="danger"
-                        onClick={() => handleDelete(d.id)}
-                      >
-                        Xoá
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="4" className="empty">
-                    Không có bác sĩ
+              {doctorsInDept.map((d) => (
+                <tr key={d.id}>
+                  <td>{d.name}</td>
+                  <td>{d.specialty}</td>
+                  <td>
+                    <span
+                      className={`role ${(d.role || "Bác sĩ").replace(/\s/g, "")}`}
+                    >
+                      {d.role || "Bác sĩ"}
+                    </span>
+                  </td>
+                  <td>
+                    <button onClick={() => setViewDoctor(d)}>Xem</button>
+                    <button onClick={() => setEditDoctor(d)}>Sửa</button>
+                    <button onClick={() => handleDeleteDoctor(d.id)}>
+                      Xoá
+                    </button>
                   </td>
                 </tr>
-              )}
+              ))}
             </tbody>
           </table>
         </section>
       </div>
 
-      {/* ===== CREATE MODAL ===== */}
-      {showCreate && (
-        <Modal onClose={() => setShowCreate(false)}>
-          <h3>Thêm bác sĩ</h3>
-          <form className="modal-form" onSubmit={handleCreate}>
+      {/* ===== TOAST ===== */}
+      {toast.open && (
+        <div className={`toast ${toast.type}`}>
+          {toast.message}
+        </div>
+      )}
+
+      {/* ===== MODALS ===== */}
+      {showCreateDept && (
+        <Modal onClose={() => setShowCreateDept(false)}>
+          <h3>Thêm khoa</h3>
+          <form onSubmit={handleCreateDepartment}>
             <input
-              placeholder="Tên bác sĩ"
-              value={form.name}
+              placeholder="Tên khoa"
+              value={deptForm.name}
               onChange={(e) =>
-                setForm({ ...form, name: e.target.value })
+                setDeptForm({ name: e.target.value })
+              }
+            />
+            <button>Thêm</button>
+          </form>
+        </Modal>
+      )}
+
+      {editDept && (
+        <Modal onClose={() => setEditDept(null)}>
+          <h3>Sửa khoa</h3>
+          <form onSubmit={handleUpdateDepartment}>
+            <input
+              value={editDept.name}
+              onChange={(e) =>
+                setEditDept({ ...editDept, name: e.target.value })
+              }
+            />
+            <button>Lưu</button>
+          </form>
+        </Modal>
+      )}
+
+      {showCreateDoctor && (
+        <Modal onClose={() => setShowCreateDoctor(false)}>
+          <h3>Thêm bác sĩ</h3>
+          <form onSubmit={handleCreateDoctor}>
+            <input
+              placeholder="Tên"
+              value={doctorForm.name}
+              onChange={(e) =>
+                setDoctorForm({ ...doctorForm, name: e.target.value })
               }
             />
             <input
               placeholder="Chuyên môn"
-              value={form.specialty}
+              value={doctorForm.specialty}
               onChange={(e) =>
-                setForm({ ...form, specialty: e.target.value })
+                setDoctorForm({
+                  ...doctorForm,
+                  specialty: e.target.value,
+                })
               }
             />
             <select
-              value={form.role}
+              value={doctorForm.role}
               onChange={(e) =>
-                setForm({ ...form, role: e.target.value })
+                setDoctorForm({ ...doctorForm, role: e.target.value })
               }
             >
               {ROLE_OPTIONS.map((r) => (
                 <option key={r}>{r}</option>
               ))}
             </select>
-            <button className="btn-primary">Thêm</button>
+            <button>Thêm</button>
           </form>
         </Modal>
       )}
 
-      {/* ===== VIEW MODAL ===== */}
       {viewDoctor && (
         <Modal onClose={() => setViewDoctor(null)}>
-          <h3>Chi tiết bác sĩ</h3>
           <p><b>Tên:</b> {viewDoctor.name}</p>
           <p><b>Chuyên môn:</b> {viewDoctor.specialty}</p>
           <p><b>Chức vụ:</b> {viewDoctor.role || "Bác sĩ"}</p>
         </Modal>
       )}
 
-      {/* ===== EDIT MODAL ===== */}
       {editDoctor && (
         <Modal onClose={() => setEditDoctor(null)}>
           <h3>Sửa bác sĩ</h3>
-          <form className="modal-form" onSubmit={handleUpdate}>
+          <form onSubmit={handleUpdateDoctor}>
             <input
               value={editDoctor.name}
               onChange={(e) =>
@@ -344,20 +438,26 @@ export default function Departments() {
             <input
               value={editDoctor.specialty}
               onChange={(e) =>
-                setEditDoctor({ ...editDoctor, specialty: e.target.value })
+                setEditDoctor({
+                  ...editDoctor,
+                  specialty: e.target.value,
+                })
               }
             />
             <select
               value={editDoctor.role}
               onChange={(e) =>
-                setEditDoctor({ ...editDoctor, role: e.target.value })
+                setEditDoctor({
+                  ...editDoctor,
+                  role: e.target.value,
+                })
               }
             >
               {ROLE_OPTIONS.map((r) => (
                 <option key={r}>{r}</option>
               ))}
             </select>
-            <button className="btn-primary">Lưu</button>
+            <button>Lưu</button>
           </form>
         </Modal>
       )}
@@ -365,6 +465,9 @@ export default function Departments() {
   );
 }
 
+/* =====================
+   MODAL
+===================== */
 function Modal({ children, onClose }) {
   return (
     <div className="modal-overlay" onClick={onClose}>

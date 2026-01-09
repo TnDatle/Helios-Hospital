@@ -1,31 +1,77 @@
-@import "./admin.css";
+/* =====================
+   ROOT
+===================== */
+:root {
+  --primary: #0ea5a4;
+  --primary-dark: #0f766e;
+  --blue: #2563eb;
+  --danger: #dc2626;
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+}
 
-/* ===== PAGE ===== */
+/* =====================
+   PAGE
+===================== */
 .admin-page {
-  background: #f4f6f8;
+  padding: 28px;
+  background: var(--bg);
+  min-height: 100vh;
 }
 
-/* ===== LAYOUT ===== */
+.admin-title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 24px;
+  color: var(--text);
+}
+
+/* =====================
+   LAYOUT
+===================== */
 .dept-layout {
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 24px;
+  display: flex;
+  gap: 22px;
 }
 
-/* ======================
-   SIDEBAR – KHOA
-====================== */
+/* =====================
+   SIDEBAR
+===================== */
 .dept-sidebar {
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 20px;
-  border: 1px solid #e5e7eb;
+  width: 280px;
+  background: linear-gradient(180deg, #ecfeff, #ffffff);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
 }
 
-.dept-sidebar h3 {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 14px;
+.dept-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.dept-header h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.dept-header button {
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: none;
+  background: var(--primary);
+  color: #fff;
+  cursor: pointer;
+}
+
+.dept-header button:hover {
+  background: var(--primary-dark);
 }
 
 .dept-sidebar ul {
@@ -35,178 +81,258 @@
 }
 
 .dept-sidebar li {
-  padding: 10px 14px;
-  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 12px;
   cursor: pointer;
-  font-size: 14px;
-  color: #0f172a;
-  margin-bottom: 6px;
-  transition: all 0.15s ease;
+  user-select: none;  
+  transition: all 0.2s ease;
+  transition: background 0.15s ease, transform 0.1s ease;
 }
 
 .dept-sidebar li:hover {
-  background: #f1f5f9;
+  background: #e0f2fe;
 }
 
 .dept-sidebar li.active {
-  background: #2563eb;
-  color: #ffffff;
-  font-weight: 600;
+  background: linear-gradient(90deg, #cffafe, #ecfeff);
+  transform: scale(0.985);
+  box-shadow: inset 4px 0 0 var(--primary);
+  font-weight: 700;
 }
 
-/* ======================
+.dept-sidebar li span {
+  color: var(--text);
+}
+
+.dept-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.dept-actions button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* =====================
    CONTENT
-====================== */
+===================== */
 .dept-content {
-  background: #ffffff;
-  border-radius: 14px;
+  flex: 1;
+  background: var(--card);
+  border-radius: 18px;
   padding: 20px;
-  border: 1px solid #e5e7eb;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
 }
 
-/* ===== TOOLBAR ===== */
+/* =====================
+   TOOLBAR
+===================== */
 .toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
-.search {
-  width: 320px;
+.toolbar input {
+  width: 280px;
   padding: 10px 14px;
-  border-radius: 10px;
+  border-radius: 999px;
   border: 1px solid #cbd5e1;
-  font-size: 14px;
+  outline: none;
 }
 
-.btn-primary {
-  padding: 10px 16px;
-  border-radius: 10px;
-  font-size: 14px;
-  background: #1fb6b6;
-  color: #fff;
+.toolbar input:focus {
+  border-color: var(--primary);
+}
+
+.toolbar button {
+  padding: 10px 18px;
+  border-radius: 999px;
   border: none;
+  background: var(--blue);
+  color: #fff;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.25s ease;
 }
 
-.btn-primary:hover {
-  background: #1fb6b6;
-  color: #0f172a;
-  box-shadow: 0 6px 16px rgba(20, 184, 166, 0.35);
-  transform: translateY(-1px);
+.toolbar button:hover {
+  opacity: 0.9;
 }
 
-
-/* ======================
+/* =====================
    TABLE
-====================== */
+===================== */
 .doctor-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0 8px;
 }
 
-.doctor-table th {
-  text-align: left;
-  font-size: 13px;
-  font-weight: 600;
-  color: #475569;
-  padding: 12px 10px;
-  border-bottom: 1px solid #e5e7eb;
+.doctor-table thead th {
+  text-transform: uppercase;
+  font-size: 12px;
+  color: var(--muted);
+  padding: 10px;
+}
+
+.doctor-table tbody tr {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
 }
 
 .doctor-table td {
-  padding: 14px 10px;
-  border-bottom: 1px solid #f1f5f9;
+  padding: 14px 12px;
   font-size: 14px;
+  color: var(--text);
 }
 
-.doctor-table tbody tr:hover {
-  background: #f8fafc;
+.doctor-table td:first-child {
+  font-weight: 700;
 }
 
-/* ======================
-   ROLE BADGE
-====================== */
+.doctor-table button {
+  margin-right: 6px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.doctor-table button:last-child {
+  background: var(--danger);
+  color: #fff;
+}
+
+/* =====================
+   ROLE BADGE (HIGHLIGHT)
+===================== */
 .role {
-  padding: 6px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
   border-radius: 999px;
   font-size: 12px;
-  font-weight: 600;
-  display: inline-block;
+  font-weight: 700;
 }
 
+/*  TRƯỞNG KHOA – NỔI NHẤT */
 .role.Trưởngkhoa {
-  background: #fee2e2;
-  color: #991b1b;
+  background: linear-gradient(135deg, #facc15, #f59e0b);
+  color: #78350f;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.5);
 }
 
+/*  PHÓ KHOA */
 .role.Phókhoa {
-  background: #ede9fe;
-  color: #5b21b6;
+  background: linear-gradient(135deg, #c7d2fe, #818cf8);
+  color: #1e1b4b;
+  box-shadow: 0 4px 12px rgba(129, 140, 248, 0.4);
 }
 
+/*  BÁC SĨ */
 .role.Bácsĩ {
-  background: #e2e8f0;
-  color: #334155;
+  background: #e0f2fe;
+  color: #0369a1;
 }
 
-/* ======================
-   ACTIONS
-====================== */
-.actions {
-  display: flex;
-  gap: 12px;
-}
-
-.actions button {
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: 13px;
-  cursor: pointer;
-  color: #2563eb;
-}
-
-.actions .danger {
-  color: #dc2626;
-}
-
-/* ======================
+/* =====================
    MODAL
-====================== */
+===================== */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.45);
+  background: rgba(15, 23, 42, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 999;
 }
 
 .modal {
   background: #ffffff;
   width: 380px;
+  border-radius: 20px;
   padding: 22px;
-  border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  animation: popup 0.25s ease;
 }
 
 .modal h3 {
-  margin-bottom: 14px;
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 16px;
 }
 
-.modal-form {
+.modal form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
-.modal-form input,
-.modal-form select {
-  padding: 10px 12px;
-  border-radius: 10px;
+.modal input,
+.modal select {
+  padding: 10px 14px;
+  border-radius: 12px;
   border: 1px solid #cbd5e1;
+}
+
+.modal button {
+  padding: 10px;
+  border-radius: 999px;
+  border: none;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.modal button:hover {
+  background: var(--primary-dark);
+}
+
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  color: #fff;
+  font-weight: 600;
+  animation: fadeIn 0.2s ease;
+}
+
+.toast.success {
+  background: #16a34a;
+}
+
+.toast.error {
+  background: #dc2626;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+
+@keyframes popup {
+  from {
+    transform: translateY(10px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
 }
