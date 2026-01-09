@@ -142,15 +142,10 @@ export default function Departments() {
     }
   };
 
-
   const handleUpdateDepartment = async (e) => {
     e.preventDefault();
-    if (!editDept.name.trim()) {
-      showToast("Tên khoa không hợp lệ", "error");
-      return;
-    }
 
-    await fetch(
+    const res = await fetch(
       `http://localhost:5000/api/departments/${editDept.id}`,
       {
         method: "PUT",
@@ -159,41 +154,68 @@ export default function Departments() {
       }
     );
 
-    setDepartments((prev) =>
-      prev.map((d) =>
-        d.id === editDept.id ? { ...d, name: editDept.name } : d
-      )
-    );
+    if (!res.ok) {
+      const err = await res.json();
+      showToast(err.message || "Cập nhật thất bại", "error");
+      return;
+    }
 
+    const { data } = await res.json();
+
+    // UPDATE STATE NGAY
+    setDepartments((prev) => {
+      // xoá khoa cũ
+      const filtered = prev.filter((d) => d.id !== data.oldId);
+
+      // thêm khoa mới
+      return [...filtered, {
+        id: data.id,
+        name: data.name,
+        isActive: data.isActive,
+      }];
+    });
+
+    // nếu đang active khoa cũ → chuyển sang khoa mới
     setActiveDept((prev) =>
-      prev?.id === editDept.id ? { ...prev, name: editDept.name } : prev
+      prev?.id === data.oldId
+        ? { id: data.id, name: data.name, isActive: data.isActive }
+        : prev
     );
 
     setEditDept(null);
     showToast("Cập nhật khoa thành công");
   };
 
+
   const handleDeleteDepartment = async (dept) => {
-    const hasDoctor = doctors.some(
-      (d) => d.departmentId === dept.id
-    );
+  if (!dept?.id) {
+    showToast("Không xác định được khoa", "error");
+    return;
+  }
 
-    if (hasDoctor) {
-      showToast("Không thể xoá khoa vì vẫn còn bác sĩ", "error");
-      return;
-    }
+  if (!window.confirm(`Xoá khoa "${dept.name}"?`)) return;
 
-    if (!window.confirm(`Xoá khoa "${dept.name}"?`)) return;
+  const res = await fetch(
+    `http://localhost:5000/api/departments/${dept.id}`,
+    { method: "DELETE" }
+  );
 
-    await fetch(
-      `http://localhost:5000/api/departments/${dept.id}`,
-      { method: "DELETE" }
-    );
+  if (!res.ok) {
+    const err = await res.json();
+    showToast(err.message || "Xoá thất bại", "error");
+    return;
+  }
 
-    setDepartments((prev) => prev.filter((d) => d.id !== dept.id));
-    setActiveDept(null);
-    showToast("Xoá khoa thành công");
-  };
+  setDepartments((prev) =>
+    prev.filter((d) => d.id !== dept.id)
+  );
+
+  setActiveDept(null);
+  showToast("Đã xoá khoa");
+};
+
+
+
 
   /* =====================
      DOCTOR CRUD

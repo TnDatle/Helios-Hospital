@@ -20,6 +20,8 @@
     "express-fileupload": "^1.5.2",
     "firebase": "^12.6.0",
     "firebase-admin": "^13.6.0",
+    "mysql2": "^3.16.0",
+    "sequelize": "^6.37.7",
     "uuid": "^13.0.0"
   },
   "devDependencies": {
