@@ -21,13 +21,14 @@ const SHIFT_LABEL = {
 };
 
 const DEPARTMENT_LABEL = {
-  "ngoai-tiet-nieu": "khoa Ngoại Tiết Niệu",
-  "tim-mach": "khoa Tim Mạch",
-  "ngoai-tong-quat": "khoa Ngoại Tổng Quát",
-  "ung-buou": "khoa Ung Bướu",
-  "noi-than": "khoa Lọc Máu - Nội Thận",
+  "ngoai-tong-quat": "Ngoại Tổng Quát",
+  "ngoai-tiet-nieu": "Ngoại Tiết Niệu",
+  "tim-mach": "Tim Mạch & Mạch Máu",
+  "ung-buou": "Ung Bướu",
+  "noi-than": "Lọc Máu & Nội Thận",
+  "noi-soi-tieu-hoa": "Nội Soi Tiêu Hóa",
+  "noi-soi-nieu": "Nội Soi Niệu",
 };
-
 
 /**
  * =====================================================

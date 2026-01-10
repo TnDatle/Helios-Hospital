@@ -11,6 +11,9 @@ import TimMach from "./pages/DepartmentsPages/TimMach";
 import UngBuou from "./pages/DepartmentsPages/UngBuou";
 import NoiThan from "./pages/DepartmentsPages/NoiThan";
 import XetNghiem from "./pages/DepartmentsPages/XetNghiem";
+import NoiSoiTieuHoa from "./pages/DepartmentsPages/NoiSoiTieuHoa";
+import NoiSoiNieu from "./pages/DepartmentsPages/NoiSoiNieu";
+
 
 // Import Header Pages
 import Home from "./pages/Home";
@@ -72,6 +75,8 @@ function App() {
         <Route path="/ung-buou" element={<UngBuou />} />
         <Route path="/noi-than" element={<NoiThan />} />
         <Route path="/xet-nghiem" element={<XetNghiem />} />
+        <Route path="/noi-soi-tieu-hoa" element={<NoiSoiTieuHoa />} />
+        <Route path="/noi-soi-nieu" element={<NoiSoiNieu />} />
 
         {/* ===== MENU HEADER ===== */}
         <Route path="/gio-kham" element={<GioKhamBenh />} />

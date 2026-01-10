@@ -40,6 +40,18 @@ function ServiceSection() {
       image: "/services/xetnghiem.jpg",
       slug: "xet-nghiem",
     },
+    {
+    name: "NỘI SOI TIÊU HÓA",
+    desc: "Thực hiện các kỹ thuật nội soi đường tiêu hóa như nội soi dạ dày, tá tràng, đại tràng nhằm chẩn đoán, theo dõi và phát hiện sớm các bệnh lý tiêu hóa.",
+    image: "/services/noisoitieuhoa.jpg",
+    slug: "noi-soi-tieu-hoa",
+  },
+  {
+    name: "NỘI SOI NIỆU",
+    desc: "Thực hiện các kỹ thuật nội soi hệ tiết niệu để chẩn đoán và theo dõi các bệnh lý về bàng quang, niệu đạo và đường tiết niệu.",
+    image: "/services/noisoinieu.jpg",
+    slug: "noi-soi-nieu",
+  },
   ];
 
   return (

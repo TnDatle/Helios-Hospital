@@ -15,6 +15,8 @@ const DEPARTMENT_LABEL = {
   "tim-mach": "Tim Mạch & Mạch Máu",
   "ung-buou": "Ung Bướu",
   "noi-than": "Lọc Máu & Nội Thận",
+  "noi-soi-tieu-hoa": "Nội Soi Tiêu Hóa",
+  "noi-soi-nieu": "Nội Soi Niệu",
 };
 
 // ===== helper: chuẩn hóa khoa -> slug =====
@@ -220,6 +222,9 @@ const FindDoctor = () => {
           <option value="tim-mach">Tim mạch & Mạch máu</option>
           <option value="ung-buou">Ung Bướu</option>
           <option value="noi-than">Lọc Máu - Nội Thận</option>
+          <option value="noi-soi-nieu">Nội Soi Niệu</option>
+          <option value="noi-soi-tieu-hoa">Nội Soi Tiêu Hóa</option>
+          <option value="xet-nghiem">Xét Nghiệm</option>
         </select>
         <input
           type="text"

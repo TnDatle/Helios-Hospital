@@ -332,7 +332,7 @@ export default function Departments() {
           <table className="doctor-table">
             <thead>
               <tr>
-                <th>Tên</th>
+                <th>Họ và Tên</th>
                 <th>Chuyên môn</th>
                 <th>Chức vụ</th>
                 <th>Thao tác</th>
@@ -408,7 +408,7 @@ export default function Departments() {
           <h3>Thêm bác sĩ</h3>
           <form onSubmit={handleCreateDoctor}>
             <input
-              placeholder="Tên"
+              placeholder="Họ và Tên và học vị"
               value={doctorForm.name}
               onChange={(e) =>
                 setDoctorForm({ ...doctorForm, name: e.target.value })

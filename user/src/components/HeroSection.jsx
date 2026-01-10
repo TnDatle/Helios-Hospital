@@ -4,7 +4,7 @@ function HeroSection() {
 
       {/* Background image */}
       <img
-        src="/icons/hospital-banner.png"
+        src="/icons/hospital_2.png"
         className="hero-bg-image"
         alt="Helios banner"
       />

@@ -22,26 +22,26 @@ function OverviewSection() {
 
         <div className="col-md-3 stat-item border-item">
           <img src="/icons/bed.png" alt="icon" className="stat-icon" />
-          <h3 className="stat-number">200+</h3>
+          <h3 className="stat-number">700+</h3>
           <p className="stat-text">giường cho bệnh nhân</p>
         </div>
 
         <div className="col-md-3 stat-item border-item">
           <img src="/icons/bandage.png" alt="icon" className="stat-icon" />
-          <h3 className="stat-number">1.000+</h3>
+          <h3 className="stat-number">1.500+</h3>
           <p className="stat-text">ca phẫu thuật thành công hằng năm</p>
         </div>
 
         <div className="col-md-3 stat-item">
           <img src="/icons/heart-hand.png" alt="icon" className="stat-icon" />
-          <h3 className="stat-number">6.000+</h3>
+          <h3 className="stat-number">10.000+</h3>
           <p className="stat-text">bệnh nhân được điều trị hằng năm</p>
         </div>
 
       </div>
 
 
-      <Link to="/gioi-thieu" className="overview-btn">
+      <Link to="/tong-quan" className="overview-btn">
         XEM THÊM
       </Link>
     </div>

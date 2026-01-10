@@ -28,12 +28,12 @@ function About() {
             </h2>
 
             <h4 className="about-subtitle">
-                Trung tâm điều trị chuyên sâu về Ngoại tổng quát, Tiết niệu, Tim mạch & Mạch máu
+                Trung tâm điều trị chuyên sâu về Ngoại tổng quát, Tiết niệu, Tim mạch & Mạch máu và nhiều chuyên khoa quan trọng khác.
             </h4>
 
             {/* ẢNH CHÍNH */}
             <div className="about-img-box">
-                <img src="/icons/hospital-banner.png" alt="hospital" />
+                <img src="/icons/hospital_2.png" alt="hospital" />
             </div>
 
             <p>
@@ -98,8 +98,10 @@ function About() {
                 <li>Khoa Tim Mạch & Mạch Máu – chuyên sâu về can thiệp tim mạch và phẫu thuật mạch máu.</li>
                 <li>Khoa Ung Bướu – chuyên sâu trong chẩn đoán, điều trị và xạ trị các bệnh lý ung thư.</li>
                 <li>Khoa Nội Thận – Lọc Máu – điều trị các bệnh lý thận và thực hiện lọc máu cho bệnh nhân suy thận.</li>
+                <li>Khoa Nội soi Tiêu hóa – chuyên chẩn đoán và can thiệp các bệnh lý dạ dày, đại tràng và đường tiêu hóa.</li>
+                <li>Khoa Nội soi Niệu – thực hiện nội soi chẩn đoán và điều trị các bệnh lý đường tiết niệu.</li>
+                <li>Khoa Xét nghiệm – cung cấp các dịch vụ xét nghiệm sinh hóa, huyết học, vi sinh và miễn dịch phục vụ chẩn đoán.</li>
                 <li>Phòng Công tác Xã hội hỗ trợ thông tin, tư vấn và kết nối người bệnh.</li>
-
             </ul>
 
             <p>
