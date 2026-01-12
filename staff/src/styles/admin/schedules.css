@@ -1,15 +1,150 @@
-@import "./admin.css";
+/* PAGE */
+.admin-page {
+  background: #f8fafc;
+  min-height: 100vh;
+  padding: 24px;
+}
+.admin-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.empty {
+  color: #64748b;
+  font-style: italic;
+}
 
-.schedule-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
+/* ACCORDION */
+.schedule-section {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 16px;
+}
+.department-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 20px;
+  cursor: pointer;
+  background: #f1f5f9;
+}
+.department-title {
+  font-size: 17px;
+  font-weight: 600;
+}
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+.add-btn {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  cursor: pointer;
+}
+.toggle-btn {
+  font-size: 12px;
+}
+
+/* TABLE */
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.schedule-table th,
+.schedule-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e2e8f0;
+}
+.schedule-inline {
+  margin-bottom: 6px;
+}
+.shift-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  margin-right: 6px;
+}
+.shift-badge.morning {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+.shift-badge.afternoon {
+  background: #fef3c7;
+  color: #92400e;
+}
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal {
+  width: 500px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+}
+.modal select,
+.modal input {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
   gap: 10px;
 }
 
-.schedule-cell {
-  background: #ffffff;
-  border-radius: 8px;
-  padding: 12px;
+.modal span{
+  color:red;
+}
+/* MATRIX */
+.schedule-matrix {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 16px 0;
+}
+.matrix-header,
+.matrix-row {
+  display: grid;
+  grid-template-columns: 100px repeat(6, 1fr);
+}
+.matrix-header {
+  background: #f1f5f9;
+  font-weight: 600;
+}
+.matrix-col,
+.matrix-row-title {
+  padding: 10px;
   text-align: center;
-  font-size: 13px;
+}
+.matrix-cell {
+  padding: 10px;
+  border-left: 1px solid #e2e8f0;
+  border-top: 1px solid #e2e8f0;
+  text-align: center;
+  cursor: pointer;
+}
+.matrix-cell.active {
+  background: #2563eb;
+  color: #fff;
 }

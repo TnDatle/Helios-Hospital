@@ -15,6 +15,15 @@ const SHIFT_TIME = {
   AFTERNOON: "13:00 – 16:00",
 };
 
+// Thứ tự ngày: 2–4–6 → 3–5 → 7
+const WEEKDAY_ORDER = [2, 4, 6, 3, 5, 7];
+
+// Thứ tự phòng: TN-001 → 1
+const getRoomOrder = (room = "") => {
+  const num = Number(room.replace(/\D/g, ""));
+  return isNaN(num) ? 9999 : num;
+};
+
 /**
  * =====================================================
  * SINH NGÀY THEO THỨ (14 NGÀY TỚI)
@@ -29,15 +38,13 @@ function getNextDatesByWeekday(weekday, days = 14) {
     d.setDate(today.getDate() + i);
 
     const jsDay = d.getDay() === 0 ? 7 : d.getDay();
-
     if (jsDay === weekday) {
       result.push({
-        date: d.toISOString().slice(0, 10), // yyyy-mm-dd
+        date: d.toISOString().slice(0, 10),
         label: d.toLocaleDateString("vi-VN"),
       });
     }
   }
-
   return result;
 }
 
@@ -45,14 +52,14 @@ export default function StepSchedule({ doctor, onBack, onSelect }) {
   const [schedules, setSchedules] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // chọn ca + ngày
   const [selectedSchedule, setSelectedSchedule] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
 
+  /* ===== FETCH ===== */
   useEffect(() => {
     if (!doctor?.id) return;
 
-    fetch(`http://localhost:5000/api/schedules/${doctor.id}`, {
+    fetch(`http://localhost:5000/api/schedules/doctor/${doctor.id}`, {
       cache: "no-store",
     })
       .then((res) => res.json())
@@ -66,21 +73,39 @@ export default function StepSchedule({ doctor, onBack, onSelect }) {
       });
   }, [doctor]);
 
-  const morningSchedules = useMemo(
-    () =>
-      schedules
-        .filter((s) => s.shiftId === "MORNING")
-        .sort((a, b) => a.weekday - b.weekday),
-    [schedules]
-  );
+  /* ===== SORTED SCHEDULES ===== */
 
-  const afternoonSchedules = useMemo(
-    () =>
-      schedules
-        .filter((s) => s.shiftId === "AFTERNOON")
-        .sort((a, b) => a.weekday - b.weekday),
-    [schedules]
-  );
+  const morningSchedules = useMemo(() => {
+    return schedules
+      .filter((s) => s.shiftId === "MORNING")
+      .sort((a, b) => {
+        // 1. phòng
+        const roomDiff =
+          getRoomOrder(a.room) - getRoomOrder(b.room);
+        if (roomDiff !== 0) return roomDiff;
+
+        // 2. ngày
+        return (
+          WEEKDAY_ORDER.indexOf(a.weekday) -
+          WEEKDAY_ORDER.indexOf(b.weekday)
+        );
+      });
+  }, [schedules]);
+
+  const afternoonSchedules = useMemo(() => {
+    return schedules
+      .filter((s) => s.shiftId === "AFTERNOON")
+      .sort((a, b) => {
+        const roomDiff =
+          getRoomOrder(a.room) - getRoomOrder(b.room);
+        if (roomDiff !== 0) return roomDiff;
+
+        return (
+          WEEKDAY_ORDER.indexOf(a.weekday) -
+          WEEKDAY_ORDER.indexOf(b.weekday)
+        );
+      });
+  }, [schedules]);
 
   if (loading) {
     return <p>Đang tải lịch làm việc...</p>;
@@ -113,7 +138,7 @@ export default function StepSchedule({ doctor, onBack, onSelect }) {
               <div className="date-list">
                 {getNextDatesByWeekday(s.weekday).map((d) => (
                   <button
-                    key={d.date}
+                    key={`${s.id}_${d.date}`}
                     className={`date-chip ${
                       selectedSchedule?.id === s.id &&
                       selectedDate === d.date
@@ -155,7 +180,7 @@ export default function StepSchedule({ doctor, onBack, onSelect }) {
               <div className="date-list">
                 {getNextDatesByWeekday(s.weekday).map((d) => (
                   <button
-                    key={d.date}
+                    key={`${s.id}_${d.date}`}
                     className={`date-chip ${
                       selectedSchedule?.id === s.id &&
                       selectedDate === d.date
@@ -192,7 +217,7 @@ export default function StepSchedule({ doctor, onBack, onSelect }) {
           onClick={() =>
             onSelect({
               ...selectedSchedule,
-              date: selectedDate, // 🔥 NGÀY THẬT
+              date: selectedDate,
             })
           }
         >

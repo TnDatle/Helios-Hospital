@@ -20,24 +20,25 @@ const SHIFT_TIME = {
   AFTERNOON: "13:00 – 16:00",
 };
 
-const WEEKDAY_SEQUENCE = [1, 3, 5, 2, 4, 6];
+/* ===== SORT ORDER ===== */
 
-const normalizeDay = (day) => {
-  // nếu là số string: "1" -> 1
-  if (!isNaN(day)) return Number(day);
+// Thứ tự ngày: 2 – 4 – 6 → 3 – 5 → 7
+const WEEKDAY_ORDER = [2, 4, 6, 3, 5, 7];
 
-  // nếu là "thu2", "thu3"...
-  if (typeof day === "string") {
-    const match = day.match(/\d+/);
-    if (match) return Number(match[0]) - 1; 
-  }
-
-  return null;
+// Thứ tự ca: sáng → chiều
+const SHIFT_ORDER = {
+  MORNING: 1,
+  AFTERNOON: 2,
 };
 
+// Lấy số phòng: TN-001 → 1
+const getRoomOrder = (room = "") => {
+  const num = Number(room.replace(/\D/g, ""));
+  return isNaN(num) ? 9999 : num;
+};
 
 export default function Schedule() {
-  const [groups, setGroups] = useState([]);
+  const [groups, setGroups] = useState([]); // backend đã group sẵn
   const [loading, setLoading] = useState(true);
   const [openDept, setOpenDept] = useState(null);
 
@@ -45,7 +46,7 @@ export default function Schedule() {
     setOpenDept((prev) => (prev === deptId ? null : deptId));
   };
 
-  /* ===== FETCH DATA ===== */
+  /* ===== FETCH PUBLIC SCHEDULE ===== */
   useEffect(() => {
     fetch("http://localhost:5000/api/schedules", {
       cache: "no-store",
@@ -57,20 +58,7 @@ export default function Schedule() {
           return;
         }
 
-        const groupedByDepartment = res.data.reduce((acc, row) => {
-          if (!acc[row.departmentId]) {
-            acc[row.departmentId] = {
-              departmentId: row.departmentId,
-              departmentName: row.departmentName,
-              doctors: [],
-            };
-          }
-
-          acc[row.departmentId].doctors.push(row);
-          return acc;
-        }, {});
-
-        setGroups(Object.values(groupedByDepartment));
+        setGroups(res.data || []);
         setLoading(false);
       })
       .catch((err) => {
@@ -144,48 +132,71 @@ export default function Schedule() {
                     </thead>
 
                     <tbody>
-                      {group.doctors.map((row) => (
-                        <tr key={row.doctorId}>
-                          <td>{row.doctorName}</td>
-                          <td>{row.specialty}</td>
-                          <td>{row.room}</td>
+                      {[...group.doctors]
+                        .sort(
+                          (a, b) =>
+                            getRoomOrder(a.room) -
+                            getRoomOrder(b.room)
+                        )
+                        .map((row) => (
+                          <tr
+                            key={`${row.doctorId}_${row.room}`}
+                          >
+                            <td>{row.doctorName}</td>
+                            <td>{row.specialty}</td>
+                            <td>{row.room}</td>
 
-                          <td>
-                            {row.schedule &&
-                            Object.keys(row.schedule).length > 0 ? (
-                              Object.entries(row.schedule)
-                                .sort(
-                                  ([dayA], [dayB]) =>
-                                    WEEKDAY_SEQUENCE.indexOf(normalizeDay(dayA)) -
-                                    WEEKDAY_SEQUENCE.indexOf(normalizeDay(dayB))
-                                )
-                                .map(([day, shifts]) => (
-                                  <div
-                                    key={day}
-                                    className="schedule-inline"
-                                  >
-                                    <strong>
-                                      {WEEKDAY_LABEL[day]}:
-                                    </strong>{" "}
-                                    {shifts.map((s) => (
-                                      <span
-                                        key={s}
-                                        className={`shift-badge ${s.toLowerCase()}`}
-                                      >
-                                        {SHIFT_LABEL[s]} (
-                                        {SHIFT_TIME[s]})
-                                      </span>
-                                    ))}
-                                  </div>
-                                ))
-                            ) : (
-                              <span className="empty">
-                                Chưa có lịch
-                              </span>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
+                            <td>
+                              {row.schedule &&
+                              Object.keys(row.schedule).length >
+                                0 ? (
+                                Object.entries(row.schedule)
+                                  .map(([day, shifts]) => ({
+                                    day: Number(day),
+                                    shifts,
+                                  }))
+                                  .sort(
+                                    (a, b) =>
+                                      WEEKDAY_ORDER.indexOf(
+                                        a.day
+                                      ) -
+                                      WEEKDAY_ORDER.indexOf(
+                                        b.day
+                                      )
+                                  )
+                                  .map(({ day, shifts }) => (
+                                    <div
+                                      key={`${row.doctorId}_${day}`}
+                                      className="schedule-inline"
+                                    >
+                                      <strong>
+                                        {WEEKDAY_LABEL[day]}:
+                                      </strong>{" "}
+                                      {[...shifts]
+                                        .sort(
+                                          (a, b) =>
+                                            SHIFT_ORDER[a] -
+                                            SHIFT_ORDER[b]
+                                        )
+                                        .map((s) => (
+                                          <span
+                                            key={`${row.doctorId}_${day}_${s}`}
+                                            className={`shift-badge ${s.toLowerCase()}`}
+                                          >
+                                            {SHIFT_LABEL[s]} (
+                                            {SHIFT_TIME[s]})
+                                          </span>
+                                        ))}
+                                    </div>
+                                  ))
+                              ) : (
+                                <span className="empty">
+                                  Chưa có lịch
+                                </span>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
                     </tbody>
                   </table>
                 )}
