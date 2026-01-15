@@ -1,9 +1,12 @@
 import express from "express";
 import cors from "cors";
 import session from "express-session";
-import fileUpload from "express-fileupload";
+import path from "path";
+import { fileURLToPath } from "url";
 
 import "./src/config/firebase.js";
+import newsRoutes from "./src/routes/news.routes.js";
+import uploadRoutes from "./src/routes/upload.routes.js";
 import doctorRoutes from "./src/routes/doctor.routes.js";
 import departmentRoutes from "./src/routes/department.routes.js";
 import scheduleRoutes from "./src/routes/schedule.routes.js";
@@ -13,6 +16,8 @@ import userRoutes from "./src/routes/user.routes.js";
 import authRoute from "./src/routes/auth.routes.js";
 
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const allowedOrigins = [
   "http://localhost:3000",
@@ -20,17 +25,11 @@ const allowedOrigins = [
 ];
 
 /* ======================
-   PARSE JSON (PHẢI ĐẦU TIÊN)
-====================== */
-app.use(express.json());
-
-/* ======================
-    CORS
+   CORS (PHẢI ĐẦU TIÊN)
 ====================== */
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Cho phép Postman / server-to-server
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
@@ -42,8 +41,23 @@ app.use(
     credentials: true,
   })
 );
+
 /* ======================
-   3️⃣ SESSION
+   UPLOAD (PHẢI TRƯỚC JSON)
+====================== */
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"))
+);
+
+/* ======================
+   PARSE JSON
+====================== */
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+/* ======================
+   SESSION
 ====================== */
 app.use(
   session({
@@ -61,14 +75,15 @@ app.use(
 );
 
 /* ======================
-   4️⃣ FILE UPLOAD
+   STATIC FILE
 ====================== */
-app.use(fileUpload());
+app.use("/uploads", express.static("uploads"));
 
 /* ======================
-   5️⃣ ROUTES
+   ROUTES
 ====================== */
 app.get("/", (req, res) => res.send("Server OK"));
+app.use("/api/upload", uploadRoutes);
 app.use("/api/departments", departmentRoutes);
 app.use("/api/doctors", doctorRoutes);
 app.use("/api/users", userRoutes);
@@ -76,6 +91,7 @@ app.use("/api/schedules", scheduleRoutes);
 app.use("/api/locations", locationRoutes);
 app.use("/api/booking", bookingDoctorRoutes);
 app.use("/api/auth", authRoute);
+app.use("/api/news", newsRoutes);
 
 /* ======================
    START SERVER

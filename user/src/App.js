@@ -30,6 +30,8 @@ import TongQuan from "./pages/AboutPages/About";
 import CoCauToChuc from "./pages/AboutPages/Organization"
 import GioKhamBenh from "./pages/Time";
 import BangGia from "./pages/Price";
+import TinTuc from "./pages/HeaderPages/News"
+import TinTucChiTiet from "./pages/HeaderPages/NewsDetail"
 
 // Import CSS Modules
 import "./styles/header.css";
@@ -47,10 +49,10 @@ import "./styles/departments.css";
 import "./styles/schedule.css";
 import "./styles/time.css"
 import "./styles/price.css";
-import "./styles/auth.css"
-import "./styles/bookingsuccesmodel.css"
-import "./styles/patient.css"
-
+import "./styles/auth.css";
+import "./styles/bookingsuccesmodel.css";
+import "./styles/patient.css";
+import "./styles/news.css";
 
 function App() {
   return (
@@ -87,10 +89,16 @@ function App() {
         {/* Placeholder – tạo sau nếu cần */}
         <Route path="/tong-quan" element={<TongQuan />} />
         <Route path="/co-cau-to-chuc" element={<CoCauToChuc />} />
+
         <Route path="/dieu-tri" element={<div className='container py-5'>Điều trị</div>} />
+
         <Route path="/dich-vu" element={<div className='container py-5'>Dịch vụ</div>} />
+
         <Route path="/huong-dan" element={<div className='container py-5'>Hướng dẫn</div>} />
-        <Route path="/truyen-thong" element={<div className='container py-5'>Truyền thông</div>} />
+
+        <Route path="/tin-tuc" element={<TinTuc />} />
+        <Route path="/tin-tuc/:slug" element={<TinTucChiTiet />} />
+
         <Route path="/dao-tao" element={<div className='container py-5'>Đào tạo</div>} />
         <Route path="/van-ban" element={<div className='container py-5'>Văn bản</div>} />
         <Route path="/tuyen-dung" element={<div className='container py-5'>Tuyển dụng</div>} />

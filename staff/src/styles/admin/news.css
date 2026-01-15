@@ -1,0 +1,165 @@
+.admin-news {
+  padding: 24px 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #f7f9fc;
+}
+
+/* Title */
+.admin-news h1 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #111
+}
+
+/* ================= FORM ================= */
+.admin-news-form {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  margin-bottom: 40px;
+}
+
+.admin-news-form h3 {
+  margin-bottom: 16px;
+  font-size: 18px;
+  color: #222;
+}
+
+.admin-news-form input,
+.admin-news-form textarea,
+.admin-news-form select {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+  border-radius: 8px;
+  border: 1px solid #dcdfe6;
+  font-size: 14px;
+  outline: none;
+}
+
+.admin-news-form textarea {
+  resize: vertical;
+}
+
+.admin-news-form input:focus,
+.admin-news-form textarea:focus,
+.admin-news-form select:focus {
+  border-color: #0f4c81;
+}
+
+/* Button submit */
+.admin-news-form button {
+  background: #0f4c81;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  font-size: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.admin-news-form button:hover {
+  background: #0c3c66;
+}
+
+/* ================= TABLE ================= */
+.admin-news-table {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  border-collapse: collapse;
+}
+
+.admin-news-table th,
+.admin-news-table td {
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.admin-news-table th {
+  background: #0f4c81;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.admin-news-table tr:nth-child(even) {
+  background: #f7f9fc;
+}
+
+/* ================= STATUS ================= */
+.status {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status.published {
+  background: #e6f7ed;
+  color: #1e8e3e;
+}
+
+.status.draft {
+  background: #fff4e5;
+  color: #b26a00;
+}
+
+.status.hidden {
+  background: #fdecea;
+  color: #d93025;
+}
+
+/* ================= ACTION BUTTONS ================= */
+.admin-news-table button {
+  margin-right: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-news-table button:hover {
+  opacity: 0.85;
+}
+
+.admin-news-table button:nth-child(1) {
+  background: #1e8e3e;
+  color: #fff;
+}
+
+.admin-news-table button:nth-child(2) {
+  background: #fbbc04;
+  color: #222;
+}
+
+.admin-news-table button:nth-child(3) {
+  background: #d93025;
+  color: #fff;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .admin-news {
+    padding: 16px;
+  }
+
+  .admin-news-table th,
+  .admin-news-table td {
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  .admin-news-form {
+    padding: 16px;
+  }
+}

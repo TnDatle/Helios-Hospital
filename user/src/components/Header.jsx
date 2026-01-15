@@ -77,7 +77,7 @@ function Header() {
               </li>
             </ul>
           </div>
-          <Link to="/truyen-thong" className="nav-link-custom">Truyền thông</Link>
+          <Link to="/tin-tuc" className="nav-link-custom">Tin tức</Link>
           <Link to="/dao-tao" className="nav-link-custom">Đào tạo</Link>
           <Link to="/van-ban" className="nav-link-custom">Văn bản</Link>
           <Link to="/tuyen-dung" className="nav-link-custom">Tuyển dụng</Link>
