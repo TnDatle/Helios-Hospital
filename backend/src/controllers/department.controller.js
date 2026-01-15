@@ -1,4 +1,4 @@
-import * as DepartmentService from "../services/department-service.js";
+import * as DepartmentService from "../services/department.service.js";
 
 // GET
 export const getDepartments = async (req, res) => {

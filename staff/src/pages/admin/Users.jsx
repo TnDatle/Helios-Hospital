@@ -1,170 +1,405 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "../../styles/admin/users.css";
 
-const DOCTOR_DEPARTMENTS = [
-  { value: "ngoai-tong-quat", label: "Ngoại tổng quát" },
-  { value: "ngoai-tiet-nieu", label: "Ngoại tiết niệu" },
-  { value: "tim-mach", label: "Tim mạch" },
-  { value: "noi-than", label: "Lọc máu - Nội thận" },
-  { value: "ung-buou", label: "Ung bướu" },
-  { value: "noi-soi-nieu", label: "Nội soi niệu" },
-  { value: "noi-soi-tieu-hoa", label: "Nội soi tiêu hóa" },
-];
+const API_BASE = "http://localhost:5000/api";
 
 const STAFF_OFFICES = [
-  // { value: "hanh-chinh", label: "Phòng Hành chính" },
-  // { value: "ke-toan", label: "Phòng Kế toán" },
-  // { value: "nhan-su", label: "Phòng Nhân sự" },
   { value: "tiep-tan", label: "Phòng Tiếp tân" },
+  { value: "ke-toan", label: "Phòng Kế toán" },
+  { value: "hanh-chinh", label: "Phòng Hành chính" },
 ];
 
-export default function Users() {
-  const [showModal, setShowModal] = useState(false);
+const STAFF_ROLE_MAP = {
+  "Phòng Tiếp tân": "RECEPTION",
+  "Phòng Kế toán": "ACCOUNTANT",
+  "Phòng Hành chính": "ADMIN_STAFF",
+};
 
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    role: "",
-    department: "",
+
+export default function Users() {
+  /* =========================
+     ROLE TAB
+  ========================= */
+  const [activeRole, setActiveRole] = useState("ADMIN");
+
+  /* =========================
+     UI
+  ========================= */
+  const [showModal, setShowModal] = useState(false);
+  const [uiAlert, setUiAlert] = useState({
+    open: false,
+    type: "error",
+    message: "",
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  /* =========================
+     DATA
+  ========================= */
+  const [users, setUsers] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [allDoctors, setAllDoctors] = useState([]);
 
-    setForm((prev) => {
-      // đổi role thì reset khoa / phòng
-      if (name === "role") {
-        return {
-          ...prev,
-          role: value,
-          department: "",
-        };
+  /* =========================
+     FORM
+  ========================= */
+  const [selectedDepartment, setSelectedDepartment] = useState("");
+  const [form, setForm] = useState({
+    email: "",
+    name: "",
+    doctorId: "",
+    office: "",
+  });
+
+  /* =========================
+     TABLE FILTER
+  ========================= */
+  const [filterDepartment, setFilterDepartment] = useState("");
+  const [filterDoctor, setFilterDoctor] = useState("");
+
+  /* =========================
+     HELPERS
+  ========================= */
+  const showAlert = (type, message) => {
+    setUiAlert({ open: true, type, message });
+    setTimeout(() => {
+      setUiAlert((prev) => ({ ...prev, open: false }));
+    }, 4000);
+  };
+
+  const isValidEmail = (email) =>
+    /^[a-zA-Z0-9._%+-]+@helios\.vn$/.test(email);
+
+  const resetForm = () => {
+    setSelectedDepartment("");
+    setForm({ email: "", name: "", doctorId: "", office: "" });
+  };
+
+  /* =========================
+     FETCH DATA
+  ========================= */
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/users`);
+      const data = await res.json();
+      setUsers(data.data || []);
+    } catch {
+      showAlert("error", "Không tải được danh sách người dùng");
+    }
+  };
+
+  useEffect(() => {
+    const fetchBase = async () => {
+      try {
+        const [depRes, docRes] = await Promise.all([
+          fetch(`${API_BASE}/departments`),
+          fetch(`${API_BASE}/doctors`),
+        ]);
+
+        setDepartments((await depRes.json()).data || []);
+        setAllDoctors((await docRes.json()).data || []);
+      } catch {
+        showAlert("error", "Không tải được dữ liệu hệ thống");
       }
-      return { ...prev, [name]: value };
+    };
+
+    fetchBase();
+  }, []);
+
+  /* =========================
+     FILTER TABLE
+  ========================= */
+  const filteredUsers = useMemo(() => {
+    return users.filter((u) => {
+      // 🔥 STAFF TAB
+      if (activeRole === "STAFF") {
+        return ["RECEPTION", "ACCOUNTANT", "ADMIN_STAFF"].includes(u.role);
+      }
+
+      // ROLE KHÁC
+      if (u.role !== activeRole) return false;
+
+      // FILTER DOCTOR
+      if (
+        filterDepartment &&
+        u.role === "DOCTOR" &&
+        u.doctor?.departmentName !== filterDepartment
+      ) {
+        return false;
+      }
+
+      if (
+        filterDoctor &&
+        u.role === "DOCTOR" &&
+        u.doctor?.name !== filterDoctor
+      ) {
+        return false;
+      }
+
+      return true;
     });
-  };
+}, [users, activeRole, filterDepartment, filterDoctor]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
 
-    console.log("Tạo người dùng:", form);
-    // TODO: gọi API create user
+  /* =========================
+     CREATE USER
+  ========================= */
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
+  if (!isValidEmail(form.email)) {
+    return showAlert("error", "Email phải có dạng @helios.vn");
+  }
+
+  if (activeRole === "DOCTOR" && !form.doctorId) {
+    return showAlert("warning", "Vui lòng chọn bác sĩ");
+  }
+
+  if (activeRole === "STAFF" && !form.office) {
+    return showAlert("warning", "Vui lòng chọn phòng ban");
+  }
+
+  // XÁC ĐỊNH ROLE THỰC TẾ
+  let finalRole = activeRole;
+
+  if (activeRole === "STAFF") {
+    finalRole = STAFF_ROLE_MAP[form.office];
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/users`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: form.email,
+        role: finalRole, // ROLE ĐÃ ĐÚNG NGHIỆP VỤ
+        name: activeRole === "DOCTOR" ? null : form.name,
+        office: activeRole === "STAFF" ? form.office : null,
+        doctorId: activeRole === "DOCTOR" ? form.doctorId : null,
+      }),
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      return showAlert("error", data.message || "Có lỗi xảy ra");
+    }
+
+    showAlert("success", "Tạo tài khoản thành công");
     setShowModal(false);
-    setForm({
-      name: "",
-      email: "",
-      role: "",
-      department: "",
-    });
-  };
+    resetForm();
+    fetchUsers();
+  } catch {
+    showAlert("error", "Không thể kết nối server");
+  }
+};
 
+
+  /* =========================
+     RENDER
+  ========================= */
   return (
     <div className="admin-page">
-      <h1 className="admin-title">Quản lý người dùng</h1>
-
-      <div className="admin-toolbar">
+      <div className="admin-header">
+        <h1>Quản lý tài khoản</h1>
         <button className="btn-primary" onClick={() => setShowModal(true)}>
-          + Thêm người dùng
+          ➕ Thêm tài khoản
         </button>
       </div>
 
-      <div className="admin-table-placeholder">
-        Bảng danh sách người dùng
+      {uiAlert.open && (
+        <div className={`ui-alert ${uiAlert.type}`}>
+          {uiAlert.message}
+        </div>
+      )}
+
+      {/* ROLE TABS */}
+      <div className="role-tabs">
+        {["ADMIN", "DOCTOR", "STAFF"].map((r) => (
+          <button
+            key={r}
+            className={activeRole === r ? "active" : ""}
+            onClick={() => {
+              setActiveRole(r);
+              setFilterDepartment("");
+              setFilterDoctor("");
+            }}
+          >
+            {r}
+          </button>
+        ))}
       </div>
 
+      {/* FILTER DOCTOR */}
+      {activeRole === "DOCTOR" && (
+        <div className="table-filters">
+          <select
+            value={filterDepartment}
+            onChange={(e) => {
+              setFilterDepartment(e.target.value);
+              setFilterDoctor("");
+            }}
+          >
+            <option value="">Tất cả khoa</option>
+            {[...new Set(
+              users
+                .filter((u) => u.role === "DOCTOR")
+                .map((u) => u.doctor?.departmentName)
+            )].map((dep) => (
+              <option key={dep} value={dep}>
+                {dep}
+              </option>
+            ))}
+          </select>
+
+          <select
+            disabled={!filterDepartment}
+            value={filterDoctor}
+            onChange={(e) => setFilterDoctor(e.target.value)}
+          >
+            <option value="">Tất cả bác sĩ</option>
+            {users
+              .filter(
+                (u) =>
+                  u.role === "DOCTOR" &&
+                  u.doctor?.departmentName === filterDepartment
+              )
+              .map((u) => (
+                <option key={u.id} value={u.doctor?.name}>
+                  {u.doctor?.name}
+                </option>
+              ))}
+          </select>
+        </div>
+      )}
+
+      {/* TABLE */}
+      <div className="admin-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Họ tên</th>
+              <th>Khoa / Phòng</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredUsers.length === 0 ? (
+              <tr>
+                <td colSpan="3">Không có dữ liệu</td>
+              </tr>
+            ) : (
+              filteredUsers.map((u) => (
+                <tr key={u.id}>
+                  <td>{u.email}</td>
+                  <td>{u.role === "DOCTOR" ? u.doctor?.name : u.name}</td>
+                  <td>
+                    {u.role === "DOCTOR"
+                      ? u.doctor?.departmentName
+                      : u.office}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* MODAL */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
-            <h2>Thêm người dùng</h2>
+            <h2>Tạo {activeRole.toLowerCase()}</h2>
 
-            <form onSubmit={handleSubmit} className="form">
-              <div className="form-group">
-                <label>Họ và tên</label>
-                <input
-                  name="name"
-                  value={form.name}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+            <form onSubmit={handleSubmit}>
+              <label>Email</label>
+              <input
+                value={form.email}
+                onChange={(e) =>
+                  setForm({ ...form, email: e.target.value })
+                }
+              />
 
-              <div className="form-group">
-                <label>Email đăng nhập</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Vai trò</label>
-                <select
-                  name="role"
-                  value={form.role}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="">-- Chọn vai trò --</option>
-                  <option value="ADMIN">Quản trị</option>
-                  <option value="DOCTOR">Bác sĩ</option>
-                  <option value="STAFF">Nhân viên</option>
-                </select>
-              </div>
-
-              {/* KHOA - chỉ cho BÁC SĨ */}
-              {form.role === "DOCTOR" && (
-                <div className="form-group">
-                  <label>Khoa</label>
-                  <select
-                    name="department"
-                    value={form.department}
-                    onChange={handleChange}
-                    required
-                  >
-                    <option value="">-- Chọn khoa --</option>
-                    {DOCTOR_DEPARTMENTS.map((d) => (
-                      <option key={d.value} value={d.value}>
-                        {d.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+              {(activeRole === "ADMIN" || activeRole === "STAFF") && (
+                <>
+                  <label>Họ tên</label>
+                  <input
+                    value={form.name}
+                    onChange={(e) =>
+                      setForm({ ...form, name: e.target.value })
+                    }
+                  />
+                </>
               )}
 
-              {/* PHÒNG BAN - chỉ cho NHÂN VIÊN */}
-              {form.role === "STAFF" && (
-                <div className="form-group">
+              {activeRole === "STAFF" && (
+                <>
                   <label>Phòng ban</label>
                   <select
-                    name="department"
-                    value={form.department}
-                    onChange={handleChange}
-                    required
+                    value={form.office}
+                    onChange={(e) =>
+                      setForm({ ...form, office: e.target.value })
+                    }
                   >
-                    <option value="">-- Chọn phòng ban --</option>
+                    <option value="">-- Chọn phòng --</option>
                     {STAFF_OFFICES.map((o) => (
-                      <option key={o.value} value={o.value}>
+                      <option key={o.value} value={o.label}>
                         {o.label}
                       </option>
                     ))}
                   </select>
-                </div>
+                </>
+              )}
+
+              {activeRole === "DOCTOR" && (
+                <>
+                  <label>Khoa</label>
+                  <select
+                    value={selectedDepartment}
+                    onChange={(e) => {
+                      setSelectedDepartment(e.target.value);
+                      setForm({ ...form, doctorId: "" });
+                    }}
+                  >
+                    <option value="">-- Chọn khoa --</option>
+                    {departments.map((d) => (
+                      <option key={d.id} value={d.id}>
+                        {d.name}
+                      </option>
+                    ))}
+                  </select>
+
+                  <label>Bác sĩ</label>
+                  <select
+                    value={form.doctorId}
+                    disabled={!selectedDepartment}
+                    onChange={(e) =>
+                      setForm({ ...form, doctorId: e.target.value })
+                    }
+                  >
+                    <option value="">-- Chọn bác sĩ --</option>
+                    {allDoctors
+                      .filter((d) => d.departmentId === selectedDepartment)
+                      .map((d) => (
+                        <option key={d.id} value={d.id}>
+                          {d.name}
+                        </option>
+                      ))}
+                  </select>
+                </>
               )}
 
               <div className="modal-actions">
                 <button
                   type="button"
-                  className="btn-secondary"
                   onClick={() => setShowModal(false)}
                 >
                   Hủy
                 </button>
                 <button type="submit" className="btn-primary">
-                  Tạo tài khoản
+                  Tạo
                 </button>
               </div>
             </form>

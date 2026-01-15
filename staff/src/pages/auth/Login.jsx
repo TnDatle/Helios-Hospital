@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../config/firebase";
+import { useAuth } from "../../context/AuthContext";
+
+const API_BASE = "http://localhost:5000/api";
 
 function Login() {
   const navigate = useNavigate();
+  const { user, loading: authLoading, refreshUser } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -12,6 +16,18 @@ function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  /* =========================
+     🔑 ĐÃ LOGIN → ĐẨY RA KHỎI LOGIN
+  ========================= */
+  useEffect(() => {
+    if (!authLoading && user) {
+      navigate("/staff", { replace: true });
+    }
+  }, [user, authLoading, navigate]);
+
+  /* =========================
+     SUBMIT LOGIN
+  ========================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -25,49 +41,40 @@ function Login() {
       setLoading(true);
 
       // 1️⃣ Firebase login
-      const { user } = await signInWithEmailAndPassword(
+      const { user: fbUser } = await signInWithEmailAndPassword(
         auth,
         email,
         password
       );
 
-      // 2️⃣ Lấy ID TOKEN
-      const idToken = await user.getIdToken();
+      // 2️⃣ Lấy Firebase ID token
+      const idToken = await fbUser.getIdToken();
 
-      // 3️⃣ Gọi backend để lấy role
-      const res = await fetch("http://localhost:5000/api/auth/me", {
+      // 3️⃣ GỬI TOKEN → BACKEND TẠO SESSION
+      const res = await fetch(`${API_BASE}/auth/login`, {
+        method: "POST",
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${idToken}`,
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify({ idToken }),
       });
+      await refreshUser();
 
       if (!res.ok) {
-        throw new Error("Không thể xác thực tài khoản");
+        throw new Error("LOGIN_FAILED");
       }
 
-      const data = await res.json();
-
-      // 4️⃣ Redirect theo role
-      switch (data.role) {
-        case "ADMIN":
-          navigate("/staff/admin");
-          break;
-        case "DOCTOR":
-          navigate("/staff/doctor");
-          break;
-        case "RECEPTION":
-          navigate("/staff/reception");
-          break;
-        default:
-          setError("Tài khoản không có quyền truy cập");
-      }
     } catch (err) {
-      console.error(err);
+      console.error("LOGIN ERROR:", err);
       setError("Email hoặc mật khẩu không đúng");
     } finally {
       setLoading(false);
     }
   };
+
+  // ⏳ chờ AuthContext xác nhận
+  if (authLoading) return null;
 
   return (
     <div className="login-wrapper">
@@ -102,7 +109,6 @@ function Login() {
               <span
                 className="toggle-password"
                 onClick={() => setShowPassword(!showPassword)}
-                title={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
               >
                 👁
               </span>

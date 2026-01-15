@@ -2,7 +2,7 @@ import {
   DoctorService,
   fetchDoctors,
   fetchDoctorDetail,
-} from "../services/doctor-service.js";
+} from "../services/doctor.service.js";
 
 //Tìm bác sĩ 
 export const findDoctors = async (req, res) => {

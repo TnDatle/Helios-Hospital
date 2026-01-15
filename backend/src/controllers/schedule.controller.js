@@ -5,7 +5,7 @@ import {
   createBulkScheduleService,
   deleteScheduleService,
 
-} from "../services/schedule-service.js";
+} from "../services/schedule.service.js";
 
 export const getDoctorSchedules = async (req, res) => {
   try {

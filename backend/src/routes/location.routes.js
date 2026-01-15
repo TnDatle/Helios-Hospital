@@ -2,7 +2,7 @@ import express from "express";
 import {
   getProvinces,
   getCommunes,
-} from "../controllers/location-controller.js";
+} from "../controllers/location.controller.js";
 
 const router = express.Router();
 

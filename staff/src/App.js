@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import StaffLayout from "./layouts/StaffLayout";
+import RoleRedirect from "./components/RoleRedirect";
 
 // pages
 import Login from "./pages/auth/Login";
@@ -35,24 +36,30 @@ import "./styles/login.css";
 function App() {
   return (
     <Routes>
-      {/* 🔹 ROOT → LOGIN */}
-      <Route path="/" element={<Navigate to="/staff/login" />} />
+      {/* ROOT */}
+      <Route path="/" element={<Navigate to="/staff/login" replace />} />
 
-      {/* 🔹 LOGIN */}
+      {/* LOGIN */}
       <Route path="/staff/login" element={<Login />} />
 
-      {/* 🔹 STAFF SYSTEM */}
-      <Route element={<StaffLayout />}>
-        <Route element={<ReceptionPage />}>
-          <Route path="/staff/reception" element={<PatientQueue />} />
-          <Route path="/staff/reception/verify/:id" element={<VerifyPatient />} />
+      {/* STAFF */}
+      <Route path="/staff" element={<StaffLayout />}>
+        {/* 🔑 QUAN TRỌNG: redirect khi vào /staff */}
+        <Route index element={<RoleRedirect />} />
+
+        {/* RECEPTION */}
+        <Route path="reception" element={<ReceptionPage />}>
+          <Route index element={<PatientQueue />} />
+          <Route path="verify/:id" element={<VerifyPatient />} />
         </Route>
 
-        <Route element={<DoctorPage />}>
-          <Route path="/staff/doctor" element={<Schedule />} />
+        {/* DOCTOR */}
+        <Route path="doctor" element={<DoctorPage />}>
+          <Route index element={<Schedule />} />
         </Route>
 
-        <Route path="/staff/admin" element={<AdminPage />}>
+        {/* ADMIN */}
+        <Route path="admin" element={<AdminPage />}>
           <Route index element={<Dashboard />} />
           <Route path="users" element={<Users />} />
           <Route path="departments" element={<Department />} />
@@ -63,6 +70,8 @@ function App() {
           <Route path="settings" element={<Setting />} />
         </Route>
       </Route>
+
+      <Route path="*" element={<div>404</div>} />
     </Routes>
   );
 }

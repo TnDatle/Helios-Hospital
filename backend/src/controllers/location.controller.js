@@ -1,7 +1,7 @@
 import {
   fetchProvinces,
   fetchCommunes,
-} from "../services/location-service.js";
+} from "../services/location.service.js";
 
 export const getProvinces = async (req, res) => {
   try {

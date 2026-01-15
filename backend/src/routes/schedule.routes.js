@@ -5,7 +5,7 @@ import {
   getSchedulesController,
   createBulkScheduleController,
   deleteScheduleController,
-} from "../controllers/schedule-controller.js";
+} from "../controllers/schedule.controller.js";
 import { noCache } from "../middlewares/no-cache.js";
 
 const router = express.Router();

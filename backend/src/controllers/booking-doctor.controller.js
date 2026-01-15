@@ -1,6 +1,6 @@
 import {
   fetchDoctorsForBooking,
-} from "../services/doctor-service.js";
+} from "../services/doctor.service.js";
 
 export const findDoctorsForBooking = async (req, res) => {
   try {

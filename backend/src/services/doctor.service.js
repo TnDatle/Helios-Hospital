@@ -1,6 +1,6 @@
 import admin from "firebase-admin";
 import { db } from "../config/firebase.js";
-import { DoctorModel } from "../models/doctor-model.js";
+import { DoctorModel } from "../models/doctor.model.js";
 
 // FE gửi tên khoa → map sang departmentId DB
 const departmentMap = {

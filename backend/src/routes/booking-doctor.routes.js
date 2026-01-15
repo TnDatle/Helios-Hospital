@@ -1,6 +1,6 @@
 // booking-doctor-routes.js
 import express from "express";
-import { findDoctorsForBooking } from "../controllers/booking-doctor-controller.js";
+import { findDoctorsForBooking } from "../controllers/booking-doctor.controller.js";
 import { noCache } from "../middlewares/no-cache.js";
 const router = express.Router();
 
