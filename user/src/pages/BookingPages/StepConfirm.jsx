@@ -119,12 +119,6 @@ export default function StepConfirm({ data, onBack }) {
           <strong>Số điện thoại:</strong> {patient.phone}
         </p>
 
-        {patient.relationship && (
-          <p>
-            <strong>Mối quan hệ:</strong> {patient.relationship}
-          </p>
-        )}
-
         {patient.cccd && (
           <p>
             <strong>CCCD:</strong> {patient.cccd}

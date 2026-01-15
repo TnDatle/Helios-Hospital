@@ -14,21 +14,34 @@ import authRoute from "./src/routes/auth.routes.js";
 
 const app = express();
 
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:5173",
+];
+
 /* ======================
-   1️⃣ PARSE JSON (PHẢI ĐẦU TIÊN)
+   PARSE JSON (PHẢI ĐẦU TIÊN)
 ====================== */
 app.use(express.json());
 
 /* ======================
-   2️⃣ CORS
+    CORS
 ====================== */
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: function (origin, callback) {
+      // Cho phép Postman / server-to-server
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
   })
 );
-
 /* ======================
    3️⃣ SESSION
 ====================== */

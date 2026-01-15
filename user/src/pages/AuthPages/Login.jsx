@@ -29,33 +29,51 @@ function Login() {
       return;
     }
 
-    try {
-      setLoading(true);
+    setLoading(true); // đưa ra ngoài try
 
+    try {
       await setPersistence(auth, browserSessionPersistence);
 
-      await signInWithEmailAndPassword(auth, email, password);
+      const { user } = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      const idToken = await user.getIdToken();
+
+      const res = await fetch("http://localhost:5000/api/auth/me-token", {
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error("UNAUTHORIZED");
+      }
+
+      const data = await res.json();
+
+      if (data.data.role !== "PATIENT") {
+        await auth.signOut();
+        throw new Error("NOT_PATIENT"); // QUAN TRỌNG
+      }
 
       showToast("Đăng nhập thành công");
       navigate("/");
+
     } catch (err) {
       console.error("Login error:", err);
 
-      switch (err.code) {
-        case "auth/user-not-found":
-          setError("Email chưa được đăng ký");
-          break;
-        case "auth/wrong-password":
-          setError("Mật khẩu không đúng");
-          break;
-        case "auth/invalid-email":
-          setError("Email không hợp lệ");
-          break;
-        default:
-          setError("Email hoặc mật khẩu không đúng");
+      if (err.message === "NOT_PATIENT") {
+        setError(
+          "Email này thuộc nhân sự bệnh viện. Vui lòng đăng nhập tại cổng nội bộ."
+        );
+      } else {
+        setError("Email hoặc mật khẩu không đúng");
       }
     } finally {
-      setLoading(false);
+      setLoading(false); // LUÔN LUÔN CHẠY
     }
   };
 

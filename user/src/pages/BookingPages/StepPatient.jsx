@@ -203,6 +203,7 @@ export default function StepPatient({ onBack, onSelect }) {
       !patient.fullName ||
       !patient.dob ||
       !patient.phone ||
+      !patient.cccd ||
       !patient.province ||
       !patient.ward ||
       !patient.address ||
@@ -364,6 +365,14 @@ export default function StepPatient({ onBack, onSelect }) {
             value={patient.phone}
             onChange={handleChange}
             disabled={type === "SELF" && isFilled(patient.phone)}
+          />
+
+          <input
+            name="cccd"
+            placeholder="Căn cước công dân"
+            value={patient.cccd}
+            onChange={handleChange}
+            disabled={type === "SELF" && isFilled(patient.cccd)}
           />
 
           <select

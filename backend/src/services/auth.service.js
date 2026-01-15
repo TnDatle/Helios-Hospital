@@ -34,3 +34,10 @@ export const hydrateAuthUser = async (user) => {
   }
   return user;
 };
+
+
+export const getUserByUid = async (uid) => {
+  const snap = await db.collection("Users").doc(uid).get();
+  if (!snap.exists) return null;
+  return snap.data();
+};
