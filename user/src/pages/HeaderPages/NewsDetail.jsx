@@ -10,33 +10,59 @@ function NewsDetail() {
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const formatDateTime = (value) => {
+    return new Date(value).toLocaleString("vi-VN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
+
   useEffect(() => {
-    axios
-      .get(`${API}/news/${slug}`)
-      .then((res) => setPost(res.data))
-      .catch(() => setPost(null))
-      .finally(() => setLoading(false));
+    const fetchDetail = async () => {
+      try {
+        const res = await axios.get(`${API}/news/${slug}`);
+        setPost(res.data);
+      } catch {
+        setPost(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDetail();
   }, [slug]);
 
   if (loading) return <p>Đang tải bài viết...</p>;
   if (!post) return <p>Bài viết không tồn tại</p>;
 
   return (
-    <div className="news-detail">
-      <h1>{post.title}</h1>
+    <article className="news-detail">
+      {/* ===== TITLE ===== */}
+      <h1 className="news-title">{post.title}</h1>
 
-      <span className="news-date">
-        {new Date(post.createdAt).toLocaleDateString("vi-VN")}
-      </span>
+      {/* ===== META ===== */}
+      <div className="news-meta">
+        {post.createdAt && (
+          <span> {formatDateTime(post.createdAt)}  <span> - Thành phố Hồ Chí Minh</span></span>
+        )}
+      </div>
 
-      <img src={post.thumbnail} alt={post.title} />
+      {/* ===== THUMBNAIL ===== */}
+      {post.thumbnail && (
+        <div className="news-thumbnail">
+          <img src={post.thumbnail} alt={post.title} />
+        </div>
+      )}
 
-      {/* Nội dung bài */}
+      {/* ===== CONTENT ===== */}
       <div
         className="news-body"
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
-    </div>
+    </article>
   );
 }
 

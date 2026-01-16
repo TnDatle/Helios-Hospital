@@ -1,6 +1,7 @@
 import slugify from "slugify";
 import { db, FieldValue } from "../config/firebase.js";
 
+
 export const createNews = async ({
   title,
   summary,
@@ -56,7 +57,7 @@ export const getAllPublishedNews = async () => {
 
 export const getNewsBySlug = async (slug) => {
   const snap = await db
-    .collection("news")
+    .collection("News")
     .where("slug", "==", slug)
     .where("status", "==", "published")
     .limit(1)
@@ -74,4 +75,15 @@ export const getNewsBySlug = async (slug) => {
       ? data.createdAt.toDate()
       : null,
   };
+};
+
+
+export const deleteNewsById = async (id) => {
+  if (!id) {
+    throw new Error("Missing news id");
+  }
+
+  await db.collection("News").doc(id).delete();
+
+  return true;
 };

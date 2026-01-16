@@ -1,3 +1,4 @@
+import { doc, deleteDoc } from "firebase/firestore";
 import * as NewsService from "../services/news.service.js";
 import {
   getAllPublishedNews,
@@ -38,5 +39,20 @@ export const getNewsDetail = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Lỗi lấy bài viết" });
+  }
+};
+
+// DELETE /api/news
+export const deleteNews = async (req, res) => {
+  try {
+    await NewsService.deleteNewsById(req.params.id);
+
+    res.status(200).json({ message: "Delete success" });
+  } catch (err) {
+    console.error("DELETE NEWS ERROR:", err.message);
+
+    res.status(500).json({
+      message: err.message || "Delete failed",
+    });
   }
 };

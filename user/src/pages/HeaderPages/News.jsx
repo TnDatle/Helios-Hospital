@@ -37,7 +37,7 @@ function News() {
 
               {/*  TRUYỀN SLUG */}
               <Link to={`/tin-tuc/${item.slug}`}>
-                <button>Đọc bài</button>
+                <button className="btnRead">Đọc bài</button>
               </Link>
             </div>
           </div>
