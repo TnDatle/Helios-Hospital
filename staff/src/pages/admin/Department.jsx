@@ -298,8 +298,8 @@ export default function Departments() {
                   className="dept-actions"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <button onClick={() => setEditDept(d)}>✏️</button>
-                  <button onClick={() => handleDeleteDepartment(d)}>🗑️</button>
+                  <button onClick={() => setEditDept(d)}>Sửa</button>
+                  <button onClick={() => handleDeleteDepartment(d)}>Xóa</button>
                 </div>
               </li>
             ))}

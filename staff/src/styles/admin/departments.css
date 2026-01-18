@@ -68,10 +68,15 @@
   background: var(--primary);
   color: #fff;
   cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(14, 165, 164, 0.3);
 }
 
 .dept-header button:hover {
   background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(14, 165, 164, 0.4);
 }
 
 .dept-sidebar ul {
@@ -87,9 +92,8 @@
   padding: 12px 14px;
   border-radius: 12px;
   cursor: pointer;
-  user-select: none;  
+  user-select: none;
   transition: all 0.2s ease;
-  transition: background 0.15s ease, transform 0.1s ease;
 }
 
 .dept-sidebar li:hover {
@@ -117,6 +121,16 @@
   border: none;
   cursor: pointer;
   font-size: 14px;
+  padding: 4px;
+  margin-left: 5px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  color:#0369a1;
+}
+
+.dept-actions button:hover {
+  background: rgba(0, 0, 0, 0.05);
+  transform: scale(1.1);
 }
 
 /* =====================
@@ -144,12 +158,15 @@
   width: 280px;
   padding: 10px 14px;
   border-radius: 999px;
-  border: 1px solid #cbd5e1;
+  border: 2px solid #cbd5e1;
   outline: none;
+  font-size: 14px;
+  transition: all 0.2s ease;
 }
 
 .toolbar input:focus {
   border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(14, 165, 164, 0.1);
 }
 
 .toolbar button {
@@ -160,10 +177,15 @@
   color: #fff;
   font-weight: 600;
   cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
 .toolbar button:hover {
-  opacity: 0.9;
+  background: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
 }
 
 /* =====================
@@ -180,12 +202,21 @@
   font-size: 12px;
   color: var(--muted);
   padding: 10px;
+  text-align: left;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
 .doctor-table tbody tr {
   background: #ffffff;
   border-radius: 14px;
   box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+  transition: all 0.2s ease;
+}
+
+.doctor-table tbody tr:hover {
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.1);
+  transform: translateY(-1px);
 }
 
 .doctor-table td {
@@ -196,6 +227,11 @@
 
 .doctor-table td:first-child {
   font-weight: 700;
+  border-radius: 14px 0 0 14px;
+}
+
+.doctor-table td:last-child {
+  border-radius: 0 14px 14px 0;
 }
 
 .doctor-table button {
@@ -205,11 +241,35 @@
   border: none;
   font-size: 12px;
   cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 
-.doctor-table button:last-child {
-  background: var(--danger);
-  color: #fff;
+.doctor-table button:nth-child(1) {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.doctor-table button:nth-child(1):hover {
+  background: #bae6fd;
+}
+
+.doctor-table button:nth-child(2) {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.doctor-table button:nth-child(2):hover {
+  background: #fde68a;
+}
+
+.doctor-table button:nth-child(3) {
+  background: #fee2e2;
+  color: var(--danger);
+}
+
+.doctor-table button:nth-child(3):hover {
+  background: #fecaca;
 }
 
 /* =====================
@@ -256,20 +316,41 @@
   align-items: center;
   justify-content: center;
   z-index: 999;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease;
 }
 
 .modal {
   background: #ffffff;
-  width: 380px;
+  width: 420px;
+  max-width: 90%;
   border-radius: 20px;
-  padding: 22px;
+  padding: 28px;
   animation: popup 0.25s ease;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.3);
 }
 
 .modal h3 {
   font-size: 20px;
   font-weight: 800;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  color: var(--text);
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 12px;
+}
+
+.modal p {
+  margin: 12px 0;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.modal p b {
+  font-weight: 700;
+  color: var(--primary-dark);
+  display: inline-block;
+  min-width: 100px;
 }
 
 .modal form {
@@ -280,51 +361,81 @@
 
 .modal input,
 .modal select {
-  padding: 10px 14px;
+  padding: 12px 16px;
   border-radius: 12px;
-  border: 1px solid #cbd5e1;
+  border: 2px solid #cbd5e1;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.modal input:focus,
+.modal select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(14, 165, 164, 0.1);
+}
+
+.modal input::placeholder {
+  color: var(--muted);
 }
 
 .modal button {
-  padding: 10px;
+  padding: 12px;
   border-radius: 999px;
   border: none;
   background: var(--primary);
   color: #fff;
   font-weight: 700;
   cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(14, 165, 164, 0.3);
 }
 
 .modal button:hover {
   background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(14, 165, 164, 0.4);
 }
 
-
+/* =====================
+   TOAST
+===================== */
 .toast {
   position: fixed;
   bottom: 24px;
   right: 24px;
-  padding: 12px 18px;
+  padding: 14px 20px;
   border-radius: 12px;
   color: #fff;
   font-weight: 600;
   animation: fadeIn 0.2s ease;
+  z-index: 1000;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
 }
 
 .toast.success {
-  background: #16a34a;
+  background: linear-gradient(135deg, #16a34a, #15803d);
 }
 
 .toast.error {
-  background: #dc2626;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
 }
 
+/* =====================
+   ANIMATIONS
+===================== */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-
-
 
 @keyframes popup {
   from {
@@ -334,5 +445,48 @@
   to {
     transform: translateY(0) scale(1);
     opacity: 1;
+  }
+}
+
+/* =====================
+   RESPONSIVE
+===================== */
+@media (max-width: 768px) {
+  .admin-page {
+    padding: 16px;
+  }
+
+  .admin-title {
+    font-size: 22px;
+  }
+
+  .dept-layout {
+    flex-direction: column;
+  }
+
+  .dept-sidebar {
+    width: 100%;
+  }
+
+  .toolbar {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .toolbar input {
+    width: 100%;
+  }
+
+  .doctor-table {
+    font-size: 13px;
+  }
+
+  .doctor-table td {
+    padding: 10px 8px;
+  }
+
+  .modal {
+    width: 100%;
+    padding: 20px;
   }
 }

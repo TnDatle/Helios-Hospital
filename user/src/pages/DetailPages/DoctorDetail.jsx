@@ -32,7 +32,7 @@ const DEPARTMENT_LABEL = {
 
 /**
  * =====================================================
- * INTRO TEMPLATE (CLEAN – SCALE ĐƯỢC)
+ * INTRO TEMPLATE
  * =====================================================
  */
 const getDoctorIntro = (doctor) => {
@@ -41,7 +41,7 @@ const getDoctorIntro = (doctor) => {
   const departmentName = DEPARTMENT_LABEL[doctor.department] || "khoa chuyên môn";
 
   return `
-  ${doctor.name} hiện đang công tác tại ${departmentName} với chuyên môn là ${doctor.specialty}.
+  ${doctor.name} hiện đang công tác tại khoa ${departmentName} với chuyên môn là ${doctor.specialty}.
   Bác sĩ tham gia tiếp nhận, thăm khám và tư vấn cho người bệnh theo quy trình chuyên môn của khoa.
 
   Lịch làm việc của bác sĩ được cập nhật định kỳ trên hệ thống để người bệnh thuận tiện theo dõi và đăng ký khám.`;
@@ -74,7 +74,7 @@ const DoctorDetail = () => {
 
   /**
    * =====================================================
-   * FETCH DOCTOR DETAIL (KHI CHƯA CÓ DATA)
+   * FETCH DOCTOR DETAIL 
    * =====================================================
    */
   useEffect(() => {
