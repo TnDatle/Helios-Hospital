@@ -19,7 +19,7 @@ function DoctorPage() {
             📄 Lịch sử khám
           </NavLink>
 
-          <NavLink to="/staff/doctor/search">
+          <NavLink to="/staff/doctor/track">
             🔍 Tra cứu bệnh nhân
           </NavLink>
         </nav>

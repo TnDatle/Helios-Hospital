@@ -13,6 +13,9 @@ import VerifyPatient from "./pages/reception/VerifyPatient";
 // doctor
 import DoctorPage from "./pages/doctor/DoctorPage";
 import Schedule from "./pages/doctor/Schedule";
+import Queue from "./pages/doctor/Queue";
+import History from "./pages/doctor/History";
+import Track from "./pages/doctor/Track"
 
 // admin
 import AdminPage from "./pages/admin/AdminPage";
@@ -56,6 +59,9 @@ function App() {
         {/* DOCTOR */}
         <Route path="doctor" element={<DoctorPage />}>
           <Route index element={<Schedule />} />
+          <Route path="queue" element={<Queue />} />
+          <Route path="history" element={<History />} />
+          <Route path="track" element={<Track />} />
         </Route>
 
         {/* ADMIN */}
