@@ -9,22 +9,14 @@ function ReceptionPage() {
 
         <nav className="sidebar-menu">
           <NavLink to="/staff/reception" end>
-            🧾 Đăng ký online
-          </NavLink>
-
-          <NavLink to="/staff/reception/verify">
-            🪪 Xác thực tại quầy
+            🧾 Đăng ký khám
           </NavLink>
 
           <NavLink to="/staff/reception/walk-in">
             🚶 Tiếp nhận trực tiếp
           </NavLink>
 
-          <NavLink to="/staff/reception/appointments">
-            📅 Lịch hẹn hôm nay
-          </NavLink>
-
-          <NavLink to="/staff/reception/search">
+          <NavLink to="/staff/reception/track-patient">
             🔍 Tra cứu bệnh nhân
           </NavLink>
         </nav>

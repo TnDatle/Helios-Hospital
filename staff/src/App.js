@@ -7,8 +7,9 @@ import Login from "./pages/auth/Login";
 
 // reception
 import ReceptionPage from "./pages/reception/ReceptionPage";
-import PatientQueue from "./pages/reception/PatientQueue";
-import VerifyPatient from "./pages/reception/VerifyPatient";
+import Register from "./pages/reception/Register";
+import WalkIn from "./pages/reception/WalkIn";
+import TrackPatient from "./pages/doctor/Track";
 
 // doctor
 import DoctorPage from "./pages/doctor/DoctorPage";
@@ -52,8 +53,9 @@ function App() {
 
         {/* RECEPTION */}
         <Route path="reception" element={<ReceptionPage />}>
-          <Route index element={<PatientQueue />} />
-          <Route path="verify/:id" element={<VerifyPatient />} />
+           <Route index element={<Register />} />
+           <Route path="walk-in" element={<WalkIn />} />
+           <Route path="track-patient" element={<TrackPatient />} />
         </Route>
 
         {/* DOCTOR */}
