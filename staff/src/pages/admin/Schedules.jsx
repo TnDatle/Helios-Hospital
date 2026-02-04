@@ -72,6 +72,18 @@ export default function Schedules() {
     }
   };
 
+  const getRoomOrder = (room) => {
+  if (!room) return Number.MAX_SAFE_INTEGER;
+
+  // Lấy phần sau dấu "-"
+  const parts = room.split("-");
+  if (parts.length < 2) return Number.MAX_SAFE_INTEGER;
+
+  const num = parseInt(parts[1], 10);
+  return isNaN(num) ? Number.MAX_SAFE_INTEGER : num;
+};
+
+
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
@@ -132,7 +144,7 @@ export default function Schedules() {
   /* ===== CRUD OPERATIONS ===== */
   const submitCreate = async () => {
     if (!form.doctorId || !form.room || selectedSlots.length === 0) {
-      alert("⚠️ Vui lòng chọn bác sĩ, phòng và lịch khám");
+      alert("Vui lòng chọn bác sĩ, phòng và lịch khám");
       return;
     }
 
@@ -154,23 +166,23 @@ export default function Schedules() {
         return;
       }
 
-      alert("✅ Thêm lịch khám thành công");
+      alert(" Thêm lịch khám thành công");
       closeModal();
       loadData();
     } catch (error) {
       console.error("Error creating schedule:", error);
-      alert("❌ Có lỗi xảy ra khi tạo lịch khám");
+      alert(" Có lỗi xảy ra khi tạo lịch khám");
     }
   };
 
   const deleteSchedule = async (scheduleId) => {
     if (!scheduleId) {
-      alert("⚠️ Không tìm thấy ID lịch");
+      alert(" Không tìm thấy ID lịch");
       return;
     }
 
     const confirmed = window.confirm(
-      "⚠️ Bạn có chắc chắn muốn xoá lịch khám này?\nHành động này không thể hoàn tác."
+      " Bạn có chắc chắn muốn xoá lịch khám này?\nHành động này không thể hoàn tác."
     );
     if (!confirmed) return;
 
@@ -186,11 +198,11 @@ export default function Schedules() {
         return;
       }
 
-      alert("✅ Đã xoá lịch khám thành công");
+      alert(" Đã xoá lịch khám thành công");
       loadData();
     } catch (error) {
       console.error("Error deleting schedule:", error);
-      alert("❌ Có lỗi xảy ra khi xoá lịch khám");
+      alert(" Có lỗi xảy ra khi xoá lịch khám");
     }
   };
 
@@ -268,11 +280,13 @@ export default function Schedules() {
         </tr>
       </thead>
       <tbody>
-        {group.doctors.map((row) => (
+        {[...group.doctors]
+            .sort((a, b) => getRoomOrder(a.room) - getRoomOrder(b.room))
+            .map((row) => (
           <tr key={`${row.doctorId}_${row.room}`}>
             <td>{row.doctorName}</td>
             <td>{row.specialty}</td>
-            <td>{row.room}</td>
+            <td>{row.room}</td> 
             <td>{renderScheduleCell(row)}</td>
           </tr>
         ))}

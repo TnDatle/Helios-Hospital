@@ -3,8 +3,10 @@ import cors from "cors";
 import session from "express-session";
 import path from "path";
 import { fileURLToPath } from "url";
-
+import dotenv from "dotenv";
 import "./src/config/firebase.js";
+
+
 import newsRoutes from "./src/routes/news.routes.js";
 import uploadRoutes from "./src/routes/upload.routes.js";
 import doctorRoutes from "./src/routes/doctor.routes.js";
@@ -14,6 +16,9 @@ import locationRoutes from "./src/routes/location.routes.js";
 import bookingDoctorRoutes from "./src/routes/booking-doctor.routes.js";
 import userRoutes from "./src/routes/user.routes.js";
 import authRoute from "./src/routes/auth.routes.js";
+import chatbotRoute from "./src/routes/chatbot.routes.js";
+
+dotenv.config();
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -25,7 +30,7 @@ const allowedOrigins = [
 ];
 
 /* ======================
-   CORS (PHẢI ĐẦU TIÊN)
+   CORS 
 ====================== */
 app.use(
   cors({
@@ -43,7 +48,7 @@ app.use(
 );
 
 /* ======================
-   UPLOAD (PHẢI TRƯỚC JSON)
+   UPLOAD
 ====================== */
 app.use(
   "/uploads",
@@ -92,6 +97,7 @@ app.use("/api/locations", locationRoutes);
 app.use("/api/booking", bookingDoctorRoutes);
 app.use("/api/auth", authRoute);
 app.use("/api/news", newsRoutes);
+app.use("/api/chatbot", chatbotRoute);
 
 /* ======================
    START SERVER

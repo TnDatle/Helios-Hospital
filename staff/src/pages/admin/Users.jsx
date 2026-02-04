@@ -204,7 +204,7 @@ export default function Users() {
     <div className="admin-page">
       <div className="admin-header">
         <h1>Quản lý tài khoản</h1>
-        <button className="btn-primary" onClick={() => setShowModal(true)}>
+        <button className="btn-open" onClick={() => setShowModal(true)}>
           ➕ Thêm tài khoản
         </button>
       </div>
@@ -398,7 +398,7 @@ export default function Users() {
                 >
                   Hủy
                 </button>
-                <button type="submit" className="btn-primary">
+                <button type="submit" className="btn-create">
                   Tạo
                 </button>
               </div>
