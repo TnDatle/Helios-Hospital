@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 //Import Components
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-
+import SeasonalEffect from "./components/decorations/SeasonalEffect";
 //Import Departments Pages
 import NgoaiTongQuat from "./pages/DepartmentsPages/NgoaiTongQuat";
 import NgoaiTietNieu from "./pages/DepartmentsPages/NgoaiTietNieu";
@@ -58,7 +58,7 @@ function App() {
   return (
     <BrowserRouter>
       <Header />
-
+      <SeasonalEffect />
       <main style={{ minHeight: "70vh" }}>
         <Routes>
 

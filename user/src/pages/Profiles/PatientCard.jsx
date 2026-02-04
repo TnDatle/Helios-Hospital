@@ -54,6 +54,10 @@ export default function PatientCard({ patient, onEdit }) {
         </p>
 
         <p>
+          <strong>Dân Tộc:</strong> {patient.ethnicity || "—"}
+        </p>
+
+        <p>
           <strong>Địa chỉ:</strong>{" "}
           {patient.address?.detail
             ? `${patient.address.detail}, ${patient.address.commune}, ${patient.address.province}`

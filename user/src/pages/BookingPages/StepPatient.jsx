@@ -35,6 +35,7 @@ export default function StepPatient({ onBack, onSelect }) {
     cccd: "",
     bhyt: "",
     relationship: "",
+    ethnicity:"",
     province: "",
     ward: "",
     address: "",
@@ -101,6 +102,7 @@ export default function StepPatient({ onBack, onSelect }) {
         gender: profile.gender || "MALE",
         phone: profile.phone || "",
         cccd: profile.cccd || "",
+        ethnicity: profile.ethnicity || "Kinh",
         bhyt: profile.bhyt || "",
         relationship: "",
         province: provinceCode,
@@ -204,6 +206,7 @@ export default function StepPatient({ onBack, onSelect }) {
       !patient.dob ||
       !patient.phone ||
       !patient.cccd ||
+      !patient.ethnicity ||
       !patient.province ||
       !patient.ward ||
       !patient.address ||
@@ -227,13 +230,14 @@ export default function StepPatient({ onBack, onSelect }) {
       gender: patient.gender,
       phone: patient.phone,
       cccd: patient.cccd,
+      ethnicity: patient.ethnicity.trim(),
       bhyt: patient.bhyt || "",
       isDefault: type === "SELF",
       relationship: type === "OTHER" ? patient.relationship : null,
       address: {
         province: provinceObj?.name || "",
         commune: wardObj?.name || "",
-        detail: patient.address,
+        detail: patient.address.trim(),
       },
     });
   };
@@ -365,6 +369,14 @@ export default function StepPatient({ onBack, onSelect }) {
             value={patient.phone}
             onChange={handleChange}
             disabled={type === "SELF" && isFilled(patient.phone)}
+          />
+
+          <input
+            name="ethnicity"
+            placeholder="Dân tộc (VD: Kinh, Tày, Thái...)"
+            value={patient.ethnicity}
+            onChange={handleChange}
+            disabled={type === "SELF" && isFilled(patient.ethnicity)}
           />
 
           <input

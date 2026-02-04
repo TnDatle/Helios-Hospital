@@ -15,6 +15,7 @@ export default function PatientFormModal({ patient, onClose, onSuccess }) {
     gender: patient.gender || "MALE",
     phone: patient.phone || "",
     cccd: patient.cccd || "",
+    ethnicity: patient.ethnicity || "",
     bhyt: patient.bhyt || "",
     relationship: patient.relationship || "",
     provinceCode: "",
@@ -118,6 +119,7 @@ export default function PatientFormModal({ patient, onClose, onSuccess }) {
       gender: form.gender,
       phone: form.phone,
       cccd: form.cccd,
+      ethnicity: form.ethnicity,
       bhyt: form.bhyt,
       isDefault: patient.isDefault || false,
       relationship: patient.isDefault ? null : form.relationship,
@@ -182,7 +184,6 @@ export default function PatientFormModal({ patient, onClose, onSuccess }) {
               <option value="FATHER">Cha</option>
               <option value="MOTHER">Mẹ</option>
               <option value="SPOUSE">Vợ / Chồng</option>
-              <option value="" ></option>
               <option value="CHILD">Con</option>
               <option value="OTHER">Người thân khác</option>
             </select>
@@ -192,6 +193,13 @@ export default function PatientFormModal({ patient, onClose, onSuccess }) {
             name="phone"
             placeholder="Số điện thoại"
             value={form.phone}
+            onChange={handleChange}
+          />
+
+          <input
+            name="ethnicity"
+            placeholder="Dân Tộc"
+            value={form.ethnicity}
             onChange={handleChange}
           />
 

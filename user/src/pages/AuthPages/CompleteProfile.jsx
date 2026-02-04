@@ -24,6 +24,7 @@ function CompleteProfile() {
     dob: "",
     phone: "",
     cccd: "",
+    ethnicity: "",
     province: "", // name
     commune: "",  // name
     address: "",
@@ -73,6 +74,7 @@ function CompleteProfile() {
         dob: form.dob,
         phone: form.phone,
         cccd: form.cccd || null,
+        ethnicity: form.ethnicity,
         address: {
           province: form.province,
           commune: form.commune,
@@ -133,6 +135,12 @@ function CompleteProfile() {
             <label>Số điện thoại</label>
             <input name="phone" value={form.phone} onChange={handleChange} required />
             {errors.phone && <span className="form-error">{errors.phone}</span>}
+          </div>
+
+          <div className="form-group">
+            <label>Dân Tộc</label>
+            <input name="ethnicity" value={form.ethnicity} onChange={handleChange} required />
+            {errors.ethnicity && <span className="form-error">{errors.ethnicity}</span>}
           </div>
 
           <div className="form-group">

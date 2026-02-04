@@ -1,0 +1,36 @@
+.effect-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+}
+
+.snow,
+.petal {
+  position: absolute;
+  top: -20px;
+  opacity: 0.8;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.snow {
+  animation-name: snowFall;
+  color: #fff;
+}
+
+.petal {
+  animation-name: petalFall;
+}
+
+@keyframes snowFall {
+  to {
+    transform: translateY(120vh);
+  }
+}
+
+@keyframes petalFall {
+  to {
+    transform: translateY(120vh) rotate(360deg);
+  }
+}
