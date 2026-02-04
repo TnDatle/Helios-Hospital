@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import SnowEffect from "./SnowEffect";
 import PetalEffect from "./PetalEffect";
+import "../../styles/effect.css";
 
 export default function SeasonalEffect() {
   const [enabled, setEnabled] = useState(true);
 
-  // load trạng thái đã lưu
   useEffect(() => {
     const saved = localStorage.getItem("seasonalEffect");
     if (saved !== null) {
@@ -33,25 +33,21 @@ export default function SeasonalEffect() {
 
   return (
     <>
-      {/* Nút bật / tắt */}
-      <button
-        onClick={toggle}
-        style={{
-          position: "fixed",
-          bottom: 20,
-          right: 20,
-          zIndex: 1000,
-          padding: "8px 12px",
-          borderRadius: "20px",
-          border: "none",
-          cursor: "pointer",
-          background: "#2563eb",
-          color: "#fff",
-          fontSize: 13
-        }}
-      >
-        {enabled ? "Tắt hiệu ứng ✖" : "Bật hiệu ứng ✨"}
-      </button>
+      {/* Toggle iOS */}
+      <div className="season-toggle">
+        <span className="season-icon">
+          {enabled ? "✨" : "❄️"}
+        </span>
+
+        <label className="ios-switch clean">
+          <input
+            type="checkbox"
+            checked={enabled}
+            onChange={toggle}
+          />
+          <span className="slider" />
+        </label>
+      </div>
 
       {/* Hiệu ứng */}
       {enabled && isChristmas && <SnowEffect />}

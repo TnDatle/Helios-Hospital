@@ -23,6 +23,72 @@
   animation-name: petalFall;
 }
 
+/* container */
+.season-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 6px 10px;
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+/* icon */
+.season-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* switch */
+.ios-switch.clean {
+  width: 36px;
+  height: 20px;
+  position: relative;
+}
+
+.ios-switch.clean input {
+  display: none;
+}
+
+.ios-switch.clean .slider {
+  position: absolute;
+  inset: 0;
+  background: #d1d5db;
+  border-radius: 999px;
+  transition: 0.25s;
+}
+
+.ios-switch.clean .slider::before {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: 2px;
+  top: 2px;
+  background: white;
+  border-radius: 50%;
+  transition: 0.25s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+.ios-switch.clean input:checked + .slider {
+  background: #34c759;
+}
+
+.ios-switch.clean input:checked + .slider::before {
+  transform: translateX(16px);
+}
+
+
 @keyframes snowFall {
   to {
     transform: translateY(120vh);
