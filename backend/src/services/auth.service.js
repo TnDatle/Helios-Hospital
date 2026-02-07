@@ -19,7 +19,7 @@ export const verifyAndLoadUser = async (idToken) => {
 };
 
 /* ======================
-   HYDRATE AUTH USER
+   HYDRATE AUTH USER 
 ====================== */
 export const hydrateAuthUser = async (user) => {
   if (user.role === "DOCTOR" && user.doctorId) {

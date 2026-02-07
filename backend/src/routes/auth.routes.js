@@ -9,8 +9,8 @@ const router = express.Router();
    AUTH ROUTES
 ====================== */
 router.post("/login", login);
-router.get("/me-token", requireFirebaseAuth, getMeByToken);
-router.get("/me", requireAuth, getMe);
+router.get("/me-token", requireFirebaseAuth, getMeByToken);  //Auth route cho Bệnh nhận 
+router.get("/me", requireAuth, getMe);  //Auth route cho staff (Admin , Doctor , Reception)
 
 router.post("/logout", (req, res) => {
   req.session.destroy(() => {
