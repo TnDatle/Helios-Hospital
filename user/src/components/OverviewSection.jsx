@@ -1,5 +1,5 @@
- import { Link } from "react-router-dom";
-import "../styles/overview.css";
+import { Link } from "react-router-dom";
+
 
 function OverviewSection() {
   return (

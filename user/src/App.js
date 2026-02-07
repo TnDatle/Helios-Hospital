@@ -47,14 +47,14 @@ import "./styles/booking.css";
 import "./styles/home.css";
 import "./styles/service.css";
 import "./styles/sections.css";
+import "./styles/overview.css";
 import "./styles/departments.css";
 import "./styles/schedule.css";
 import "./styles/time.css"
 import "./styles/price.css";
-import "./styles/auth.css";
-import "./styles/bookingsuccesmodel.css";
 import "./styles/patient.css";
 import "./styles/news.css";
+import "./styles/news-detail.css"
 
 function App() {
   return (

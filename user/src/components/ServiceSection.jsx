@@ -1,5 +1,4 @@
 import { useState , useEffect} from "react";
-import "../styles/service.css";
 
 function ServiceSection() {
 
