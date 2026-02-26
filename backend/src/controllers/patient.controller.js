@@ -5,7 +5,7 @@ import {
 
 export const createPatient = async (req, res) => {
   try {
-    const patient = await createPatientService(req.body);
+    const patient = await createPatientService(req.body, req.user);
     return res.status(201).json(patient);
   } catch (error) {
     console.error(error);

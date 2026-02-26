@@ -79,8 +79,6 @@ const Register = () => {
     }));
   };
 
-  const generatePatientCode = () =>
-    'BN' + Date.now().toString().slice(-8);
 
   /* ================= SUBMIT ================= */
 
@@ -91,7 +89,6 @@ const Register = () => {
     );
 
     const patientData = {
-      patientCode: generatePatientCode(),
 
       fullName: formData.fullName,
       dob: formData.dateOfBirth,

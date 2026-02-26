@@ -94,51 +94,72 @@ export default function PatientFormModal({ patient, onClose, onSuccess }) {
      SUBMIT
   ===================== */
   const handleSubmit = async () => {
-    if (
-      !form.fullName ||
-      !form.dob ||
-      !form.provinceCode ||
-      !form.wardCode ||
-      (!patient.isDefault && !form.relationship)
-    ) {
-      alert("Vui lòng nhập đầy đủ thông tin bắt buộc");
+  if (
+    !form.fullName ||
+    !form.dob ||
+    !form.provinceCode ||
+    !form.wardCode ||
+    (!patient.isDefault && !form.relationship)
+  ) {
+    alert("Vui lòng nhập đầy đủ thông tin bắt buộc");
+    return;
+  }
+
+  const provinceObj = provinces.find(
+    (p) => p.code === form.provinceCode
+  );
+  const wardObj = wards.find(
+    (w) => w.code === form.wardCode
+  );
+
+  const payload = {
+    fullName: form.fullName,
+    dob: form.dob,
+    gender: form.gender,
+    phone: form.phone,
+    cccd: form.cccd,
+    ethnicity: form.ethnicity,
+    bhyt: form.bhyt,
+    isDefault: patient.isDefault || false,
+    relationship: patient.isDefault ? null : form.relationship,
+    address: {
+      province: provinceObj?.name || "",
+      commune: wardObj?.name || "",
+      detail: form.addressDetail,
+    },
+  };
+
+  try {
+    alert("Đang lưu thông tin...");
+
+    let result;
+
+    if (patient.id) {
+      result = await updatePatient(patient.id, payload);
+    } else {
+      result = await addPatient(payload);
+    }
+
+    if (result?.message === "PHONE_EXISTS") {
+      alert("Số điện thoại đã tồn tại trong hệ thống.");
       return;
     }
 
-    const provinceObj = provinces.find(
-      (p) => p.code === form.provinceCode
-    );
-    const wardObj = wards.find(
-      (w) => w.code === form.wardCode
-    );
-
-    const payload = {
-      ownerUid: user.uid,
-      fullName: form.fullName,
-      dob: form.dob,
-      gender: form.gender,
-      phone: form.phone,
-      cccd: form.cccd,
-      ethnicity: form.ethnicity,
-      bhyt: form.bhyt,
-      isDefault: patient.isDefault || false,
-      relationship: patient.isDefault ? null : form.relationship,
-      address: {
-        province: provinceObj?.name || "",
-        commune: wardObj?.name || "",
-        detail: form.addressDetail,
-      },
-    };
-
-    if (patient.id) {
-      await updatePatient(patient.id, payload);
-    } else {
-      await addPatient(payload);
+    if (result?.message === "CCCD_EXISTS") {
+      alert("CCCD đã tồn tại trong hệ thống.");
+      return;
     }
+
+    alert(patient.id ? "Cập nhật thành công!" : "Thêm người thân thành công!");
 
     onSuccess();
     onClose();
-  };
+
+  } catch (err) {
+    console.error("Patient save error:", err);
+    alert("Có lỗi xảy ra. Vui lòng thử lại.");
+  }
+};
 
   /* =====================
      RENDER

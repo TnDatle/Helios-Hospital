@@ -5,12 +5,11 @@ import {
   where,
   getDoc,
   getDocs,
-  addDoc,
   updateDoc,
   doc,
   serverTimestamp,
 } from "firebase/firestore";
-import { db } from "../config/firebase";
+import {auth, db } from "../config/firebase";
 
 export const getSelfPatientByOwner = async (ownerUid) => {
   const q = query(
@@ -41,13 +40,18 @@ export const getPatientsByOwner = async (ownerUid) => {
 };
 
 export const addPatient = async (data) => {
-  const ref = await addDoc(collection(db, "Patients"), {
-    ...data,
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
+  const token = await auth.currentUser.getIdToken();
+
+  const res = await fetch("http://localhost:5000/api/patients", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
   });
 
-  return ref.id; 
+  return res.json();
 };
 
 

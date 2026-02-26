@@ -1,11 +1,17 @@
+import { v4 as uuidv4 } from "uuid";
 import { db } from "../config/firebase.js";
 import admin from "firebase-admin";
 
 const collection = db.collection("Patients");
 
-export const createPatientService = async (data) => {
+const generatePatientCode = () => {
+  const shortId = uuidv4().replace(/-/g, "").slice(0, 8).toUpperCase();
+  return "BN" + shortId;
+};
 
-  // Check duplicate phone
+export const createPatientService = async (data, user) => {
+
+  //  Check duplicate phone
   if (data.phone) {
     const phoneQuery = await collection
       .where("phone", "==", data.phone)
@@ -17,7 +23,7 @@ export const createPatientService = async (data) => {
     }
   }
 
-  // Check duplicate CCCD
+  //  Check duplicate CCCD
   if (data.cccd) {
     const cccdQuery = await collection
       .where("cccd", "==", data.cccd)
@@ -29,7 +35,24 @@ export const createPatientService = async (data) => {
     }
   }
 
+  //  Generate unique patientCode
+  let patientCode;
+  let exists = true;
+
+  while (exists) {
+    patientCode = generatePatientCode();
+    const doc = await collection.doc(patientCode).get();
+    exists = doc.exists;
+  }
+
+  //  Logic ownerUid đơn giản
+  // Nếu request có user (đăng nhập) → là user tạo
+  // Nếu không có user (reception không verify) → null
+
+  const ownerUid = user?.uid ?? null;
+
   const patientDoc = {
+    patientCode,
     fullName: data.fullName,
     dob: data.dob,
     gender: data.gender?.toUpperCase(),
@@ -44,19 +67,20 @@ export const createPatientService = async (data) => {
     },
 
     bhyt: data.bhyt || "",
-
     relationship: data.relationship || null,
-    ownerUid: data.ownerUid || null,
+    ownerUid,
     isDefault: false,
+
+    createdBy: user?.uid ?? null,
 
     createdAt: admin.firestore.FieldValue.serverTimestamp(),
     updatedAt: admin.firestore.FieldValue.serverTimestamp()
   };
 
-  await collection.doc(data.patientCode).set(patientDoc);
+  await collection.doc(patientCode).set(patientDoc);
 
   return {
-    patientCode: data.patientCode,
+    patientCode,
     ...patientDoc
   };
 };
