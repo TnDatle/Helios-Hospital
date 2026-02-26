@@ -1,8 +1,11 @@
 // Register.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../styles/reception/register.css';
+import { getProvinces, getCommunes } from '../../API/location-api';
+
 
 const Register = () => {
+
   const [formData, setFormData] = useState({
     fullName: '',
     dateOfBirth: '',
@@ -24,45 +27,180 @@ const Register = () => {
     insuranceTo: ''
   });
 
+  const [provinces, setProvinces] = useState([]);
+  const [communes, setCommunes] = useState([]);
   const [searchId, setSearchId] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
   const [patientCode, setPatientCode] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
+  /* ================= LOAD PROVINCES ================= */
 
-  const handleChange = (e) => {
+  useEffect(() => {
+    const loadProvinces = async () => {
+      try {
+        const data = await getProvinces();
+        setProvinces(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error("Load provinces error:", err);
+        setProvinces([]);
+      }
+    };
+
+    loadProvinces();
+  }, []);
+
+  /* ================= HANDLE CHANGE ================= */
+
+  const handleChange = async (e) => {
     const { name, value, type, checked } = e.target;
+
+    if (name === 'province') {
+      setFormData(prev => ({
+        ...prev,
+        province: value,
+        ward: ''
+      }));
+
+      try {
+        const data = await getCommunes(value);
+        setCommunes(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error('Lỗi load phường:', err);
+        setCommunes([]);
+      }
+
+      return;
+    }
+
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
   };
 
-  const generatePatientCode = () => {
-    const code = 'BN' + Date.now().toString().slice(-8);
-    return code;
+  const generatePatientCode = () =>
+    'BN' + Date.now().toString().slice(-8);
+
+  /* ================= SUBMIT ================= */
+
+  const handleSubmit = async () => {
+
+    const selectedProvince = provinces.find(
+      p => p.code === formData.province
+    );
+
+    const patientData = {
+      patientCode: generatePatientCode(),
+
+      fullName: formData.fullName,
+      dob: formData.dateOfBirth,
+
+      gender: formData.gender.toUpperCase(),
+
+      cccd: formData.idCard,
+      phone: formData.phone,
+      email: formData.email || '',
+
+      ethnicity: formData.ethnicity || 'Kinh',
+
+      address: {
+        province: selectedProvince?.name || '',
+        provinceCode: formData.province,
+        commune: formData.ward,
+        detail: formData.address
+      },
+
+      relationship: null, // vì tiếp tân tạo
+
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/patients",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(patientData)
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        alert(result.message);
+        return;
+      }
+
+      setPatientCode(result.patientCode);
+      setShowSuccess(true);
+
+    } catch (err) {
+      alert("Không thể kết nối server");
+    }
   };
 
-  const handleSubmit = () => {
-    if (!formData.fullName || !formData.dateOfBirth || !formData.phone) {
-      alert('Vui lòng điền đầy đủ thông tin bắt buộc (Họ tên, Ngày sinh, Số điện thoại)!');
+  /* ================= SEARCH ================= */
+
+  const handleSearch = async () => {
+
+  if (!searchId.trim()) return;
+
+  setIsSearching(true); // 🔥 bật loading
+
+  try {
+    const response = await fetch(
+      `http://localhost:5000/api/patients/search?q=${searchId}`
+    );
+
+    if (!response.ok) {
+      alert("Không tìm thấy bệnh nhân");
       return;
     }
 
-    const code = generatePatientCode();
-    setPatientCode(code);
-    
-    const patientData = {
-      ...formData,
-      patientCode: code,
-      createdAt: new Date().toISOString()
-    };
+    const data = await response.json();
 
-    console.log('Đăng ký bệnh nhân:', patientData);
-    setShowSuccess(true);
-    
-    setTimeout(() => {
-      setShowSuccess(false);
-    }, 3000);
-  };
+    let provinceCode = data.address?.provinceCode || '';
+
+    if (!provinceCode && data.address?.province) {
+      const match = provinces.find(
+        p => p.name === data.address.province
+      );
+      provinceCode = match?.code || '';
+    }
+
+    if (provinceCode) {
+      const communeData = await getCommunes(provinceCode);
+      setCommunes(Array.isArray(communeData) ? communeData : []);
+    }
+
+    setFormData(prev => ({
+      ...prev,
+      fullName: data.fullName || "",
+      dateOfBirth: data.dob || "",
+      gender: data.gender?.toLowerCase() || "male",
+      idCard: data.cccd || "",
+      phone: data.phone || "",
+      email: data.email || "",
+      ethnicity: data.ethnicity || "Kinh",
+      province: provinceCode,
+      ward: data.address?.commune || "",
+      address: data.address?.detail || ""
+    }));
+
+    setPatientCode(data.patientCode);
+    setIsLocked(true);
+
+  } catch (err) {
+    alert("Lỗi server");
+  } finally {
+    setIsSearching(false);
+  }
+};
+
+  /* ================= RESET ================= */
 
   const handleReset = () => {
     setFormData({
@@ -73,7 +211,6 @@ const Register = () => {
       phone: '',
       email: '',
       province: '',
-      district: '',
       ward: '',
       address: '',
       ethnicity: 'Kinh',
@@ -86,15 +223,11 @@ const Register = () => {
       insuranceFrom: '',
       insuranceTo: ''
     });
+
+    setCommunes([]);
     setPatientCode('');
     setShowSuccess(false);
-  };
-
-  const handleSearch = () => {
-    if (searchId.trim()) {
-      alert(`Tìm kiếm bệnh nhân: ${searchId}`);
-      // Implement search logic here
-    }
+    setIsLocked(false);
   };
 
   return (
@@ -117,8 +250,12 @@ const Register = () => {
               onChange={(e) => setSearchId(e.target.value)}
               className="search-input"
             />
-            <button onClick={handleSearch} className="btn-search">
-               Tìm kiếm
+            <button
+              onClick={handleSearch}
+              className="btn-search"
+              disabled={isSearching}
+            >
+              {isSearching ? "Đang tìm..." : "Tìm kiếm"}
             </button>
           </div>
         </div>
@@ -142,6 +279,7 @@ const Register = () => {
                   value={formData.fullName}
                   onChange={handleChange}
                   placeholder="Nguyễn Văn A"
+                  disabled={isLocked}
                 />
               </div>
 
@@ -154,6 +292,7 @@ const Register = () => {
                   name="dateOfBirth"
                   value={formData.dateOfBirth}
                   onChange={handleChange}
+                  disabled={isLocked}
                 />
               </div>
 
@@ -165,6 +304,7 @@ const Register = () => {
                   name="gender"
                   value={formData.gender}
                   onChange={handleChange}
+                  disabled={isLocked}
                 >
                   <option value="male">Nam</option>
                   <option value="female">Nữ</option>
@@ -180,6 +320,7 @@ const Register = () => {
                   value={formData.idCard}
                   onChange={handleChange}
                   placeholder="001234567890"
+                  disabled={isLocked}
                 />
               </div>
 
@@ -193,17 +334,7 @@ const Register = () => {
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="0912345678"
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="email@example.com"
+                  disabled={isLocked}
                 />
               </div>
 
@@ -215,6 +346,7 @@ const Register = () => {
                   name="ethnicity"
                   value={formData.ethnicity}
                   onChange={handleChange}
+                  disabled={isLocked}
                 />
               </div>
             </div>
@@ -233,29 +365,33 @@ const Register = () => {
                   name="province"
                   value={formData.province}
                   onChange={handleChange}
+                  disabled={isLocked}
                 >
                   <option value="">-- Chọn --</option>
-                  <option value="HCM">TP. Hồ Chí Minh</option>
-                  <option value="HN">Hà Nội</option>
-                  <option value="DN">Đà Nẵng</option>
-                  <option value="CT">Cần Thơ</option>
-                  <option value="HP">Hải Phòng</option>
+                  {provinces.map((p) => (
+                    <option key={p.code} value={p.code}>
+                      {p.name}
+                    </option>
+                  ))}
                 </select>
-              </div>
+            </div>
 
               <div className="form-group">
-                <label>Phường/Xã</label>
-                <select
-                  name="ward"
-                  value={formData.ward}
-                  onChange={handleChange}
-                >
-                  <option value="">-- Chọn --</option>
-                  <option value="P1">Phường 1</option>
-                  <option value="P2">Phường 2</option>
-                  <option value="P3">Phường 3</option>
-                </select>
-              </div>
+              <label>Phường/Xã</label>
+              <select
+                name="ward"
+                value={formData.ward}
+                onChange={handleChange}
+                disabled={isLocked}
+              >
+                <option value="">-- Chọn --</option>
+                {communes.map((c) => (
+                  <option key={c.code} value={c.name}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
               <div className="form-group form-group-full">
                 <label>Địa chỉ chi tiết</label>
@@ -265,7 +401,9 @@ const Register = () => {
                   value={formData.address}
                   onChange={handleChange}
                   placeholder="Số nhà, tên đường..."
+                  disabled={isLocked}
                 />
+                
               </div>
             </div>
           </div>
