@@ -4,6 +4,10 @@ export default function StepDepartment({ onSelect }) {
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const filteredDepartments = departments.filter((dep) =>
+    dep.name !== "Y Dược" && dep.name !== "Xét Nghiệm"
+  );
+
   useEffect(() => {
     fetch("http://localhost:5000/api/departments", {
       cache: "no-store",
@@ -33,7 +37,7 @@ export default function StepDepartment({ onSelect }) {
       <h4>Chọn khoa</h4>
 
       <div className="booking-grid">
-        {departments.map((dep) => (
+        {filteredDepartments.map((dep) => (
           <div
             key={dep.id}
             className="booking-card"

@@ -107,6 +107,31 @@
 .booking-meta {
   color: var(--bk-muted);
   margin-bottom: 14px;
+  color:#000;
+}
+
+
+.doctor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.badge {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.badge.head {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.badge.deputy {
+  background: #e0f2fe;
+  color: #0369a1;
 }
 
 /* Grid cards */
@@ -174,6 +199,12 @@
   font-size: 16px;
   font-weight: 800;
   margin: 0 0 6px;
+  color:#0091a7;
+}
+
+.booking-card p.sub {
+  color: #000;
+  font-weight: bolder;
 }
 
 .booking-card .sub {

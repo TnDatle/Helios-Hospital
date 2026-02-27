@@ -5,49 +5,6 @@
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* ===== HERO ===== */
-.find-doctor-hero {
-  height: 300px;
-  position: relative;
-  padding: 40px 80px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow: visible;
-  z-index: 1;
-}
-
-.find-doctor-hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.35);
-  z-index: 0; /* 🚀 overlay nằm dưới */
-}
-
-.find-doctor-hero * {
-  position: relative;
-  z-index: 1;
-}
-
-
-.find-doctor-hero .breadcrumb {
-  color: #fff;
-  font-size: 14px;
-  margin-bottom: 12px;
-  opacity: 0.9;
-}
-
-.find-doctor-hero h1 {
-  background: #1fb6b6;
-  color: #fff;
-  width: fit-content;
-  padding: 10px 22px;
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: 1px;
-}
-
 /* ===== SEARCH BAR ===== */
 .find-doctor-search {
   position: relative; 

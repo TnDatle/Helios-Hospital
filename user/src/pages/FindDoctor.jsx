@@ -201,16 +201,24 @@ const FindDoctor = () => {
     <div className="find-doctor">
       {/* ===== HERO ===== */}
       <div
-        className="find-doctor-hero"
+        className="page-banner"
         style={{
           backgroundImage: 'url("/icons/hand-banner.jpg")',
           backgroundSize: "cover",
           backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
+          padding: "90px 0",
+          color: "#fff",
         }}
       >
-        <div className="breadcrumb">Trang chủ / Điều trị</div>
-        <h1>BÁC SĨ</h1>
+        <div className="container">
+          <div className="breadcrumb">
+            <span>Trang chủ /</span>
+            <span> Tìm bác sĩ</span>
+          </div>
+
+          <h1 className="banner-title">Tìm Bác Sĩ</h1>
+
+        </div>
       </div>
 
       {/* ===== SEARCH ===== */}

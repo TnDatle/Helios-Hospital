@@ -4,6 +4,15 @@ export default function StepDoctor({ department, onBack, onSelect }) {
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const sortedDoctors = [...doctors].sort((a, b) => {
+    const priority = {
+      "Trưởng khoa": 1,
+      "Phó khoa": 2,
+    };
+
+    return (priority[a.role] || 99) - (priority[b.role] || 99);
+  });
+
   useEffect(() => {
     if (!department?.id) return;
 
@@ -40,14 +49,32 @@ export default function StepDoctor({ department, onBack, onSelect }) {
       </div>
 
       <div className="booking-grid">
-        {doctors.map((doc) => (
+        {sortedDoctors.map((doc) => (
           <div
             key={doc.id}
             className="booking-card"
             onClick={() => onSelect(doc)}
           >
-            <h5>{doc.name}</h5>
-            <p className="sub">{doc.specialty}</p>
+            <div className="doctor-header">
+              <h5>{doc.name}</h5>
+
+              {(doc.role === "Trưởng khoa" ||
+                doc.role === "Phó khoa") && (
+                <span
+                  className={`badge ${
+                    doc.role === "Trưởng khoa"
+                      ? "head"
+                      : "deputy"
+                  }`}
+                >
+                  {doc.role}
+                </span>
+              )}
+            </div>
+
+            <p className="sub">
+              Chuyên môn: {doc.specialty}
+            </p>
           </div>
         ))}
       </div>
