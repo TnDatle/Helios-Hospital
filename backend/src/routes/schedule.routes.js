@@ -3,6 +3,7 @@ import {
   getPublicSchedules,
   getDoctorSchedules,
   getSchedulesController,
+  getScheduleByIdController,
   createBulkScheduleController,
   deleteScheduleController,
 } from "../controllers/schedule.controller.js";
@@ -13,7 +14,7 @@ const router = express.Router();
 /* ================= PUBLIC ================= */
 // Lịch công khai (theo khoa)
 router.get("/public", getPublicSchedules);
-
+router.get("/:id", getScheduleByIdController);
 /* ================= BOOKING ================= */
 // Lịch theo bác sĩ (đặt khám)
 router.get("/doctor/:doctorId", noCache, getDoctorSchedules);

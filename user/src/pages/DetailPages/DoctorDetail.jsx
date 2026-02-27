@@ -132,7 +132,7 @@ const DoctorDetail = () => {
   useEffect(() => {
     if (!doctor?.id) return;
 
-    fetch(`${SCHEDULE_API}/${doctor.id}`, { cache: "no-store" })
+    fetch(`${SCHEDULE_API}/doctor/${doctor.id}`, { cache: "no-store" })
       .then((res) => res.json())
       .then((json) => {
         setSchedules(json.data || []);

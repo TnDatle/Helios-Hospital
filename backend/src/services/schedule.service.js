@@ -128,10 +128,26 @@ export const fetchPublicScheduleGrouped = async () => {
     });
 };
 
+/* =====================================================
+   GET Doctor Schedule by Doctor ID
+===================================================== */
+export const getScheduleByIdService = async (id) => {
+  const doc = await db
+    .collection("DoctorWeeklySchedules")
+    .doc(id)
+    .get();
+
+  if (!doc.exists) {
+    throw new Error("Schedule not found");
+  }
+
+  return { id: doc.id, ...doc.data() };
+};
+
 
 /**
  * ============================
- * LỊCH THEO BÁC SĨ (BOOKING)
+ * LỊCH THEO BÁC SĨ (Dành cho trang BOOKING)
  * ============================
  */
 

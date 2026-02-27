@@ -1,7 +1,7 @@
 .chatbot-fab {
   position: fixed;
   bottom: 20px;
-  right: 120px;
+  right: 24px; 
   width: 56px;
   height: 56px;
   border-radius: 50%;
@@ -11,6 +11,12 @@
   border: none;
   cursor: pointer;
   z-index: 2147483647;
+  transition: right 0.3s ease;
+}
+
+/* 🔥 Khi có season toggle */
+.chatbot-fab.with-season {
+  right: 120px;
 }
 
 .chatbot-box {

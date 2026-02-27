@@ -31,9 +31,14 @@ export default function SeasonalEffect() {
     (month === 1 && date >= 15) ||
     (month === 2 && date <= 15);
 
+  const isSeason = isChristmas || isTet;
+
+  //  Nếu không phải dịp lễ → không render gì cả
+  if (!isSeason) return null;
+
   return (
     <>
-      {/* Toggle iOS */}
+      {/* Toggle chỉ hiện khi vào mùa */}
       <div className="season-toggle">
         <span className="season-icon">
           {enabled ? "✨" : "❄️"}

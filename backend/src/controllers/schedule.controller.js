@@ -4,90 +4,170 @@ import {
   getSchedulesService,
   createBulkScheduleService,
   deleteScheduleService,
-
+  getScheduleByIdService, 
 } from "../services/schedule.service.js";
 
+/* =====================================================
+   GET – LỊCH THEO BÁC SĨ (BOOKING)
+===================================================== */
 export const getDoctorSchedules = async (req, res) => {
   try {
+    const { doctorId } = req.params;
+
+    if (!doctorId) {
+      return res.status(400).json({
+        success: false,
+        message: "Thiếu doctorId",
+      });
+    }
+
     res.set("Cache-Control", "no-store");
 
-    const { doctorId } = req.params;
-    const schedules = await fetchSchedulesByDoctor(doctorId);
+    const data = await fetchSchedulesByDoctor(doctorId);
 
-    res.json({
+    return res.status(200).json({
       success: true,
-      data: schedules,
+      data,
     });
-  } catch (err) {
-    res.status(500).json({ success: false });
+  } catch (error) {
+    console.error("[getDoctorSchedules]", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
   }
 };
 
+/* =====================================================
+   GET – SCHEDULE BY ID
+===================================================== */
+export const getScheduleByIdController = async (req, res) => {
+  try {
+    const { id } = req.params;
 
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "Thiếu scheduleId",
+      });
+    }
+
+    const data = await getScheduleByIdService(id);
+
+    return res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (error) {
+    console.error("[getScheduleById]", error);
+
+    return res.status(404).json({
+      success: false,
+      message: error.message || "Schedule not found",
+    });
+  }
+};
+
+/* =====================================================
+   GET – PUBLIC SCHEDULE
+===================================================== */
 export const getPublicSchedules = async (req, res) => {
   try {
     const data = await fetchPublicScheduleGrouped();
-    res.json({ success: true, data });
-  } catch (err) {
-    console.error("[getPublicSchedules]", err);
-    res.status(500).json({
+
+    return res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (error) {
+    console.error("[getPublicSchedules]", error);
+
+    return res.status(500).json({
       success: false,
-      message: err.message,
+      message: "Internal Server Error",
     });
   }
 };
 
-
-//CRUD Schedule for Admin
-
-/* ================= GET ================= */
+/* =====================================================
+   GET – ADMIN LIST
+===================================================== */
 export const getSchedulesController = async (req, res) => {
   try {
-    console.log("[API] query:", req.query);
-
     const { departmentId } = req.query;
+
     const data = await getSchedulesService({ departmentId });
 
-    res.json({ success: true, data });
-  } catch (err) {
-    res.status(500).json({ success: false });
+    return res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (error) {
+    console.error("[getSchedulesController]", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
   }
 };
 
-
-/* ================= CREATE BULK ================= */
+/* =====================================================
+   CREATE BULK
+===================================================== */
 export const createBulkScheduleController = async (req, res) => {
-  const { doctorId, room, slots } = req.body;
-
-  if (!doctorId || !room || !Array.isArray(slots)) {
-    return res.status(400).json({
-      success: false,
-      message: "Thiếu dữ liệu",
-    });
-  }
-
   try {
+    const { doctorId, room, slots } = req.body;
+
+    if (!doctorId || !room || !Array.isArray(slots)) {
+      return res.status(400).json({
+        success: false,
+        message: "Thiếu dữ liệu đầu vào",
+      });
+    }
+
     await createBulkScheduleService({ doctorId, room, slots });
-    res.json({ success: true });
-  } catch (err) {
-    res.status(409).json({
+
+    return res.status(201).json({
+      success: true,
+      message: "Tạo lịch thành công",
+    });
+  } catch (error) {
+    console.error("[createBulkSchedule]", error);
+
+    return res.status(409).json({
       success: false,
-      message: err.message,
+      message: error.message,
     });
   }
 };
 
-/* ================= DELETE ================= */
+/* =====================================================
+   DELETE
+===================================================== */
 export const deleteScheduleController = async (req, res) => {
-  const { id } = req.params;
-
   try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "Thiếu scheduleId",
+      });
+    }
+
     await deleteScheduleService(id);
-    res.json({ success: true });
-  } catch (err) {
-    res.status(409).json({
+
+    return res.status(200).json({
+      success: true,
+      message: "Xóa lịch thành công",
+    });
+  } catch (error) {
+    console.error("[deleteSchedule]", error);
+
+    return res.status(409).json({
       success: false,
-      message: err.message,
+      message: error.message,
     });
   }
 };

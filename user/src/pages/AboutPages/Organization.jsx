@@ -83,6 +83,7 @@ function Organization() {
             <div className="org-box sub">Khoa Tim Mạch &amp; Mạch Máu</div>
             <div className="org-box sub">Khoa Ung Bướu</div>
             <div className="org-box sub">Khoa Lọc Máu - Nội Thận</div>
+            <div className="org-box sub">Khoa Dược</div>
           </div>
 
           {/* ===== KHỐI CẬN LÂM SÀNG ===== */}

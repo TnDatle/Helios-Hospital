@@ -44,6 +44,7 @@ import "./styles/hero.css";
 import "./styles/finddoctor.css";
 import "./styles/doctordetail.css";
 import "./styles/booking.css";
+import "./styles/bookingsuccesmodel.css"
 import "./styles/home.css";
 import "./styles/service.css";
 import "./styles/sections.css";
@@ -60,8 +61,10 @@ function App() {
   return (
     <BrowserRouter>
       <Header />
-      <SeasonalEffect />
-      <Chatbot />
+      <div className="floating-actions">
+        <SeasonalEffect />
+        <Chatbot />
+      </div>
       <main style={{ minHeight: "70vh" }}>
         <Routes>
 
