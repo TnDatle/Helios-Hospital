@@ -69,7 +69,7 @@ export const createPatientService = async (data, user) => {
     bhyt: data.bhyt || "",
     relationship: data.relationship || null,
     ownerUid,
-    isDefault: false,
+    isDefault: true,
 
     createdBy: user?.uid ?? null,
 

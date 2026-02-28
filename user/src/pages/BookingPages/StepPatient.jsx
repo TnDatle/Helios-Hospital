@@ -23,7 +23,7 @@ export default function StepPatient({ onBack, onSelect }) {
   const [type, setType] = useState("SELF"); // SELF | OTHER
   const [otherMode, setOtherMode] = useState("SELECT"); // SELECT | NEW
   const [loadingProfile, setLoadingProfile] = useState(false);
-
+  const [isSelfLoaded, setIsSelfLoaded] = useState(false);
   /* =====================
      FORM STATE
   ===================== */
@@ -77,16 +77,20 @@ export default function StepPatient({ onBack, onSelect }) {
 
     const loadSelfPatient = async () => {
       setLoadingProfile(true);
+      setIsSelfLoaded(false);
 
       let profile = selfProfileCache.current;
+
       if (!profile) {
         profile = await getSelfPatientByOwner(user.uid);
         selfProfileCache.current = profile;
       }
 
       if (!profile) {
+        // Không có hồ sơ → cho nhập
         setPatient(emptyPatient);
         setWards([]);
+        setIsSelfLoaded(false);
         setLoadingProfile(false);
         return;
       }
@@ -94,6 +98,7 @@ export default function StepPatient({ onBack, onSelect }) {
       const provinceObj = provinces.find(
         (p) => p.name === profile.address?.province
       );
+
       const provinceCode = provinceObj?.code || "";
 
       setPatient({
@@ -112,20 +117,28 @@ export default function StepPatient({ onBack, onSelect }) {
 
       if (provinceCode) {
         let wardsData = wardsCache.current[provinceCode];
+
         if (!wardsData) {
           wardsData = await getCommunes(provinceCode);
           wardsCache.current[provinceCode] = wardsData || [];
         }
+
         setWards(wardsData || []);
 
         const wardObj = wardsData?.find(
           (w) => w.name === profile.address?.commune
         );
+
         if (wardObj) {
-          setPatient((prev) => ({ ...prev, ward: wardObj.code }));
+          setPatient((prev) => ({
+            ...prev,
+            ward: wardObj.code,
+          }));
         }
       }
 
+      // Đánh dấu đã load profile thật
+      setIsSelfLoaded(true);
       setLoadingProfile(false);
     };
 
@@ -326,7 +339,7 @@ export default function StepPatient({ onBack, onSelect }) {
             placeholder="Họ và Tên"
             value={patient.fullName}
             onChange={handleChange}
-            disabled={type === "SELF" && isFilled(patient.fullName)}
+            disabled={type === "SELF" && isSelfLoaded}
           />
 
           <input
@@ -334,14 +347,14 @@ export default function StepPatient({ onBack, onSelect }) {
             name="dob"
             value={patient.dob}
             onChange={handleChange}
-            disabled={type === "SELF" && isFilled(patient.dob)}
+            disabled={type === "SELF" && isSelfLoaded}
           />
 
           <select
             name="gender"
             value={patient.gender}
             onChange={handleChange}
-            disabled={type === "SELF" && isFilled(patient.gender)}
+            disabled={type === "SELF" && isSelfLoaded}
           >
             <option value="MALE">Nam</option>
             <option value="FEMALE">Nữ</option>
@@ -368,7 +381,7 @@ export default function StepPatient({ onBack, onSelect }) {
             placeholder="Số điện thoại"
             value={patient.phone}
             onChange={handleChange}
-            disabled={type === "SELF" && isFilled(patient.phone)}
+            disabled={type === "SELF" && isSelfLoaded}
           />
 
           <input
@@ -376,7 +389,7 @@ export default function StepPatient({ onBack, onSelect }) {
             placeholder="Dân tộc (VD: Kinh, Tày, Thái...)"
             value={patient.ethnicity}
             onChange={handleChange}
-            disabled={type === "SELF" && isFilled(patient.ethnicity)}
+            disabled={type === "SELF" && isSelfLoaded}
           />
 
           <input
@@ -384,12 +397,13 @@ export default function StepPatient({ onBack, onSelect }) {
             placeholder="Căn cước công dân"
             value={patient.cccd}
             onChange={handleChange}
-            disabled={type === "SELF" && isFilled(patient.cccd)}
+            disabled={type === "SELF" && isSelfLoaded}
           />
 
           <select
             value={patient.province}
             onChange={handleProvinceChange}
+            disabled={type === "SELF" && isSelfLoaded}
           >
             <option value="">Chọn Tỉnh / Thành</option>
             {provinces.map((p) => (
@@ -404,7 +418,7 @@ export default function StepPatient({ onBack, onSelect }) {
             onChange={(e) =>
               setPatient((prev) => ({ ...prev, ward: e.target.value }))
             }
-            disabled={!wards.length}
+            disabled={type === "SELF" && isSelfLoaded}
           >
             <option value="">Chọn Phường / Xã</option>
             {wards.map((w) => (
@@ -419,6 +433,7 @@ export default function StepPatient({ onBack, onSelect }) {
             placeholder="Số nhà, tên đường"
             value={patient.address}
             onChange={handleChange}
+            disabled={type === "SELF" && isSelfLoaded}
           />
         </div>
         </div>
