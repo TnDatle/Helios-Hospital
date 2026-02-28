@@ -236,26 +236,6 @@ const Register = () => {
           <p>Nhập đầy đủ thông tin bệnh nhân để tạo hồ sơ mới</p>
         </div>
 
-        {/* Search Box */}
-        <div className="search-box">
-          <h2>Kiểm tra bệnh nhân đã tồn tại</h2>
-          <div className="search-input-group">
-            <input
-              type="text"
-              placeholder="Nhập mã BN, CMND, SĐT để tìm kiếm..."
-              value={searchId}
-              onChange={(e) => setSearchId(e.target.value)}
-              className="search-input"
-            />
-            <button
-              onClick={handleSearch}
-              className="btn-search"
-              disabled={isSearching}
-            >
-              {isSearching ? "Đang tìm..." : "Tìm kiếm"}
-            </button>
-          </div>
-        </div>
 
         {/* Registration Form */}
         <div className="register-form">

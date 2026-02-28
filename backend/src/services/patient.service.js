@@ -85,35 +85,48 @@ export const createPatientService = async (data, user) => {
   };
 };
 
-export const searchPatientService = async (keyword) => {
+export const searchPatientService = async (keyword, type) => {
+  let querySnapshot;
 
-  // search by doc id
-  const doc = await collection.doc(keyword).get();
-  if (doc.exists) {
-    return { patientCode: doc.id, ...doc.data() };
+  switch (type) {
+
+    case "id":
+      querySnapshot = await collection
+        .where("patientCode", "==", keyword)
+        .limit(1)
+        .get();
+      break;
+
+    case "phone":
+      querySnapshot = await collection
+        .where("phone", "==", keyword)
+        .limit(1)
+        .get();
+      break;
+
+    case "insurance":
+      querySnapshot = await collection
+        .where("bhyt", "==", keyword)
+        .limit(1)
+        .get();
+      break;
+
+    case "name":
+      querySnapshot = await collection
+        .where("fullName", ">=", keyword)
+        .where("fullName", "<=", keyword + "\uf8ff")
+        .limit(10)
+        .get();
+      break;
+
+    default:
+      return null;
   }
 
-  // search by phone
-  const phoneQuery = await collection
-    .where("phone", "==", keyword)
-    .limit(1)
-    .get();
+  if (querySnapshot.empty) return null;
 
-  if (!phoneQuery.empty) {
-    const d = phoneQuery.docs[0];
-    return { patientCode: d.id, ...d.data() };
-  }
-
-  // search by cccd
-  const idQuery = await collection
-    .where("cccd", "==", keyword)
-    .limit(1)
-    .get();
-
-  if (!idQuery.empty) {
-    const d = idQuery.docs[0];
-    return { patientCode: d.id, ...d.data() };
-  }
-
-  return null;
+  return querySnapshot.docs.map(doc => ({
+    patientCode: doc.id,
+    ...doc.data()
+  }));
 };

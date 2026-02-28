@@ -9,7 +9,7 @@ import Login from "./pages/auth/Login";
 import ReceptionPage from "./pages/reception/ReceptionPage";
 import Register from "./pages/reception/Register";
 import WalkIn from "./pages/reception/WalkIn";
-import TrackPatient from "./pages/doctor/Track";
+import SearchPatient from "./pages/reception/Search";
 
 // doctor
 import DoctorPage from "./pages/doctor/DoctorPage";
@@ -48,14 +48,14 @@ function App() {
 
       {/* STAFF */}
       <Route path="/staff" element={<StaffLayout />}>
-        {/* 🔑 QUAN TRỌNG: redirect khi vào /staff */}
+        {/*  QUAN TRỌNG: redirect khi vào /staff */}
         <Route index element={<RoleRedirect />} />
 
         {/* RECEPTION */}
         <Route path="reception" element={<ReceptionPage />}>
            <Route index element={<Register />} />
            <Route path="walk-in" element={<WalkIn />} />
-           <Route path="track-patient" element={<TrackPatient />} />
+           <Route path="search-patient" element={<SearchPatient />} />
         </Route>
 
         {/* DOCTOR */}

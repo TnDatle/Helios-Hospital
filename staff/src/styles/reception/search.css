@@ -8,7 +8,6 @@
 
 .track-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -79,13 +78,13 @@
 }
 
 .type-btn:hover {
-  border-color: #fa709a;
-  color: #fa709a;
+  border-color: #00b7c4;
+  color: #00b7c4;
   background: #fff5f8;
 }
 
 .type-btn.active {
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  background: linear-gradient(135deg, #00b7c4 0%);
   color: white;
   border-color: transparent;
   box-shadow: 0 5px 15px rgba(250, 112, 154, 0.3);
@@ -108,13 +107,13 @@
 
 .search-input-track:focus {
   outline: none;
-  border-color: #fa709a;
+  border-color: #00b7c4;
   box-shadow: 0 0 0 3px rgba(250, 112, 154, 0.1);
 }
 
 .btn-search-track {
   padding: 15px 35px;
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  background: linear-gradient(135deg, #00b7c4 0%);
   color: white;
   border: none;
   border-radius: 12px;
@@ -182,7 +181,7 @@
 }
 
 .results-table thead {
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  background: linear-gradient(135deg, #00b7c4 0%);
   color: white;
 }
 
@@ -223,7 +222,7 @@
 
 .btn-view-detail {
   padding: 8px 16px;
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  background: linear-gradient(135deg, #00b7c4 0%);
   color: white;
   border: none;
   border-radius: 6px;
@@ -329,11 +328,11 @@
 }
 
 .btn-edit-track {
-  background: #f39c12;
+  background: #00b7c4;
 }
 
 .btn-edit-track:hover {
-  background: #e67e22;
+  background: #00b7c4;
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3);
 }
@@ -355,7 +354,7 @@
 .avatar-circle {
   width: 100px;
   height: 100px;
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  background: linear-gradient(135deg, #00b7c4 0%);
   color: white;
   border-radius: 50%;
   display: flex;
@@ -456,28 +455,6 @@
   overflow-x: auto;
 }
 
-.tab-btn {
-  padding: 12px 24px;
-  background: transparent;
-  color: #7f8c8d;
-  border: none;
-  border-bottom: 3px solid transparent;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-}
-
-.tab-btn:hover {
-  color: #fa709a;
-  background: #fff5f8;
-}
-
-.tab-btn.active {
-  color: #fa709a;
-  border-bottom-color: #fa709a;
-}
 
 /* Tab Content */
 .tab-content {
@@ -487,8 +464,9 @@
 /* Info Grid */
 .info-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px 40px;
+  margin-top: 20px;
 }
 
 .info-section {
@@ -507,19 +485,15 @@
 
 .info-row {
   display: flex;
-  justify-content: space-between;
-  padding: 10px 0;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 0;
   border-bottom: 1px solid #e8e8e8;
 }
 
 .info-row:last-child {
   border-bottom: none;
-}
-
-.info-label {
-  color: #7f8c8d;
-  font-size: 14px;
-  font-weight: 500;
+  text-align: left;
 }
 
 .info-value {
@@ -533,176 +507,6 @@
   color: #e74c3c;
 }
 
-/* History List */
-.history-list,
-.appointments-list,
-.tests-list {
-  max-width: 100%;
-}
-
-.history-list h3,
-.appointments-list h3,
-.tests-list h3 {
-  color: #2c3e50;
-  font-size: 20px;
-  margin-bottom: 20px;
-}
-
-.history-card,
-.appointment-card,
-.test-card {
-  display: flex;
-  gap: 20px;
-  padding: 20px;
-  background: #f8f9fa;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  transition: all 0.3s ease;
-}
-
-.history-card:hover,
-.appointment-card:hover,
-.test-card:hover {
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
-}
-
-.history-date,
-.test-date {
-  flex-shrink: 0;
-  width: 120px;
-  padding: 10px;
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-  color: white;
-  border-radius: 8px;
-  text-align: center;
-  font-weight: 600;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.history-details,
-.test-details {
-  flex: 1;
-}
-
-.history-row,
-.apt-row {
-  margin-bottom: 8px;
-  color: #555;
-  font-size: 14px;
-}
-
-.history-status,
-.apt-status {
-  margin-top: 10px;
-}
-
-.status-badge {
-  padding: 5px 12px;
-  border-radius: 15px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.status-badge.completed {
-  background: #d4edda;
-  color: #155724;
-}
-
-.status-badge.confirmed {
-  background: #d1ecf1;
-  color: #0c5460;
-}
-
-.status-badge.pending {
-  background: #fff3cd;
-  color: #856404;
-}
-
-.btn-view-prescription,
-.btn-view-result {
-  padding: 8px 16px;
-  background: #3498db;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-}
-
-.btn-view-prescription:hover,
-.btn-view-result:hover {
-  background: #2980b9;
-  transform: scale(1.05);
-}
-
-/* Appointment Card */
-.appointment-date-time {
-  flex-shrink: 0;
-  width: 140px;
-  padding: 15px;
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-  color: white;
-  border-radius: 8px;
-  text-align: center;
-}
-
-.apt-date {
-  font-size: 15px;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-.apt-time {
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.appointment-details {
-  flex: 1;
-}
-
-.apt-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.btn-cancel-apt,
-.btn-reschedule-apt {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-}
-
-.btn-cancel-apt {
-  background: #e74c3c;
-  color: white;
-}
-
-.btn-cancel-apt:hover {
-  background: #c0392b;
-}
-
-.btn-reschedule-apt {
-  background: #f39c12;
-  color: white;
-}
-
-.btn-reschedule-apt:hover {
-  background: #e67e22;
-}
 
 /* Test Card */
 .test-name {

@@ -1,5 +1,6 @@
 // WalkIn.jsx
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import '../../styles/reception/walkin.css';
 
 const WalkIn = () => {
@@ -7,6 +8,7 @@ const WalkIn = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null);
+  const navigate = useNavigate();
   const [appointmentData, setAppointmentData] = useState({
     department: '',
     doctor: '',
@@ -71,8 +73,7 @@ const WalkIn = () => {
   };
 
   const handleNewPatient = () => {
-    // Chuyển đến trang đăng ký bệnh nhân mới
-    alert('Chuyển đến trang đăng ký bệnh nhân mới');
+    navigate("/staff/reception");
   };
 
   const handleChange = (e) => {
@@ -136,7 +137,7 @@ const WalkIn = () => {
       <div className="walkin-wrapper">
         {/* Header */}
         <div className="walkin-header">
-          <h1>🏥 TIẾP NHẬN TRỰC TIẾP</h1>
+          <h1>TIẾP NHẬN TRỰC TIẾP</h1>
           <p>Check-in bệnh nhân đến khám tại quầy</p>
         </div>
 
@@ -173,7 +174,7 @@ const WalkIn = () => {
                   className="search-input-walkin"
                 />
                 <button onClick={handleSearch} className="btn-search-walkin">
-                  🔍 Tìm kiếm
+                   Tìm kiếm
                 </button>
               </div>
 
@@ -204,14 +205,14 @@ const WalkIn = () => {
 
               {searchQuery && searchResults.length === 0 && (
                 <div className="no-results">
-                  <p>❌ Không tìm thấy bệnh nhân</p>
+                  <p> Không tìm thấy bệnh nhân</p>
                 </div>
               )}
 
               <div className="new-patient-section">
                 <p>Bệnh nhân chưa có trong hệ thống?</p>
                 <button onClick={handleNewPatient} className="btn-new-patient">
-                  ➕ Đăng ký bệnh nhân mới
+                   Đăng ký bệnh nhân mới
                 </button>
               </div>
             </div>
@@ -230,7 +231,7 @@ const WalkIn = () => {
                   <p>SĐT: {selectedPatient.phone}</p>
                 </div>
                 <button onClick={() => setStep(1)} className="btn-change">
-                  🔄 Đổi BN
+                  Đổi BN
                 </button>
               </div>
             </div>
@@ -332,7 +333,7 @@ const WalkIn = () => {
                     checked={appointmentData.priority}
                     onChange={handleChange}
                   />
-                  <span>🔴 Ưu tiên (người cao tuổi, trẻ em, khuyết tật)</span>
+                  <span> Ưu tiên (người cao tuổi, trẻ em, khuyết tật)</span>
                 </label>
 
                 <label className="checkbox-label-walkin">
@@ -358,7 +359,7 @@ const WalkIn = () => {
                       checked={appointmentData.paymentType === 'tien-mat'}
                       onChange={handleChange}
                     />
-                    <span>💵 Tiền mặt</span>
+                    <span> Tiền mặt</span>
                   </label>
                   <label className="radio-label">
                     <input
@@ -368,7 +369,7 @@ const WalkIn = () => {
                       checked={appointmentData.paymentType === 'the'}
                       onChange={handleChange}
                     />
-                    <span>💳 Thẻ</span>
+                    <span> Thẻ</span>
                   </label>
                   <label className="radio-label">
                     <input
@@ -378,7 +379,7 @@ const WalkIn = () => {
                       checked={appointmentData.paymentType === 'chuyen-khoan'}
                       onChange={handleChange}
                     />
-                    <span>🏦 Chuyển khoản</span>
+                    <span> Chuyển khoản</span>
                   </label>
                 </div>
               </div>

@@ -8,7 +8,6 @@
 
 .register-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -40,64 +39,6 @@
   font-size: 16px;
 }
 
-/* Search Box */
-.search-box {
-  background: white;
-  padding: 25px;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-  animation: slideDown 0.6s ease-out;
-}
-
-.search-box h2 {
-  color: #2c3e50;
-  font-size: 18px;
-  margin-bottom: 15px;
-  font-weight: 600;
-}
-
-.search-input-group {
-  display: flex;
-  gap: 10px;
-}
-
-.search-input {
-  flex: 1;
-  padding: 12px 20px;
-  border: 2px solid #e0e0e0;
-  border-radius: 10px;
-  font-size: 15px;
-  transition: all 0.3s ease;
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-.btn-search {
-  padding: 12px 30px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-}
-
-.btn-search:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-}
-
-.btn-search:active {
-  transform: translateY(0);
-}
 
 /* Form Styles */
 .register-form {
@@ -241,7 +182,7 @@
 .btn-submit {
   flex: 1;
   padding: 15px 30px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #00b7c4 0%);
   color: white;
   border: none;
   border-radius: 10px;
@@ -253,7 +194,6 @@
 
 .btn-submit:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
 }
 
 .btn-submit:active {

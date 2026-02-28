@@ -16,7 +16,7 @@ function ReceptionPage() {
             🚶 Tiếp nhận trực tiếp
           </NavLink>
 
-          <NavLink to="/staff/reception/track-patient">
+          <NavLink to="/staff/reception/search-patient">
             🔍 Tra cứu bệnh nhân
           </NavLink>
         </nav>

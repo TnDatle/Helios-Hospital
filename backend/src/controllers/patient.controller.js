@@ -23,23 +23,14 @@ export const createPatient = async (req, res) => {
 };
 
 export const searchPatient = async (req, res) => {
-  try {
-    const { q } = req.query;
+  const { q, type } = req.query;
 
-    if (!q) {
-      return res.status(400).json({ message: "Missing keyword" });
-    }
+  const result = await searchPatientService(q, type);
 
-    const patient = await searchPatientService(q);
-
-    if (!patient) {
-      return res.status(404).json({ message: "Patient not found" });
-    }
-
-    return res.json(patient);
-
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Server error" });
+  if (!result) {
+    return res.status(404).json([]);
   }
+
+  res.json(result);
+
 };
