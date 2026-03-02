@@ -13,24 +13,28 @@ const Track = () => {
 
   /* ================= SEARCH ================= */
   const handleSearch = async () => {
-    if (!searchQuery.trim()) {
-      alert('Vui lòng nhập thông tin tìm kiếm!');
+  if (!searchQuery.trim()) {
+    alert('Vui lòng nhập thông tin tìm kiếm!');
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const response = await fetch(
+      `http://localhost:5000/api/patients/search?q=${searchQuery}&type=${searchType}`,
+      {
+        method: "GET",
+        credentials: "include"
+      }
+    );
+
+    if (!response.ok) {
+      setSearchResults([]);
       return;
     }
 
-    setLoading(true);
-
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/patients/search?q=${searchQuery}&type=${searchType}`
-      );
-
-      if (!response.ok) {
-        setSearchResults([]);
-        return;
-      }
-
-      const result = await response.json();
+    const result = await response.json();
 
       let patientsArray = [];
 

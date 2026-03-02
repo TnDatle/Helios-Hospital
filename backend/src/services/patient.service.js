@@ -1,8 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
-import { db } from "../config/firebase.js";
 import admin from "firebase-admin";
-
-const collection = db.collection("Patients");
+import * as PatientModel from "../models/patient.model.js";
 
 const generatePatientCode = () => {
   const shortId = uuidv4().replace(/-/g, "").slice(0, 8).toUpperCase();
@@ -11,45 +9,24 @@ const generatePatientCode = () => {
 
 export const createPatientService = async (data, user) => {
 
-  //  Check duplicate phone
   if (data.phone) {
-    const phoneQuery = await collection
-      .where("phone", "==", data.phone)
-      .limit(1)
-      .get();
-
-    if (!phoneQuery.empty) {
-      throw new Error("PHONE_EXISTS");
-    }
+    const phoneQuery = await PatientModel.findByPhone(data.phone);
+    if (!phoneQuery.empty) throw new Error("PHONE_EXISTS");
   }
 
-  //  Check duplicate CCCD
   if (data.cccd) {
-    const cccdQuery = await collection
-      .where("cccd", "==", data.cccd)
-      .limit(1)
-      .get();
-
-    if (!cccdQuery.empty) {
-      throw new Error("CCCD_EXISTS");
-    }
+    const cccdQuery = await PatientModel.findByCCCD(data.cccd);
+    if (!cccdQuery.empty) throw new Error("CCCD_EXISTS");
   }
 
-  //  Generate unique patientCode
   let patientCode;
   let exists = true;
 
   while (exists) {
     patientCode = generatePatientCode();
-    const doc = await collection.doc(patientCode).get();
+    const doc = await PatientModel.findById(patientCode);
     exists = doc.exists;
   }
-
-  //  Logic ownerUid đơn giản
-  // Nếu request có user (đăng nhập) → là user tạo
-  // Nếu không có user (reception không verify) → null
-
-  const ownerUid = user?.uid ?? null;
 
   const patientDoc = {
     patientCode,
@@ -59,74 +36,63 @@ export const createPatientService = async (data, user) => {
     phone: data.phone,
     cccd: data.cccd,
     ethnicity: data.ethnicity || "Kinh",
-
     address: {
       province: data.address?.province || "",
       commune: data.address?.commune || "",
       detail: data.address?.detail || ""
     },
-
     bhyt: data.bhyt || "",
     relationship: data.relationship || null,
-    ownerUid,
+    ownerUid: user?.uid ?? null,
     isDefault: true,
-
     createdBy: user?.uid ?? null,
-
     createdAt: admin.firestore.FieldValue.serverTimestamp(),
     updatedAt: admin.firestore.FieldValue.serverTimestamp()
   };
 
-  await collection.doc(patientCode).set(patientDoc);
+  await PatientModel.createPatient(patientCode, patientDoc);
 
-  return {
-    patientCode,
-    ...patientDoc
-  };
+  return { patientCode, ...patientDoc };
 };
 
+
 export const searchPatientService = async (keyword, type) => {
-  let querySnapshot;
 
   switch (type) {
+    case "id": {
+      const doc = await PatientModel.findById(keyword);
+      if (!doc.exists) return null;
+      return [{ patientCode: doc.id, ...doc.data() }];
+    }
 
-    case "id":
-      querySnapshot = await collection
-        .where("patientCode", "==", keyword)
-        .limit(1)
-        .get();
-      break;
+    case "phone": {
+      const snapshot = await PatientModel.findByPhone(keyword);
+      if (snapshot.empty) return null;
+      return snapshot.docs.map(doc => ({
+        patientCode: doc.id,
+        ...doc.data()
+      }));
+    }
 
-    case "phone":
-      querySnapshot = await collection
-        .where("phone", "==", keyword)
-        .limit(1)
-        .get();
-      break;
+    case "insurance": {
+      const snapshot = await PatientModel.searchByField("bhyt", keyword);
+      if (snapshot.empty) return null;
+      return snapshot.docs.map(doc => ({
+        patientCode: doc.id,
+        ...doc.data()
+      }));
+    }
 
-    case "insurance":
-      querySnapshot = await collection
-        .where("bhyt", "==", keyword)
-        .limit(1)
-        .get();
-      break;
-
-    case "name":
-      querySnapshot = await collection
-        .where("fullName", ">=", keyword)
-        .where("fullName", "<=", keyword + "\uf8ff")
-        .limit(10)
-        .get();
-      break;
+    case "name": {
+      const snapshot = await PatientModel.searchByName(keyword);
+      if (snapshot.empty) return null;
+      return snapshot.docs.map(doc => ({
+        patientCode: doc.id,
+        ...doc.data()
+      }));
+    }
 
     default:
       return null;
   }
-
-  if (querySnapshot.empty) return null;
-
-  return querySnapshot.docs.map(doc => ({
-    patientCode: doc.id,
-    ...doc.data()
-  }));
 };
