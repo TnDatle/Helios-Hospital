@@ -1,5 +1,8 @@
 import { appointmentCollection } from "../models/appointment.model.js";
+import { DoctorModel } from "../models/doctor.model.js";
+import { departmentCollection } from "../models/department.model.js";
 import { generateQueueNumber } from "../utils/queue.js";
+
 
 export const createWalkInAppointmentService = async (data) => {
 
@@ -51,7 +54,7 @@ export const searchPatientsAppointmentService = async (query) => {
   /* SEARCH BY PATIENT CODE */
 
   const codeSnap = await  appointmentCollection
-    .where("patientCode", "==", query)
+    .where("patientId", "==", query)
     .limit(10)
     .get();
 
@@ -99,4 +102,57 @@ export const searchPatientsAppointmentService = async (query) => {
   );
 
   return unique;
+};
+
+
+export const getAppointmentsByPatientService = async (patientId) => {
+
+  const snapshot = await appointmentCollection
+    .where("patientId", "==", patientId)
+    .get();
+
+  const appointments = [];
+
+  for (const doc of snapshot.docs) {
+
+    const data = doc.data();
+
+    let doctorName = "";
+    let departmentName = "";
+
+    /* GET DOCTOR */
+
+    if (data.doctorId) {
+
+      const doctor = await DoctorModel.getById(data.doctorId);
+
+      doctorName = doctor?.name || "";
+
+    }
+
+    /* GET DEPARTMENT */
+
+    if (data.departmentId) {
+
+      const deptDoc = await departmentCollection
+        .doc(data.departmentId)
+        .get();
+
+      if (deptDoc.exists) {
+        departmentName = deptDoc.data().name;
+      }
+
+    }
+
+    appointments.push({
+      id: doc.id,
+      ...data,
+      doctorName,
+      departmentName
+    });
+
+  }
+
+  return appointments;
+
 };

@@ -1,6 +1,7 @@
 import { db } from "../config/firebase.js";
 
 export class DoctorModel {
+
   static fromFirestore(doc, departmentFromFE = "") {
     const data = doc.data();
 
@@ -15,10 +16,23 @@ export class DoctorModel {
     };
   }
 
-    static async update(id, data) {
+  static async getById(id) {
+
+    const doc = await db.collection("Doctor").doc(id).get();
+
+    if (!doc.exists) return null;
+
+    return DoctorModel.fromFirestore(doc);
+
+  }
+
+  static async update(id, data) {
+
     await db.collection("Doctor").doc(id).update({
       ...data,
       updatedAt: new Date(),
     });
+
   }
+
 }

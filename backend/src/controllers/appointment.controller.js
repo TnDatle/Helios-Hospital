@@ -1,4 +1,4 @@
-import {searchPatientsAppointmentService, createWalkInAppointmentService } from "../services/appointment.service.js";
+import {searchPatientsAppointmentService, createWalkInAppointmentService , getAppointmentsByPatientService } from "../services/appointment.service.js";
 
 export const createWalkInAppointment = async (req, res) => {
 
@@ -20,6 +20,27 @@ export const createWalkInAppointment = async (req, res) => {
 
 };
 
+export const getAppointmentsByPatient = async (req, res) => {
+
+  try {
+
+    const { patientId } = req.params;
+
+    const appointments = await getAppointmentsByPatientService(patientId);
+
+    res.status(200).json(appointments);
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      message: "Cannot get appointments"
+    });
+
+  }
+
+};
 
 export const searchPatientsAppointment = async (req, res) => {
 

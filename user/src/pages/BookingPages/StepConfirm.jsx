@@ -44,6 +44,7 @@ export default function StepConfirm({ data, onBack }) {
         patientId,
 
         fullName: patient.fullName,
+        dob: patient.dob,
         phone: patient.phone,
         cccd: patient.cccd || null,
 

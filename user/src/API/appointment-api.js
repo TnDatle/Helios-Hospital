@@ -18,6 +18,7 @@ export const createAppointment = async (payload) => {
     patientId: payload.patientId || null,
 
     fullName: payload.fullName || "",
+    dob: payload.dob || "",
     phone: payload.phone || "",
     cccd: payload.cccd || null,
 

@@ -11,6 +11,19 @@ export const searchPatientsApi = async (query) => {
   return res.json();
 };
 
+export const getAppointmentsByPatientApi = async (patientId) => {
+
+  const res = await fetch(
+    `http://localhost:5000/api/appointments/patient/${patientId}`
+  );
+
+  if (!res.ok) {
+    throw new Error("Cannot fetch appointments");
+  }
+
+  return res.json();
+};
+
 export const createAppointmentApi = async (data) => {
 
   const res = await fetch(
