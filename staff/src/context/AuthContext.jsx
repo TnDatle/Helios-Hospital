@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
       if (!res.ok) throw new Error("UNAUTHORIZED");
 
       const data = await res.json();
-      console.log("AUTH ME DATA:", data.data);
+      console.log("AUTH ME DATA:", data.data.name);
 
       setUser(data.data);
     } catch {

@@ -1,27 +1,17 @@
 import {
-  createPatientService,
+  createPatientForStaffService,
+  createPatientForUserService,
   searchPatientService
 } from "../services/patient.service.js";
 
-export const createPatient = async (req, res) => {
-  try {
-    const patient = await createPatientService(req.body, req.user);
-    return res.status(201).json(patient);
+export const createPatientForUser = async (req, res) => {
+  const patient = await createPatientForUserService(req.body, req.user);
+  res.json(patient);
+};
 
-  } catch (error) {
-    console.error("Create Patient Error:", error);
-
-    switch (error.message) {
-      case "PHONE_EXISTS":
-        return res.status(400).json({ message: "Số điện thoại đã tồn tại" });
-
-      case "CCCD_EXISTS":
-        return res.status(400).json({ message: "CCCD đã tồn tại" });
-
-      default:
-        return res.status(500).json({ message: "Internal Server Error" });
-    }
-  }
+export const createPatientForStaff = async (req, res) => {
+  const patient = await createPatientForStaffService(req.body, req.user);
+  res.json(patient);
 };
 
 export const searchPatient = async (req, res) => {

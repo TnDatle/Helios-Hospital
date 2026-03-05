@@ -22,7 +22,7 @@ const Track = () => {
 
   try {
     const response = await fetch(
-      `http://localhost:5000/api/patients/search?q=${searchQuery}&type=${searchType}`,
+      `http://localhost:5000/api/patients/staff/search?q=${searchQuery}&type=${searchType}`,
       {
         method: "GET",
         credentials: "include"

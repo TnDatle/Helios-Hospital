@@ -116,7 +116,7 @@ const Register = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/patients",
+        "http://localhost:5000/api/patients/staff",
         {
           method: "POST",
           credentials: "include",

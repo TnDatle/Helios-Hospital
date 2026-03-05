@@ -28,7 +28,7 @@ export default function StepConfirm({ data, onBack }) {
     try {
       setLoading(true);
 
-      let patientId = patient.id;
+      let patientId = patient.patientCode || patient.id;
 
       // ===== 1. LƯU PATIENT NẾU CHƯA CÓ =====
       if (!patientId) {

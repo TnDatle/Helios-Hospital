@@ -40,6 +40,7 @@ export const getPatientsByOwner = async (ownerUid) => {
 };
 
 export const addPatient = async (data) => {
+  console.log("CURRENT USER:", auth.currentUser);
   const token = await auth.currentUser.getIdToken();
 
   const res = await fetch("http://localhost:5000/api/patients", {
@@ -51,7 +52,8 @@ export const addPatient = async (data) => {
     body: JSON.stringify(data),
   });
 
-  return res.json();
+  const result = await res.json();
+  return result.patientCode;
 };
 
 

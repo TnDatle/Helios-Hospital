@@ -1,4 +1,5 @@
 import { admin, db } from "../config/firebase.js";
+
 export const requireAuth = (req, res, next) => {
   // 🔥 SESSION MODE
   if (!req.session || !req.session.user) {
@@ -13,19 +14,22 @@ export const requireAuth = (req, res, next) => {
 };
 
 export const verifyToken = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "UNAUTHORIZED" });
-  }
-
   try {
-    const token = authHeader.split("Bearer ")[1];
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+      return res.status(401).json({ message: "NO_TOKEN" });
+    }
+
+    const token = authHeader.split(" ")[1];
+
     const decodedToken = await admin.auth().verifyIdToken(token);
 
-    req.user = decodedToken;   //  gắn user vào request
+    req.user = decodedToken;
+
     next();
   } catch (error) {
+    console.error("VERIFY TOKEN ERROR:", error);
     return res.status(401).json({ message: "INVALID_TOKEN" });
   }
 };
