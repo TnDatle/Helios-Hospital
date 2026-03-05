@@ -9,11 +9,23 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 
+
 export const createAppointment = async (payload) => {
   const ref = collection(db, "Appointments");
 
   const docRef = await addDoc(ref, {
-    ...payload,
+    userUid: payload.userUid || null,
+    patientId: payload.patientId || null,
+
+    fullName: payload.fullName || "",
+    phone: payload.phone || "",
+    cccd: payload.cccd || null,
+
+    doctorId: payload.doctorId || null,
+    departmentId: payload.departmentId || null,
+
+    schedule: payload.schedule || null,
+
     status: "PENDING",
     createdAt: serverTimestamp(),
   });

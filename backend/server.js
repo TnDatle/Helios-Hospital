@@ -18,6 +18,7 @@ import userRoutes from "./src/routes/user.routes.js";
 import authRoute from "./src/routes/auth.routes.js";
 import chatbotRoute from "./src/routes/chatbot.routes.js";
 import patientRoutes from "./src/routes/patient.routes.js";
+import appointmentRoutes from "./src/routes/appointment.route.js";
 
 dotenv.config();
 
@@ -100,7 +101,7 @@ app.use("/api/auth", authRoute);
 app.use("/api/news", newsRoutes);
 app.use("/api/chatbot", chatbotRoute);
 app.use("/api/patients", patientRoutes);
-
+app.use("/api/appointments", appointmentRoutes);
 /* ======================
    START SERVER
 ====================== */

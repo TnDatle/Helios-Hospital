@@ -42,8 +42,14 @@ export default function StepConfirm({ data, onBack }) {
       await createAppointment({
         userUid: user.uid,
         patientId,
+
+        fullName: patient.fullName,
+        phone: patient.phone,
+        cccd: patient.cccd || null,
+
         doctorId: doctor.id,
         departmentId: department.id,
+
         schedule: {
           date: schedule.date,
           shiftId: schedule.shiftId,
