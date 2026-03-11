@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect, useRef} from 'react';
 import { useNavigate } from "react-router-dom";
 import '../../styles/reception/walkin.css';
+
+import {
+  getDepartmentsApi,
+  getTodaySlotsApi
+} from "../../API/doctor-api";
 
 import {
   searchPatientsApi,
@@ -19,37 +24,50 @@ const WalkIn = () => {
   const navigate = useNavigate();
 
   const [appointmentData, setAppointmentData] = useState({
-    department: '',
-    doctor: '',
-    visitType: 'kham-benh',
-    priority: false,
-    paymentType: 'tien-mat',
-    reason: '',
-    hasInsurance: false
-  });
+  department: '',
+  doctor: '',
+  shiftId: '',
+  room: '',
+  visitType: 'kham-benh',
+  priority: false,
+  paymentType: 'tien-mat',
+  reason: '',
+  hasInsurance: false
+});
+
   const [appointments, setAppointments] = useState([]);
   const [activeTab, setActiveTab] = useState("today");
   const [queueNumber, setQueueNumber] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
-
+  const slotCache = useRef({});
   // Danh sách khoa
-  const departments = [
-    { id: 'noi', name: 'Nội khoa', icon: '🏥' },
-    { id: 'ngoai', name: 'Ngoại khoa', icon: '⚕️' },
-    { id: 'san', name: 'Sản khoa', icon: '👶' },
-    { id: 'nhi', name: 'Nhi khoa', icon: '🧸' },
-    { id: 'mat', name: 'Mắt', icon: '👁️' },
-    { id: 'tai-mui-hong', name: 'Tai-Mũi-Họng', icon: '👂' },
-    { id: 'rang-ham-mat', name: 'Răng-Hàm-Mặt', icon: '🦷' },
-    { id: 'da-lieu', name: 'Da liễu', icon: '💊' }
-  ];
+  const [departments, setDepartments] = useState([]);
+  const filteredDepartments = departments.filter((dep) =>
+    dep.name !== "Y Dược" && dep.name !== "Xét Nghiệm"
+  );
+  const [doctors, setDoctors] = useState([]);
 
-  const doctorsByDept = {
-    'noi': ['BS. Nguyễn Văn X', 'BS. Trần Thị Y'],
-    'ngoai': ['BS. Phạm Văn A'],
-    'san': ['BS. Đỗ Thị C'],
-    'nhi': ['BS. Bùi Thị E']
+  useEffect(() => {
+
+    const loadDepartments = async () => {
+
+    try {
+
+      const data = await getDepartmentsApi();
+
+      setDepartments(Array.isArray(data) ? data : data.data);
+
+    } catch (err) {
+
+      console.error("LOAD DEPARTMENTS ERROR:", err);
+
+    }
+
   };
+
+    loadDepartments();
+
+  }, []);
 
   /* ================= SEARCH ================= */
 
@@ -89,51 +107,37 @@ const WalkIn = () => {
 
     const data = await getAppointmentsByPatientApi(patient.patientId);
 
-    console.log("API RESULT:", data);
-
     setAppointments(data);
 
     const today = new Date().toISOString().split("T")[0];
 
-    if (!appointments || appointments.length === 0) {
+    const todayAppointment = data.find(
+      app => app.schedule?.date === today
+    );
 
-      setAppointmentMessage("Bệnh nhân chưa có lịch hẹn.");
-      setSelectedAppointment(null);
+    /* ===== CASE 2: Có lịch hôm nay ===== */
+
+    if (todayAppointment) {
+
+      setSelectedAppointment(todayAppointment);
+
+      setAppointmentMessage("Bệnh nhân có lịch khám hôm nay.");
+
       return;
-    }
-
-    const appointment = appointments[0];
-
-    setSelectedAppointment(appointment);
-
-    setAppointmentData(prev => ({
-      ...prev,
-      department: appointment.departmentId || "",
-      doctor: appointment.doctorId || ""
-    }));
-
-    if (appointment.schedule?.date === today) {
-
-      setAppointmentMessage("Bệnh nhân có lịch hẹn hôm nay.");
-
-    } else if (appointment.schedule?.date > today) {
-
-      setAppointmentMessage(
-        `Bệnh nhân có lịch hẹn ngày ${appointment.schedule.date}`
-      );
-
-    } else {
-
-      setAppointmentMessage("Lịch hẹn đã quá ngày.");
 
     }
+
+    /* ===== CASE 3: Không có lịch ===== */
+
+    setSelectedAppointment(null);
+
+    setAppointmentMessage("Bệnh nhân này chưa có lịch khám hôm nay.");
 
   } catch (err) {
 
-    console.error("CHECK APPOINTMENT ERROR:", err);
+    console.error(err);
 
     setAppointmentMessage("Không thể kiểm tra lịch hẹn.");
-    setSelectedAppointment(null);
 
   }
 
@@ -145,25 +149,41 @@ const WalkIn = () => {
 
   /* ================= CHANGE ================= */
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
 
-    const { name, value, type, checked } = e.target;
+  const { name, value, type, checked } = e.target;
 
-    setAppointmentData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
+  const newValue = type === "checkbox" ? checked : value;
 
-    if (name === 'department') {
+  // update state trước
+  setAppointmentData(prev => ({
+    ...prev,
+    [name]: newValue
+  }));
 
+  // nếu chọn khoa thì load bác sĩ
+  if (name === "department") {
+
+    try {
+
+      const data = await getTodaySlotsApi(value);
+
+      setDoctors(Array.isArray(data) ? data : data.data || []);
+
+      // reset doctor khi đổi khoa
       setAppointmentData(prev => ({
         ...prev,
-        doctor: ''
+        doctor: ""
       }));
+
+    } catch (err) {
+
+      console.error("LOAD DOCTORS ERROR:", err);
 
     }
 
-  };
+  }
+};
 
   const generateQueueNumber = () => {
 
@@ -214,6 +234,11 @@ const WalkIn = () => {
       departmentId: appointmentData.department,
 
       doctorId: appointmentData.doctor || null,
+
+      schedule: {
+        shiftId: appointmentData.shiftId,
+        room: appointmentData.room
+      },
 
       visitType: appointmentData.visitType,
 
@@ -296,6 +321,16 @@ const WalkIn = () => {
   const historyAppointments = appointments.filter(
     a => a.schedule?.date < today
   );
+
+  const morningSlots = doctors.filter(
+  d => d.shiftId === "MORNING"
+);
+
+  const afternoonSlots = doctors.filter(
+    d => d.shiftId === "AFTERNOON"
+  );
+
+  const todayLabel = new Date().toLocaleDateString("vi-VN");
 
   return (
     <div className="walkin-container">
@@ -406,6 +441,21 @@ const WalkIn = () => {
                     </button>
 
                   </div>
+
+                  {selectedPatient && !selectedAppointment && appointmentMessage && (
+                    <div className="no-appointment-box">
+
+                      <h3>{appointmentMessage}</h3>
+
+                      <button
+                        className="btn-create-appointment"
+                        onClick={() => setStep(2)}
+                      >
+                        Tạo lịch khám
+                      </button>
+
+                    </div>
+                  )}
 
                   {/* TAB CONTENT */}
 
@@ -562,16 +612,6 @@ const WalkIn = () => {
                     />
                     <span>Tái khám</span>
                   </label>
-                  <label className="radio-label">
-                    <input
-                      type="radio"
-                      name="visitType"
-                      value="cap-cuu"
-                      checked={appointmentData.visitType === 'cap-cuu'}
-                      onChange={handleChange}
-                    />
-                    <span>Cấp cứu</span>
-                  </label>
                 </div>
               </div>
 
@@ -579,11 +619,39 @@ const WalkIn = () => {
               <div className="form-group-walkin">
                 <label>Chọn khoa khám <span className="required">*</span></label>
                 <div className="department-grid">
-                  {departments.map(dept => (
+                  {Array.isArray(filteredDepartments) && filteredDepartments.map(dept => (
                     <div
                       key={dept.id}
                       className={`dept-card ${appointmentData.department === dept.id ? 'selected' : ''}`}
-                      onClick={() => setAppointmentData(prev => ({ ...prev, department: dept.id, doctor: '' }))}
+                      onClick={async () => {
+
+                      // reset danh sách slot cũ
+                      setDoctors([]);
+
+                      // reset doctor đã chọn và cập nhật khoa
+                      setAppointmentData(prev => ({
+                        ...prev,
+                        department: dept.id,
+                        doctor: ""
+                      }));
+
+                      if (slotCache.current[dept.id]) {
+
+                        setDoctors(slotCache.current[dept.id]);
+
+                      } else {
+
+                        const data = await getTodaySlotsApi(dept.id);
+
+                        const slots = Array.isArray(data) ? data : data.data || [];
+
+                        slotCache.current[dept.id] = slots;
+
+                        setDoctors(slots);
+
+                      }
+
+                    }}
                     >
                       <div className="dept-icon">{dept.icon}</div>
                       <div className="dept-name">{dept.name}</div>
@@ -596,17 +664,75 @@ const WalkIn = () => {
               {appointmentData.department && (
                 <div className="form-group-walkin">
                   <label>Chọn bác sĩ (tùy chọn)</label>
-                  <select
-                    name="doctor"
-                    value={appointmentData.doctor}
-                    onChange={handleChange}
-                    className="select-doctor"
-                  >
-                    <option value="">-- Tự động phân bổ --</option>
-                    {doctorsByDept[appointmentData.department]?.map((doc, idx) => (
-                      <option key={idx} value={doc}>{doc}</option>
-                    ))}
-                  </select>
+                  <div className="schedule-container">
+
+                    <p className="schedule-date">
+                      Lịch khám ngày: <strong>{todayLabel}</strong>
+                    </p>
+
+                    {/* CA SÁNG */}
+                    {morningSlots.length > 0 && (
+                      <div className="shift-section">
+                        <h3>Ca sáng (6:00 - 11:30)</h3>
+
+                        <div className="slot-grid">
+                          {morningSlots.map(slot => (
+                            <div
+                              key={`${slot.doctorId}-${slot.room}-${slot.shiftId}`}
+                              className={`slot-card ${
+                                appointmentData.doctor === slot.doctorId &&
+                                appointmentData.shiftId === slot.shiftId ? "selected" : ""
+                              }`}
+                              onClick={() =>
+                                setAppointmentData(prev => ({
+                                  ...prev,
+                                  doctor: slot.doctorId,
+                                  shiftId: slot.shiftId,
+                                  room: slot.room
+                                }))
+                              }
+                            >
+                              <p className="doctor-name">{slot.doctorName}</p>
+                              <p className="doctor-specialty">{slot.specialty}</p>
+                              <p>Phòng: {slot.room}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* CA CHIỀU */}
+                    {afternoonSlots.length > 0 && (
+                      <div className="shift-section">
+                        <h3>Ca chiều (13:00 - 16:30)</h3>
+
+                        <div className="slot-grid">
+                          {afternoonSlots.map(slot => (
+                            <div
+                              key={`${slot.doctorId}-afternoon`}
+                              className={`slot-card ${
+                                appointmentData.doctor === slot.doctorId &&
+                                appointmentData.shiftId === slot.shiftId ? "selected" : ""
+                              }`}
+                              onClick={() =>
+                                setAppointmentData(prev => ({
+                                  ...prev,
+                                  doctor: slot.doctorId,
+                                  shiftId: slot.shiftId,
+                                  room: slot.room
+                                }))
+                              }
+                            >
+                              <p className="doctor-name">{slot.doctorName}</p>
+                              <p className="doctor-specialty">{slot.specialty}</p>
+                              <p>Phòng: {slot.room}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                  </div>
                 </div>
               )}
 
