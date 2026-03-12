@@ -69,6 +69,14 @@ const WalkIn = () => {
 
   }, []);
 
+
+  //Format date time
+  const formatDate = (value) => {
+  if (!value) return "";
+  const [year, month, day] = value.split("-");
+  return `${day}-${month}-${year}`;
+};
+
   /* ================= SEARCH ================= */
 
   const handleSearch = async () => {
@@ -387,7 +395,7 @@ const WalkIn = () => {
                         <div className="patient-info">
                           <h4>{patient.fullName}</h4>
                           <p>Mã BN: <strong>{patient.patientId}</strong></p>
-                          <p>Ngày sinh:<strong> {patient.dob}</strong></p>
+                          <p>Ngày sinh: <strong>{formatDate(patient?.dob)}</strong></p>
                           <p>SĐT: <strong>{patient.phone}</strong></p>
                           <p>CCCD/CMND: <strong>{patient.cccd}</strong></p>
                           {patient.hasInsurance && <span className="badge-insurance">Có BHYT</span>}
@@ -473,6 +481,8 @@ const WalkIn = () => {
 
                         <p><strong>Phòng:</strong> {app.schedule?.room}</p>
 
+                        <p><strong>Ngày:</strong> {formatDate(app.schedule?.date)}</p>
+
                         <p>
                           <strong>Ca:</strong>{" "}
                             {app.schedule?.shiftId === "MORNING"
@@ -508,6 +518,8 @@ const WalkIn = () => {
 
                             <p><strong>Phòng:</strong> {app.schedule?.room}</p>
 
+                            <p><strong>Ngày:</strong> {formatDate(app.schedule?.date)}</p>
+
                             <p>
                               <strong>Ca:</strong>{" "}
                               {app.schedule?.shiftId === "MORNING"
@@ -535,6 +547,8 @@ const WalkIn = () => {
                             <p><strong>Bác sĩ:</strong> {app.doctorName}</p>
 
                             <p><strong>Phòng:</strong> {app.schedule?.room}</p>
+
+                            <p><strong>Ngày:</strong> {formatDate(app.schedule?.date)}</p>
 
                             <p>
                               <strong>Ca:</strong>{" "}
@@ -575,7 +589,7 @@ const WalkIn = () => {
                 <div className="selected-info">
                   <h4>{selectedPatient.fullName}</h4>
                   <p>Mã BN: <strong>{selectedPatient.patientId}</strong></p>
-                  <p>Ngày sinh: <strong>{selectedPatient.dob}</strong></p>
+                  <p>Ngày sinh: <strong>{formatDate(selectedPatient?.dob)}</strong></p>
                   <p>SĐT: <strong>{selectedPatient.phone}</strong></p>
                   <p>CCCD/CMND: <strong>{selectedPatient.cccd}</strong></p>
                 </div>
@@ -693,7 +707,7 @@ const WalkIn = () => {
                               }
                             >
                               <p className="doctor-name">{slot.doctorName}</p>
-                              <p className="doctor-specialty">{slot.specialty}</p>
+                              <p className="doctor-specialty">Chuyên môn: {slot.specialty}</p>
                               <p>Phòng: {slot.room}</p>
                             </div>
                           ))}
@@ -724,7 +738,7 @@ const WalkIn = () => {
                               }
                             >
                               <p className="doctor-name">{slot.doctorName}</p>
-                              <p className="doctor-specialty">{slot.specialty}</p>
+                              <p className="doctor-specialty">Chuyên môn: {slot.specialty}</p>
                               <p>Phòng: {slot.room}</p>
                             </div>
                           ))}

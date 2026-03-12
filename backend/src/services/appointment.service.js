@@ -1,5 +1,6 @@
 import { appointmentCollection } from "../models/appointment.model.js";
 import { DoctorModel } from "../models/doctor.model.js";
+import { patientCollection } from "../models/patient.model.js";
 import { departmentCollection } from "../models/department.model.js";
 import { generateQueueNumber } from "../utils/queue.js";
 
@@ -49,48 +50,54 @@ export const createWalkInAppointmentService = async (data) => {
 
 export const searchPatientsAppointmentService = async (query) => {
 
+  const keyword = query.trim();
+
+  const [codeSnap, phoneSnap, nameSnap] = await Promise.all([
+
+    /* SEARCH BY PATIENT CODE */
+
+    patientCollection
+      .where("patientCode", "==", keyword)
+      .limit(10)
+      .get(),
+
+    /* SEARCH BY PHONE */
+
+    patientCollection
+      .where("phone", "==", keyword)
+      .limit(10)
+      .get(),
+
+    /* SEARCH BY FULL NAME */
+
+    patientCollection
+      .orderBy("fullName")
+      .startAt(keyword)
+      .endAt(keyword + "\uf8ff")
+      .limit(10)
+      .get()
+
+  ]);
+
   const results = [];
-
-  /* SEARCH BY PATIENT CODE */
-
-  const codeSnap = await  appointmentCollection
-    .where("patientId", "==", query)
-    .limit(10)
-    .get();
 
   codeSnap.forEach(doc => {
     results.push({
-      id: doc.id,
+      patientId: doc.id,
       ...doc.data()
     });
   });
-
-  /* SEARCH BY PHONE */
-
-  const phoneSnap = await  appointmentCollection
-    .where("phone", "==", query)
-    .limit(10)
-    .get();
 
   phoneSnap.forEach(doc => {
     results.push({
-      id: doc.id,
+      patientId: doc.id,
       ...doc.data()
     });
   });
 
-  /* SEARCH BY NAME (PREFIX SEARCH) */
-
-  const nameSnap = await  appointmentCollection
-    .orderBy("fullName")
-    .startAt(query)
-    .endAt(query + "\uf8ff")
-    .limit(10)
-    .get();
-
   nameSnap.forEach(doc => {
     results.push({
-      id: doc.id,
+      patientId: doc.id,
       ...doc.data()
     });
   });
@@ -98,7 +105,7 @@ export const searchPatientsAppointmentService = async (query) => {
   /* REMOVE DUPLICATE */
 
   const unique = Array.from(
-    new Map(results.map(item => [item.id, item])).values()
+    new Map(results.map(item => [item.patientId, item])).values()
   );
 
   return unique;

@@ -1,6 +1,7 @@
 import { db } from "../config/firebase.js";
 
 const collection = db.collection("Patients");
+export const patientCollection = db.collection("Patients");
 
 export const findByPhone = async (phone) => {
   return await collection.where("phone", "==", phone).limit(1).get();
