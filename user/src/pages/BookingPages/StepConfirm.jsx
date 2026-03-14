@@ -42,14 +42,20 @@ export default function StepConfirm({ data, onBack }) {
       await createAppointment({
         userUid: user.uid,
         patientId,
-
+        
         fullName: patient.fullName,
         dob: patient.dob,
         phone: patient.phone,
+        gender: patient.gender === "MALE" ? "Nam" : "Nữ",
         cccd: patient.cccd || null,
 
-        doctorId: doctor.id,
-        departmentId: department.id,
+        information: {
+          doctorId: doctor.id,
+          name: doctor.name,
+          specialty: doctor.specialty,
+          departmentId: department.id,
+          departmentName: department.name,
+        },
 
         schedule: {
           date: schedule.date,

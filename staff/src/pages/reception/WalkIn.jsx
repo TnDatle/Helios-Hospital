@@ -475,9 +475,9 @@ const WalkIn = () => {
 
                       <div key={app.id} className="appointment-card">
 
-                        <p><strong>Khoa:</strong> {app.departmentName}</p>
+                        <p><strong>Khoa:</strong> {app.information?.departmentName}</p>
 
-                        <p><strong>Bác sĩ:</strong> {app.doctorName}</p>
+                        <p><strong>Bác sĩ:</strong> {app.information?.name}</p>
 
                         <p><strong>Phòng:</strong> {app.schedule?.room}</p>
 
@@ -512,9 +512,9 @@ const WalkIn = () => {
                         upcomingAppointments.map(app => (
                           <div key={app.id} className="appointment-card">
 
-                            <p><strong>Khoa:</strong> {app.departmentName}</p>
+                            <p><strong>Khoa:</strong> {app.information?.departmentName}</p>
 
-                            <p><strong>Bác sĩ:</strong> {app.doctorName}</p>
+                            <p><strong>Bác sĩ:</strong> {app.information?.name}</p>
 
                             <p><strong>Phòng:</strong> {app.schedule?.room}</p>
 
@@ -542,9 +542,9 @@ const WalkIn = () => {
                         historyAppointments.map(app => (
                           <div key={app.id} className="appointment-card">
 
-                            <p><strong>Khoa:</strong> {app.departmentName}</p>
+                            <p><strong>Khoa:</strong> {app.information?.departmentName}</p>
 
-                            <p><strong>Bác sĩ:</strong> {app.doctorName}</p>
+                            <p><strong>Bác sĩ:</strong> {app.information?.name}</p>
 
                             <p><strong>Phòng:</strong> {app.schedule?.room}</p>
 

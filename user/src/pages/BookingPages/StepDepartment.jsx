@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 export default function StepDepartment({ onSelect }) {
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  
   const filteredDepartments = departments.filter((dep) =>
-    dep.name !== "Y Dược" && dep.name !== "Xét Nghiệm"
+    dep.name !== "Y Dược" && dep.name !== "Xét Nghiệm" &&
+    dep.name !== "Gây Mê Hồi Sức" && dep.name !== "Hồi Sức Tích Cực & Chống Độc"
   );
 
   useEffect(() => {

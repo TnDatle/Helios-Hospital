@@ -20,12 +20,12 @@ export const createAppointment = async (payload) => {
     fullName: payload.fullName || "",
     dob: payload.dob || "",
     phone: payload.phone || "",
+    gender: payload.gender || "",
     cccd: payload.cccd || null,
 
-    doctorId: payload.doctorId || null,
-    departmentId: payload.departmentId || null,
-
-    schedule: payload.schedule || null,
+    //Gom nhóm thông tin
+    information: payload.information || null, // Thông tin Khoa , bác sĩ 
+    schedule: payload.schedule || null, //Thông tin ngày , giờ khám
 
     status: "PENDING",
     createdAt: serverTimestamp(),
