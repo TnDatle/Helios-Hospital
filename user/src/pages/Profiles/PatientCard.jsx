@@ -5,7 +5,6 @@ const RELATIONSHIP_LABEL = {
   MOTHER: "Mẹ",
   SPOUSE: "Vợ / Chồng",
   CHILD: "Con",
-
   OTHER: "Người thân khác",
 };
 
@@ -26,11 +25,12 @@ export default function PatientCard({ patient, onEdit }) {
           )}
 
           {/* ===== BADGE QUAN HỆ ===== */}
-          {!patient.isDefault && patient.relationship && (
+          {!patient?.isDefault && patient?.relationship ? (
             <span className="badge badge-relationship">
-              {RELATIONSHIP_LABEL[patient.relationship]}
+              {RELATIONSHIP_LABEL?.[patient.relationship] || patient.relationship}
             </span>
-          )}
+            
+          ) : null}
         </h5>
 
         <p>

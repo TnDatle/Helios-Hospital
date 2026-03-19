@@ -112,6 +112,7 @@ export default function PatientFormModal({ patient, onClose, onSuccess }) {
     (w) => w.code === form.wardCode
   );
 
+
   const payload = {
     fullName: form.fullName,
     dob: form.dob,
@@ -120,13 +121,15 @@ export default function PatientFormModal({ patient, onClose, onSuccess }) {
     cccd: form.cccd,
     ethnicity: form.ethnicity,
     bhyt: form.bhyt,
-    isDefault: patient.isDefault || false,
-    relationship: patient.isDefault ? null : form.relationship,
-    address: {
-      province: provinceObj?.name || "",
-      commune: wardObj?.name || "",
-      detail: form.addressDetail,
-    },
+
+    isDefault: false, 
+    relationship: form.relationship,
+
+      address: {
+        province: provinceObj?.name || "",
+        commune: wardObj?.name || "",
+        detail: form.addressDetail,
+      },
   };
 
   try {

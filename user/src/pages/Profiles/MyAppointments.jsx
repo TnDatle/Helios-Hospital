@@ -119,8 +119,8 @@ export default function MyAppointments() {
       <div className="patient-card-info">
         <h5>{a.patientName}</h5>
 
-        <p><strong>Bác sĩ:</strong> {a.doctorName}</p>
-        <p><strong>Khoa:</strong> {a.departmentName}</p>
+        <p><strong>Bác sĩ:</strong> {a.information.name}</p>
+        <p><strong>Khoa:</strong> {a.information.departmentName}</p>
 
         <p>
           <strong>Ngày khám:</strong>{" "}

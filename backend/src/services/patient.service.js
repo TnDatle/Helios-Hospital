@@ -25,28 +25,33 @@ export const createPatientForUserService = async (data, user) => {
   }
 
   const patientCode = generatePatientCode();
-
+  
   const patientDoc = {
-    patientCode,
-    fullName: data.fullName,
-    dob: data.dob,
-    gender: data.gender?.toUpperCase(),
-    phone: data.phone,
-    cccd: data.cccd,
-    ethnicity: data.ethnicity || "Kinh",
-    address: {
-      province: data.address?.province || "",
-      commune: data.address?.commune || "",
-      detail: data.address?.detail || ""
-    },
-    bhyt: data.bhyt || "",
-    relationship: data.relationship || null,
-    ownerUid: user?.uid ?? null,
-    isDefault: true,
-    createdBy: user?.uid ?? null,
-    createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    updatedAt: admin.firestore.FieldValue.serverTimestamp()
-  };
+  patientCode,
+  fullName: data.fullName,
+  dob: data.dob,
+  gender: data.gender?.toUpperCase(),
+  phone: data.phone,
+  cccd: data.cccd,
+  ethnicity: data.ethnicity || "Kinh",
+
+  address: {
+    province: data.address?.province || "",
+    commune: data.address?.commune || "",
+    detail: data.address?.detail || ""
+  },
+
+  bhyt: data.bhyt || "",
+  relationship: data.isDefault ? null : data.relationship || null,
+
+  ownerUid: user?.uid ?? null,
+
+  isDefault: !!data.isDefault,
+
+  createdBy: user?.uid ?? null,
+  createdAt: admin.firestore.FieldValue.serverTimestamp(),
+  updatedAt: admin.firestore.FieldValue.serverTimestamp()
+};
 
   await PatientModel.createPatient(patientCode, patientDoc);
 
