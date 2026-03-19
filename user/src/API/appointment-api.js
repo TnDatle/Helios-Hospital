@@ -27,7 +27,12 @@ export const createAppointment = async (payload) => {
     information: payload.information || null, // Thông tin Khoa , bác sĩ 
     schedule: payload.schedule || null, //Thông tin ngày , giờ khám
 
+    reason: "Khám mới",
+    priority: "Không" ,
+    hasInsurance: "Không",
+    
     status: "PENDING",
+
     createdAt: serverTimestamp(),
   });
 

@@ -1,5 +1,6 @@
-import React, { useState , useEffect, useRef} from 'react';
+import React, { useState , useEffect, useRef ,  useContext } from 'react';
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 import '../../styles/reception/walkin.css';
 
 import {
@@ -22,7 +23,7 @@ const WalkIn = () => {
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [appointmentMessage, setAppointmentMessage] = useState("");
   const navigate = useNavigate();
-
+  
   const [appointmentData, setAppointmentData] = useState({
   department: '',
   doctor: '',
@@ -35,6 +36,7 @@ const WalkIn = () => {
   hasInsurance: false
 });
 
+  const { user } = useContext(AuthContext);
   const [appointments, setAppointments] = useState([]);
   const [activeTab, setActiveTab] = useState("today");
   const [queueNumber, setQueueNumber] = useState('');
@@ -43,8 +45,20 @@ const WalkIn = () => {
   // Danh sách khoa
   const [departments, setDepartments] = useState([]);
   const filteredDepartments = departments.filter((dep) =>
-    dep.name !== "Y Dược" && dep.name !== "Xét Nghiệm"
+    dep.name !== "Y Dược" && dep.name !== "Xét Nghiệm" &&
+    dep.name !== "Gây Mê Hồi Sức" && dep.name !== "Hồi Sức Tích Cực & Chống Độc"
   );
+
+  //Lọc thời gian
+  const now = new Date();
+  const currentHour = now.getHours();
+  const currentMinute = now.getMinutes();
+
+  // kiểm tra đã quá 11:30 chưa
+  const isMorningClosed =
+    currentHour > 11 || (currentHour === 11 && currentMinute > 30);
+
+
   const [doctors, setDoctors] = useState([]);
 
   useEffect(() => {
@@ -236,28 +250,35 @@ const WalkIn = () => {
   try {
 
     const body = {
+      userUid: user.uid,
 
       patientId: selectedPatient.patientId,
 
-      departmentId: appointmentData.department,
+      fullName: selectedPatient.fullName,
+      dob: selectedPatient.dob,
+      phone: selectedPatient.phone,
+      gender: selectedPatient.gender === "MALE" ? "Nam" : "Nữ",
+      cccd: selectedPatient.cccd || null,
 
-      doctorId: appointmentData.doctor || null,
+      information: {
+        doctorId: appointmentData.doctor || null,
+        name: appointmentData.doctorName || "",      
+        specialty: appointmentData.specialty || "", 
+        departmentId: appointmentData.department,
+        departmentName: appointmentData.departmentName || "", 
+      },
 
       schedule: {
+        date: appointmentData.date || new Date().toISOString(), 
         shiftId: appointmentData.shiftId,
-        room: appointmentData.room
+        room: appointmentData.room,
       },
 
       visitType: appointmentData.visitType,
-
       priority: appointmentData.priority,
-
       paymentType: appointmentData.paymentType,
-
       reason: appointmentData.reason,
-
       hasInsurance: appointmentData.hasInsurance
-
     };
 
     const result = await createAppointmentApi(body);
@@ -646,6 +667,7 @@ const WalkIn = () => {
                       setAppointmentData(prev => ({
                         ...prev,
                         department: dept.id,
+                        departmentName: dept.name, 
                         doctor: ""
                       }));
 
@@ -685,10 +707,9 @@ const WalkIn = () => {
                     </p>
 
                     {/* CA SÁNG */}
-                    {morningSlots.length > 0 && (
+                    {morningSlots.length > 0 && !isMorningClosed && (
                       <div className="shift-section">
                         <h3>Ca sáng (6:00 - 11:30)</h3>
-
                         <div className="slot-grid">
                           {morningSlots.map(slot => (
                             <div
@@ -699,10 +720,12 @@ const WalkIn = () => {
                               }`}
                               onClick={() =>
                                 setAppointmentData(prev => ({
-                                  ...prev,
-                                  doctor: slot.doctorId,
-                                  shiftId: slot.shiftId,
-                                  room: slot.room
+                                   ...prev,
+                                    doctor: slot.doctorId,
+                                    doctorName: slot.doctorName,   
+                                    specialty: slot.specialty,     
+                                    shiftId: slot.shiftId,
+                                    room: slot.room
                                 }))
                               }
                             >
@@ -719,7 +742,6 @@ const WalkIn = () => {
                     {afternoonSlots.length > 0 && (
                       <div className="shift-section">
                         <h3>Ca chiều (13:00 - 16:30)</h3>
-
                         <div className="slot-grid">
                           {afternoonSlots.map(slot => (
                             <div
@@ -730,8 +752,10 @@ const WalkIn = () => {
                               }`}
                               onClick={() =>
                                 setAppointmentData(prev => ({
-                                  ...prev,
+                                   ...prev,
                                   doctor: slot.doctorId,
+                                  doctorName: slot.doctorName,   
+                                  specialty: slot.specialty,     
                                   shiftId: slot.shiftId,
                                   room: slot.room
                                 }))

@@ -7,46 +7,75 @@ import { generateQueueNumber } from "../utils/queue.js";
 
 export const createWalkInAppointmentService = async (data) => {
 
-  const queueNumber = await generateQueueNumber(data.departmentId);
-
   const appointment = {
+    userUid: data.userUid,
 
     patientId: data.patientId,
+    fullName: data.fullName,
+    dob: data.dob,
+    phone: data.phone,
+    gender: data.gender,
+    cccd: data.cccd || null,
 
-    departmentId: data.departmentId,
-
-    doctorId: data.doctorId || null,
-
-    visitType: data.visitType,
-
-    priority: data.priority,
-
-    paymentType: data.paymentType,
-
-    reason: data.reason,
-
-    hasInsurance: data.hasInsurance,
-
-    queueNumber,
-
-    status: "WAITING",
-
-    schedule: {
-      date: new Date().toISOString().split("T")[0],
-      shiftId: "WALKIN"
+    information: {
+      doctorId: data.information.doctorId,
+      name: data.information.name,
+      specialty: data.information.specialty,
+      departmentId: data.information.departmentId,
+      departmentName: data.information.departmentName,
     },
 
+    schedule: {
+      date: data.schedule.date,
+      shiftId: data.schedule.shiftId,
+      room: data.schedule.room,
+    },
+
+    status: "PENDING", 
     createdAt: new Date()
   };
 
   const docRef = await appointmentCollection.add(appointment);
 
   return {
-    appointmentId: docRef.id,
+    appointmentId: docRef.id
+  };
+
+};
+
+
+export const checkInService = async (data) => {
+
+  const departmentId = data.information?.departmentId;
+
+  const queueNumber = await generateQueueNumber(departmentId);
+
+  const checkin = {
+    appointmentId: data.appointmentId || null, // nếu có đặt trước
+
+    userUid: data.userUid, // lễ tân
+
+    patientId: data.patientId,
+    fullName: data.fullName,
+    phone: data.phone,
+
+    information: data.information,
+
+    schedule: data.schedule,
+
+    queueNumber,
+
+    status: "WAITING",
+    checkInTime: new Date()
+  };
+
+  const docRef = await checkinCollection.add(checkin);
+
+  return {
+    checkinId: docRef.id,
     queueNumber
   };
 };
-
 
 export const searchPatientsAppointmentService = async (query) => {
 
