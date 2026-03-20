@@ -30,6 +30,7 @@ const __dirname = path.dirname(__filename);
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:5173",
+  "https://helios-hospital.vercel.app",
 ];
 
 /* ======================
