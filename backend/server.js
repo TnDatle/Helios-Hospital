@@ -31,6 +31,7 @@ const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:5173",
   "https://helios-hospital.vercel.app",
+  "https://helios-hospital-staff.vercel.app",
 ];
 
 /* ======================
