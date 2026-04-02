@@ -47,6 +47,7 @@
 .form-group {
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .form-group label {
@@ -67,6 +68,22 @@
 .form-group select:focus {
   outline: none;
   border-color: #0091a7;
+}
+
+.form-group .toggle-password {
+  position: absolute;
+  top: 70%;
+  right: 12px;
+  transform: translateY(-50%);
+  /* cursor: pointer; */
+  font-size: 16px;
+  user-select: none;
+  color: #6b7280;
+  opacity: 0.8;
+}
+
+.form-group .toggle-password:hover {
+  opacity: 1;
 }
 
 /* 2 cột */

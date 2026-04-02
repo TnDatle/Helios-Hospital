@@ -14,6 +14,7 @@ function Login() {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -103,13 +104,19 @@ function Login() {
           <div className="form-group">
             <label>Mật khẩu</label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Nhập mật khẩu"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={loading}
               required
             />
+            <span
+                className="toggle-password"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                👁
+              </span>
           </div>
 
           <button
