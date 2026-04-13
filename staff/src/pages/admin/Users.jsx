@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import "../../styles/admin/users.css";
+import { getDatabase, ref, onValue } from "firebase/database";
 
 const API_BASE = "http://localhost:5000/api";
 
@@ -81,7 +82,7 @@ export default function Users() {
   const [users, setUsers] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [allDoctors, setAllDoctors] = useState([]);
-
+  const [statusMap, setStatusMap] = useState({});
   /* =========================
      FORM
   ========================= */
@@ -99,6 +100,11 @@ export default function Users() {
   const [filterDepartment, setFilterDepartment] = useState("");
   const [filterDoctor, setFilterDoctor] = useState("");
 
+  const getUserOnline = (u) => {
+  const uid = u.id; // nếu backend đã đúng UID thì giữ nguyên
+
+  return statusMap[uid]?.isOnline;
+};
   /* =========================
      HELPERS
   ========================= */
@@ -121,6 +127,7 @@ export default function Users() {
      FETCH DATA
   ========================= */
   useEffect(() => {
+    
     fetchUsers();
   }, []);
 
@@ -150,6 +157,17 @@ export default function Users() {
     };
 
     fetchBase();
+  }, []);
+
+  useEffect(() => {
+    const db = getDatabase();
+    const statusRef = ref(db, "/status");
+
+    const unsubscribe = onValue(statusRef, (snapshot) => {
+      setStatusMap(snapshot.val() || {});
+    });
+
+    return () => unsubscribe();
   }, []);
 
   /* =========================
@@ -184,7 +202,7 @@ export default function Users() {
 
       return true;
     });
-}, [users, activeRole, filterDepartment, filterDoctor]);
+  }, [users, activeRole, filterDepartment, filterDoctor]);
 
 
   /* =========================
@@ -327,6 +345,7 @@ export default function Users() {
                 <th>Họ tên</th>
                 <th>Khoa / Phòng</th>
                 <th>Trạng thái</th>
+                <th>Online</th>
                 <th>Login lần cuối</th>
               </tr>
             </thead>
@@ -364,10 +383,21 @@ export default function Users() {
                     </td>
 
                     <td>
-                      {u.lastLoginAt
+                      {getUserOnline(u) ? (
+                        <span style={{ color: "green" }}>🟢 Online</span>
+                      ) : (
+                        <span style={{ color: "#999" }}>⚪ Offline</span>
+                      )}
+                    </td>
+                    
+                    <td>
+                      {u.lastLoginAt?.seconds
+                        ? new Date(u.lastLoginAt.seconds * 1000).toLocaleString("vi-VN")
+                        : u.lastLoginAt
                         ? new Date(u.lastLoginAt).toLocaleString("vi-VN")
                         : "Chưa đăng nhập"}
                     </td>
+
                   </tr>
                 ))
               )}

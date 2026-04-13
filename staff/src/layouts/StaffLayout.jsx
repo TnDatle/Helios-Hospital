@@ -1,7 +1,9 @@
 import { Outlet, Link, Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-
+import { getDatabase, ref, set } from "firebase/database";
+import { signOut } from "firebase/auth";
+import { auth } from "../config/firebase";
 
 const ROLE_LABEL = {
   RECEPTION: "Tiếp tân",
@@ -29,17 +31,40 @@ function StaffLayout() {
   }
 
 
-  const handleLogout = async () => {
-    const ok = window.confirm("Bạn có chắc chắn muốn đăng xuất không?");
-    if (!ok) return;
+const handleLogout = async () => {
+  const ok = window.confirm("Bạn có chắc chắn muốn đăng xuất không?");
+  if (!ok) return;
 
+  try {
+    const uid = auth.currentUser?.uid;
+
+    //  set OFF ngay (realtime)
+    if (uid) {
+      const db = getDatabase();
+      const userStatusRef = ref(db, "/status/" + uid);
+
+      await set(userStatusRef, {
+        isOnline: false,
+        lastChanged: Date.now(),
+      });
+    }
+
+    //  logout BE (session)
     await fetch("http://localhost:5000/api/auth/logout", {
       method: "POST",
       credentials: "include",
     });
 
+    //  logout Firebase (QUAN TRỌNG)
+    await signOut(auth);
+
+    //  reload user context
     await refreshUser();
-  };
+
+  } catch (err) {
+    console.error("LOGOUT ERROR:", err);
+  }
+};
 
 
   return (

@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../config/firebase";
+import { auth  , rtdb } from "../../config/firebase";
 import { useAuth } from "../../context/AuthContext";
+import { ref, set, onDisconnect } from "firebase/database";
 
 const API_BASE = "http://localhost:5000/api";
 
@@ -59,7 +60,26 @@ function Login() {
         },
         body: JSON.stringify({ idToken }),
       });
+
+      // CHECK TRƯỚC
+      if (!res.ok) {
+        throw new Error("LOGIN_FAILED");
+      }
+
+      // Rồi mới làm tiếp
       await refreshUser();
+
+      const userStatusRef = ref(rtdb, "/status/" + fbUser.uid);
+
+      await set(userStatusRef, {
+        isOnline: true,
+        lastChanged: Date.now(),
+      });
+
+      onDisconnect(userStatusRef).set({
+        isOnline: false,
+        lastChanged: Date.now(),
+      });
 
       if (!res.ok) {
         throw new Error("LOGIN_FAILED");
