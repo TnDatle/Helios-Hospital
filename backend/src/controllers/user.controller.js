@@ -1,4 +1,4 @@
-import { getUsersService,createUserService } from "../services/user.service.js";
+import { getUsersService,createUserService, toggleUserStatusService } from "../services/user.service.js";
 
 export const getUsers = async (req, res) => {
   try {
@@ -8,6 +8,27 @@ export const getUsers = async (req, res) => {
     console.error("GET /users failed:", err);
     res.status(500).json({
       message: "Internal server error",
+    });
+  }
+};
+
+export const toggleUser = async (req, res) => {
+  try {
+    const result = await toggleUserStatusService(req.params.id);
+
+    return res.json({
+      success: true,
+      data: result,
+    });
+  } catch (err) {
+    if (err.message === "USER_NOT_FOUND") {
+      return res.status(404).json({
+        message: "Không tìm thấy user",
+      });
+    }
+
+    return res.status(500).json({
+      message: "Lỗi server",
     });
   }
 };

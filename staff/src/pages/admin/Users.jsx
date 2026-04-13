@@ -15,6 +15,23 @@ const STAFF_ROLE_MAP = {
   "Phòng Hành chính": "ADMIN_STAFF",
 };
 
+const ACTIVE_ROLE_LABEL  = {
+  ADMIN: "Quản trị viên",
+  DOCTOR: "Bác sĩ",
+  STAFF: "Nhân viên",
+};
+
+const ROLE_CONFIG = {
+  ADMIN: {
+    label: "Quản Trị Viên",
+  },
+  DOCTOR: {
+    label: "Bác Sĩ",
+  },
+  STAFF: {
+    label: "Nhân Viên",
+  },
+};
 
 export default function Users() {
   /* =========================
@@ -31,6 +48,32 @@ export default function Users() {
     type: "error",
     message: "",
   });
+
+ const handleToggle = async (userId) => {
+    try {
+      const res = await fetch(`${API_BASE}/users/${userId}/toggle`, {
+        method: "PATCH",
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        return showAlert("error", data.message);
+      }
+
+      //  update local state luôn (không cần fetch lại)
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.id === userId
+            ? { ...u, isActive: data.data.isActive }
+            : u
+        )
+      );
+
+    } catch {
+      showAlert("error", "Không connect server");
+    }
+  };
 
   /* =========================
      DATA
@@ -175,7 +218,7 @@ export default function Users() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         email: form.email,
-        role: finalRole, // ROLE ĐÃ ĐÚNG NGHIỆP VỤ
+        role: finalRole, 
         name: activeRole === "DOCTOR" ? null : form.name,
         office: activeRole === "STAFF" ? form.office : null,
         doctorId: activeRole === "DOCTOR" ? form.doctorId : null,
@@ -217,20 +260,20 @@ export default function Users() {
 
       {/* ROLE TABS */}
       <div className="role-tabs">
-        {["ADMIN", "DOCTOR", "STAFF"].map((r) => (
-          <button
-            key={r}
-            className={activeRole === r ? "active" : ""}
-            onClick={() => {
-              setActiveRole(r);
-              setFilterDepartment("");
-              setFilterDoctor("");
-            }}
-          >
-            {r}
-          </button>
-        ))}
-      </div>
+      {Object.keys(ROLE_CONFIG).map((r) => (
+        <button
+          key={r}
+          className={activeRole === r ? "active" : ""}
+          onClick={() => {
+            setActiveRole(r);
+            setFilterDepartment("");
+            setFilterDoctor("");
+          }}  
+        >
+          {ROLE_CONFIG[r].label}
+        </button>
+      ))}
+    </div>
 
       {/* FILTER DOCTOR */}
       {activeRole === "DOCTOR" && (
@@ -278,40 +321,65 @@ export default function Users() {
       {/* TABLE */}
       <div className="admin-table">
         <table>
-          <thead>
-            <tr>
-              <th>Email</th>
-              <th>Họ tên</th>
-              <th>Khoa / Phòng</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredUsers.length === 0 ? (
+            <thead>
               <tr>
-                <td colSpan="3">Không có dữ liệu</td>
+                <th>Email</th>
+                <th>Họ tên</th>
+                <th>Khoa / Phòng</th>
+                <th>Trạng thái</th>
+                <th>Login lần cuối</th>
               </tr>
-            ) : (
-              filteredUsers.map((u) => (
-                <tr key={u.id}>
-                  <td>{u.email}</td>
-                  <td>{u.role === "DOCTOR" ? u.doctor?.name : u.name}</td>
-                  <td>
-                    {u.role === "DOCTOR"
-                      ? u.doctor?.departmentName
-                      : u.office}
-                  </td>
+            </thead>
+
+            <tbody>
+              {filteredUsers.length === 0 ? (
+                <tr>
+                  <td colSpan="5">Không có dữ liệu</td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                filteredUsers.map((u) => (
+                  <tr key={u.id}>
+                    <td>{u.email}</td>
+                    <td>{u.role === "DOCTOR" ? u.doctor?.name : u.name}</td>
+                    <td>
+                      {u.role === "DOCTOR"
+                        ? u.doctor?.departmentName
+                        : u.office}
+                    </td>
+
+                    <td>
+                      <label className="switch">
+                        <input
+                          type="checkbox"
+                          checked={u.isActive}
+                          disabled={u.role === "ADMIN"}
+                          onChange={() => handleToggle(u.id)}
+                        />
+                        <span className="slider"></span>
+                      </label>
+
+                      {u.role === "ADMIN" && (
+                        <span style={{ marginLeft: 8, color: "#999" }}></span>
+                      )}
+                    </td>
+
+                    <td>
+                      {u.lastLoginAt
+                        ? new Date(u.lastLoginAt).toLocaleString("vi-VN")
+                        : "Chưa đăng nhập"}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
       </div>
 
       {/* MODAL */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
-            <h2>Tạo {activeRole.toLowerCase()}</h2>
+            <h2>Tạo tài khoản {ACTIVE_ROLE_LABEL[activeRole]}</h2>
 
             <form onSubmit={handleSubmit}>
               <label>Email</label>

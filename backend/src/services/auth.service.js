@@ -6,15 +6,30 @@ import { admin, db } from "../config/firebase.js";
 export const verifyAndLoadUser = async (idToken) => {
   const decoded = await admin.auth().verifyIdToken(idToken);
 
-  const userSnap = await db.collection("Users").doc(decoded.uid).get();
+  const userRef = db.collection("Users").doc(decoded.uid);
+  const userSnap = await userRef.get();
+
   if (!userSnap.exists) {
     throw new Error("USER_NOT_FOUND");
   }
 
+  const userData = userSnap.data();
+
+  // BLOCK nếu bị khóa
+  if (userData.isActive === false) {
+    throw new Error("USER_DISABLED");
+  }
+
+  // UPDATE LAST LOGIN
+  await userRef.update({
+    lastLoginAt: new Date(),
+  });
+
   return {
     uid: decoded.uid,
     email: decoded.email,
-    ...userSnap.data(),
+    ...userData,
+    lastLoginAt: new Date(), 
   };
 };
 

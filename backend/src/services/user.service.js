@@ -1,57 +1,100 @@
 import { auth, db } from "../config/firebase.js";
+import { FieldValue } from "firebase-admin/firestore";
 
 const STAFF_ROLES = ["RECEPTION", "ACCOUNTANT", "ADMIN_STAFF"];
 
-
-
+/* =========================
+   GET USERS
+========================= */
 export const getUsersService = async () => {
   const userSnap = await db.collection("Users").get();
 
-  const users = [];
+  const users = await Promise.all(
+    userSnap.docs.map(async (userDoc) => {
+      const userData = userDoc.data();
 
-  for (const userDoc of userSnap.docs) {
-    const userData = userDoc.data();
+      let doctorInfo = null;
 
-    // DEFAULT
-    let doctorInfo = null;
-
-    if (userData.role === "DOCTOR" && userData.doctorId) {
-      // 1. get Doctor
-      const doctorSnap = await db
-        .collection("Doctor")
-        .doc(userData.doctorId)
-        .get();
-
-      if (doctorSnap.exists) {
-        const doctor = doctorSnap.data();
-
-        // 2. get Department
-        const depSnap = await db
-          .collection("Departments")
-          .doc(doctor.departmentId)
+      if (userData.role === "DOCTOR" && userData.doctorId) {
+        const doctorSnap = await db
+          .collection("Doctor")
+          .doc(userData.doctorId)
           .get();
 
-        doctorInfo = {
-          name: doctor.name,
-          departmentName: depSnap.exists ? depSnap.data().name : "-",
-        };
-      }
-    }
+        if (doctorSnap.exists) {
+          const doctor = doctorSnap.data();
 
-    users.push({
-      id: userDoc.id,
-      email: userData.email,
-      role: userData.role,
-      doctor: doctorInfo, 
-      office: userData.office || null,
-      name: userData.name || null,
-    });
-  }
+          const depSnap = await db
+            .collection("Departments")
+            .doc(doctor.departmentId)
+            .get();
+
+          doctorInfo = {
+            name: doctor.name,
+            departmentName: depSnap.exists
+              ? depSnap.data().name
+              : "-",
+          };
+        }
+      }
+
+      return {
+        id: userDoc.id,
+        email: userData.email,
+        role: userData.role,
+        doctor: doctorInfo,
+        office: userData.office || null,
+        name: userData.name || null,
+        isActive: userData.isActive ?? true,
+        lastLoginAt: userData.lastLoginAt
+          ? userData.lastLoginAt.toDate()
+          : null,
+      };
+    })
+  );
 
   return users;
 };
 
+/* =========================
+   TOGGLE USER
+========================= */
+export const toggleUserStatusService = async (userId) => {
+  const userRef = db.collection("Users").doc(userId);
+  const userSnap = await userRef.get();
 
+  if (!userSnap.exists) {
+    throw new Error("USER_NOT_FOUND");
+  }
+
+  const userData = userSnap.data();
+  const newStatus = !(userData.isActive ?? true);
+
+  await userRef.update({
+    isActive: newStatus,
+  });
+
+  // OPTIONAL: sync Firebase Auth
+  // await auth.updateUser(userId, { disabled: !newStatus });
+
+  return {
+    id: userId,
+    isActive: newStatus,
+  };
+};
+
+/* =========================
+   UPDATE LAST LOGIN
+========================= */
+export const updateLastLoginService = async (userId) => {
+  await db.collection("Users").doc(userId).update({
+    lastLoginAt: FieldValue.serverTimestamp(),
+  });
+};
+
+/* =========================
+   CREATE USER
+========================= */
 export const createUserService = async ({
   email,
   role,
@@ -63,7 +106,7 @@ export const createUserService = async ({
     throw new Error("INVALID_INPUT");
   }
 
-  /* ===== DOCTOR ===== */
+  /* ===== VALIDATE ===== */
   if (role === "DOCTOR") {
     if (!doctorId) throw new Error("DOCTOR_ID_REQUIRED");
 
@@ -77,46 +120,61 @@ export const createUserService = async ({
       throw new Error("DOCTOR_HAS_ACCOUNT");
     }
 
-    const doctorSnap = await db.collection("Doctor").doc(doctorId).get();
+    const doctorSnap = await db
+      .collection("Doctor")
+      .doc(doctorId)
+      .get();
+
     if (!doctorSnap.exists) {
       throw new Error("DOCTOR_NOT_FOUND");
     }
   }
 
-  /* ===== ADMIN ===== */
   if (role === "ADMIN" && !name) {
     throw new Error("NAME_REQUIRED");
   }
 
-  /* ===== STAFF ROLES ===== */
   if (STAFF_ROLES.includes(role)) {
     if (!name) throw new Error("NAME_REQUIRED");
     if (!office) throw new Error("OFFICE_REQUIRED");
   }
 
   /* ===== CREATE AUTH ===== */
-  const userRecord = await auth.createUser({
-    email,
-    password: "123456",
-  });
+  let userRecord;
+  try {
+    userRecord = await auth.createUser({
+      email,
+      password: "123456",
+    });
+  } catch (err) {
+    if (err.code === "auth/email-already-exists") {
+      throw new Error("EMAIL_EXISTS");
+    }
+    throw err;
+  }
 
-  /* ===== SAVE FIRESTORE ===== */
+  /* ===== BUILD DATA ===== */
+  const baseData = {
+    email,
+    role,
+    isActive: true,
+    lastLoginAt: null,
+    createdAt: FieldValue.serverTimestamp(),
+  };
+
   const userData =
     role === "DOCTOR"
       ? {
-          email,
-          role,
+          ...baseData,
           doctorId,
-          createdAt: new Date(),
         }
       : {
-          email,
-          role,
+          ...baseData,
           name,
           office: STAFF_ROLES.includes(role) ? office : null,
-          createdAt: new Date(),
         };
 
+  /* ===== SAVE FIRESTORE ===== */
   await db.collection("Users").doc(userRecord.uid).set(userData);
 
   return {
