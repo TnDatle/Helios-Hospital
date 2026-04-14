@@ -76,29 +76,39 @@ export default function Departments() {
   /* =====================
      FILTER + SORT DOCTOR
   ===================== */
+  const doctorsByDept = useMemo(() => {
+    const map = {};
+
+    doctors.forEach((d) => {
+      if (!map[d.departmentId]) {
+        map[d.departmentId] = [];
+      }
+      map[d.departmentId].push(d);
+    });
+
+    return map;
+  }, [doctors]);
+
   const doctorsInDept = useMemo(() => {
-    let list = doctors.filter(
-      (d) => d.departmentId === activeDept?.id
+  let list = doctorsByDept[activeDept?.id] || [];
+
+  if (keyword.trim()) {
+    const kw = keyword.toLowerCase();
+
+    list = list.filter(
+      (d) =>
+        d.name.toLowerCase().includes(kw) ||
+        d.specialty.toLowerCase().includes(kw) ||
+        (d.role || "Bác sĩ").toLowerCase().includes(kw)
     );
+  }
 
-    if (keyword.trim()) {
-      const kw = keyword.toLowerCase();
-      list = list.filter(
-        (d) =>
-          d.name.toLowerCase().includes(kw) ||
-          d.specialty.toLowerCase().includes(kw) ||
-          (d.role || "Bác sĩ").toLowerCase().includes(kw)
-      );
-    }
-
-    list.sort(
-      (a, b) =>
-        (ROLE_PRIORITY[a.role || "Bác sĩ"] || 99) -
-        (ROLE_PRIORITY[b.role || "Bác sĩ"] || 99)
-    );
-
-    return list;
-  }, [doctors, activeDept, keyword]);
+  return [...list].sort(
+    (a, b) =>
+      (ROLE_PRIORITY[a.role || "Bác sĩ"] || 99) -
+      (ROLE_PRIORITY[b.role || "Bác sĩ"] || 99)
+  );
+}, [doctorsByDept, activeDept, keyword]);
 
   /* =====================
      DEPARTMENT CRUD

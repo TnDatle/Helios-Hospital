@@ -9,49 +9,82 @@ const STAFF_ROLES = ["RECEPTION", "ACCOUNTANT", "ADMIN_STAFF"];
 export const getUsersService = async () => {
   const userSnap = await db.collection("Users").get();
 
-  const users = await Promise.all(
-    userSnap.docs.map(async (userDoc) => {
-      const userData = userDoc.data();
+  const usersRaw = userSnap.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
 
-      let doctorInfo = null;
+  // 1. Lấy tất cả doctorId từ users
+  const doctorIds = [
+    ...new Set(
+      usersRaw
+        .filter((u) => u.role === "DOCTOR" && u.doctorId)
+        .map((u) => u.doctorId)
+    ),
+  ];
 
-      if (userData.role === "DOCTOR" && userData.doctorId) {
-        const doctorSnap = await db
-          .collection("Doctor")
-          .doc(userData.doctorId)
-          .get();
-
-        if (doctorSnap.exists) {
-          const doctor = doctorSnap.data();
-
-          const depSnap = await db
-            .collection("Departments")
-            .doc(doctor.departmentId)
-            .get();
-
-          doctorInfo = {
-            name: doctor.name,
-            departmentName: depSnap.exists
-              ? depSnap.data().name
-              : "-",
-          };
-        }
-      }
-
-      return {
-        id: userDoc.id,
-        email: userData.email,
-        role: userData.role,
-        doctor: doctorInfo,
-        office: userData.office || null,
-        name: userData.name || null,
-        isActive: userData.isActive ?? true,
-        lastLoginAt: userData.lastLoginAt
-          ? userData.lastLoginAt.toDate()
-          : null,
-      };
-    })
+  // 2. Query tất cả doctors (batch)
+  const doctorSnaps = await Promise.all(
+    doctorIds.map((id) => db.collection("Doctor").doc(id).get())
   );
+
+  const doctorMap = {};
+  const departmentIds = new Set();
+
+  doctorSnaps.forEach((snap) => {
+    if (snap.exists) {
+      const data = snap.data();
+      doctorMap[snap.id] = data;
+      if (data.departmentId) {
+        departmentIds.add(data.departmentId);
+      }
+    }
+  });
+
+  // 3. Query tất cả departments (batch)
+  const depSnaps = await Promise.all(
+    [...departmentIds].map((id) =>
+      db.collection("Departments").doc(id).get()
+    )
+  );
+
+  const depMap = {};
+  depSnaps.forEach((snap) => {
+    if (snap.exists) {
+      depMap[snap.id] = snap.data();
+    }
+  });
+
+  // 4. Build response
+  const users = usersRaw.map((user) => {
+    let doctorInfo = null;
+
+    if (user.role === "DOCTOR" && user.doctorId) {
+      const doctor = doctorMap[user.doctorId];
+
+      if (doctor) {
+        const department = depMap[doctor.departmentId];
+
+        doctorInfo = {
+          name: doctor.name,
+          departmentName: department?.name || "-",
+        };
+      }
+    }
+
+    return {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      doctor: doctorInfo,
+      office: user.office || null,
+      name: user.name || null,
+      isActive: user.isActive ?? true,
+      lastLoginAt: user.lastLoginAt
+        ? user.lastLoginAt.toDate()
+        : null,
+    };
+  });
 
   return users;
 };
