@@ -28,11 +28,20 @@
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: all 0.25s ease;
   display: flex;
   flex-direction: column;
+  cursor: pointer;
 }
 
+.news-card h3{
+  color: #00b8c4;
+}
+
+.news-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
 
 /* ================= IMAGE ================= */
 /* KHUNG ẢNH */

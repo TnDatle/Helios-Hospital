@@ -10,7 +10,7 @@ function News() {
 
   useEffect(() => {
     axios
-      .get(`${API}/news`) // chỉ trả bài published
+      .get(`${API}/news`)
       .then((res) => setNews(res.data))
       .finally(() => setLoading(false));
   }, []);
@@ -23,7 +23,11 @@ function News() {
 
       <div className="news-list">
         {news.map((item) => (
-          <div className="news-card" key={item.id}>
+          <Link 
+            to={`/tin-tuc/${item.slug}`} 
+            className="news-card"
+            key={item.id}
+          >
             <img src={item.thumbnail} alt={item.title} />
 
             <div className="news-content">
@@ -33,13 +37,8 @@ function News() {
 
               <h3>{item.title}</h3>
               <p>{item.summary}</p>
-
-              {/*  TRUYỀN SLUG */}
-              <Link to={`/tin-tuc/${item.slug}`}>
-                <button className="btnRead">Đọc bài</button>
-              </Link>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
