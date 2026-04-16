@@ -1,0 +1,136 @@
+/* =====================
+   CONTAINER
+===================== */
+.recruitment {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+/* =====================
+   HEADER
+===================== */
+.recruitment-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.recruitment-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.recruitment-header p {
+  color: #666;
+  margin-top: 8px;
+}
+
+/* =====================
+   JOB LIST
+===================== */
+.job-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* =====================
+   JOB CARD
+===================== */
+.job-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 20px 24px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+/* HOVER */
+.job-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* HOT JOB */
+.job-card.hot {
+  border-left: 4px solid #e11d48;
+  background: #fff5f5;
+}
+
+/* =====================
+   JOB CONTENT
+===================== */
+.job-main h3 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  transition: 0.2s;
+}
+
+.job-card:hover h3 {
+  color: #087cce;
+}
+
+/* META */
+.job-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 10px;
+}
+
+/* DESCRIPTION */
+.job-desc {
+  font-size: 15px;
+  color: #444;
+}
+
+/* =====================
+   BUTTON
+===================== */
+.job-action button {
+  background: #087cce;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.job-action button:hover {
+  background: #065a98;
+}
+
+/* =====================
+   LOADING
+===================== */
+.loading {
+  text-align: center;
+  margin-top: 40px;
+}
+
+/* =====================
+   RESPONSIVE
+===================== */
+@media (max-width: 768px) {
+  .job-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .job-action {
+    width: 100%;
+  }
+
+  .job-action button {
+    width: 100%;
+  }
+}

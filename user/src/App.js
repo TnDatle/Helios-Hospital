@@ -34,6 +34,8 @@ import GioKhamBenh from "./pages/Time";
 import BangGia from "./pages/Price";
 import TinTuc from "./pages/HeaderPages/News"
 import TinTucChiTiet from "./pages/HeaderPages/NewsDetail"
+import TuyenDung from "./pages/RecruitmentPages/Recruiment";
+import ChiTietTuyenDung from "./pages/RecruitmentPages/RecruimentDetail";
 
 // Import CSS Modules
 import "./styles/header.css";
@@ -56,7 +58,8 @@ import "./styles/price.css";
 import "./styles/patient.css";
 import "./styles/news.css";
 import "./styles/news-detail.css"
-
+import "./styles/recruiment.css"
+import "./styles/recruimentdetail.css"
 function App() {
   return (
     <BrowserRouter>
@@ -107,7 +110,10 @@ function App() {
 
         <Route path="/dao-tao" element={<div className='container py-5'>Đào tạo</div>} />
         <Route path="/van-ban" element={<div className='container py-5'>Văn bản</div>} />
-        <Route path="/tuyen-dung" element={<div className='container py-5'>Tuyển dụng</div>} />
+
+        <Route path="/tuyen-dung" element={<TuyenDung />} />
+        <Route path="/tuyen-dung/:id" element={<ChiTietTuyenDung />} />
+
         <Route path="/lien-he" element={<div className='container py-5'>Liên hệ</div>} />
         <Route path="/dang-nhap" element={<DangNhap />} />
         <Route path="/dang-ky" element={<DangKy />} />
