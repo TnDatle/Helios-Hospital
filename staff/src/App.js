@@ -29,6 +29,9 @@ import News from "./pages/admin/News";
 import AuditLogs from "./pages/admin/AuditLogs";
 import Setting from "./pages/admin/Setting";
 
+// human resource
+import HRPage from "./pages/humanresource/HumanResource";
+
 //css
 import "./styles/index.css";
 import "./styles/staff-layout.css";
@@ -64,6 +67,14 @@ function App() {
           <Route path="queue" element={<Queue />} />
           <Route path="history" element={<History />} />
           <Route path="track" element={<Track />} />
+        </Route>
+
+        {/* HUMAN RESOURCE */}
+        <Route path="recuitment" element={<HRPage />}>
+          {/* <Route index element={<Schedule />} />
+          <Route path="queue" element={<Queue />} />
+          <Route path="history" element={<History />} />
+          <Route path="track" element={<Track />} /> */}
         </Route>
 
         {/* ADMIN */}

@@ -1,7 +1,7 @@
 import { auth, db } from "../config/firebase.js";
 import { FieldValue } from "firebase-admin/firestore";
 
-const STAFF_ROLES = ["RECEPTION", "ACCOUNTANT", "ADMIN_STAFF"];
+const STAFF_ROLES = ["RECEPTION", "ACCOUNTANT", "ADMIN_STAFF" , "HUMAN_RESOURCE"];
 
 /* =========================
    GET USERS

@@ -8,12 +8,14 @@ const STAFF_OFFICES = [
   { value: "tiep-tan", label: "Phòng Tiếp tân" },
   { value: "ke-toan", label: "Phòng Kế toán" },
   { value: "hanh-chinh", label: "Phòng Hành chính" },
+  { value: "nhan-su", label: "Phòng Nhân sự"},
 ];
 
 const STAFF_ROLE_MAP = {
   "Phòng Tiếp tân": "RECEPTION",
   "Phòng Kế toán": "ACCOUNTANT",
   "Phòng Hành chính": "ADMIN_STAFF",
+  "Phòng Nhân sự" : "HUMAN_RESOURCE",
 };
 
 const ACTIVE_ROLE_LABEL  = {
@@ -99,6 +101,7 @@ export default function Users() {
   ========================= */
   const [filterDepartment, setFilterDepartment] = useState("");
   const [filterDoctor, setFilterDoctor] = useState("");
+  const [filterOffice, setFilterOffice] = useState("");
 
   const getUserOnline = (u) => {
   const uid = u.id; // nếu backend đã đúng UID thì giữ nguyên
@@ -175,10 +178,18 @@ export default function Users() {
   ========================= */
   const filteredUsers = useMemo(() => {
     return users.filter((u) => {
-      // 🔥 STAFF TAB
-      if (activeRole === "STAFF") {
-        return ["RECEPTION", "ACCOUNTANT", "ADMIN_STAFF"].includes(u.role);
+      // STAFF TAB
+     if (activeRole === "STAFF") {
+      const isStaffRole = ["RECEPTION", "ACCOUNTANT", "ADMIN_STAFF", "HUMAN_RESOURCE"].includes(u.role);
+
+      if (!isStaffRole) return false;
+
+      if (filterOffice && u.office !== filterOffice) {
+      return false;
       }
+
+        return true;
+    }
 
       // ROLE KHÁC
       if (u.role !== activeRole) return false;
@@ -202,7 +213,7 @@ export default function Users() {
 
       return true;
     });
-  }, [users, activeRole, filterDepartment, filterDoctor]);
+  }, [users, activeRole, filterDepartment, filterDoctor ,filterOffice]);
 
 
   /* =========================
@@ -333,9 +344,30 @@ export default function Users() {
                 </option>
               ))}
           </select>
+          
+              </div>
+            )}
+            {activeRole === "STAFF" && (
+        <div className="table-filters">
+          <select
+            value={filterOffice}
+            onChange={(e) => setFilterOffice(e.target.value)}
+          >
+            <option value="">Tất cả phòng</option>
+            {[...new Set(
+              users
+                .filter((u) =>
+                  ["RECEPTION", "ACCOUNTANT", "ADMIN_STAFF", "HUMAN_RESOURCE"].includes(u.role)
+                )
+                .map((u) => u.office)
+            )].map((office) => (
+              <option key={office} value={office}>
+                {office}
+              </option>
+            ))}
+          </select>
         </div>
       )}
-
       {/* TABLE */}
       <div className="admin-table">
         <table>
