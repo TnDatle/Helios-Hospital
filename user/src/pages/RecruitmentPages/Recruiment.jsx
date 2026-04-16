@@ -1,73 +1,67 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+const API_BASE = "http://localhost:5000/api";
+
 function Recruitment() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   /* =====================
-     MOCK DATA
-  ===================== */
-  const mockJobs = [
-    {
-      id: 1,
-      title: "Frontend Developer (ReactJS)",
-      location: "TP. Hồ Chí Minh",
-      type: "Full-time",
-      salary: "15 - 25 triệu",
-      summary:
-        "Phát triển giao diện người dùng cho hệ thống CRM, tối ưu UX/UI và hiệu suất.",
-      isHot: true,
-    },
-    {
-      id: 2,
-      title: "Backend Developer (NodeJS)",
-      location: "TP. Hồ Chí Minh",
-      type: "Full-time",
-      salary: "18 - 30 triệu",
-      summary:
-        "Xây dựng API, làm việc với database và tối ưu hệ thống backend.",
-    },
-    {
-      id: 3,
-      title: "IT Support",
-      location: "Hà Nội",
-      type: "Full-time",
-      salary: "10 - 15 triệu",
-      summary:
-        "Hỗ trợ người dùng, xử lý sự cố phần cứng, phần mềm và mạng.",
-    },
-    {
-      id: 4,
-      title: "UI/UX Designer",
-      location: "Remote",
-      type: "Part-time",
-      salary: "Thỏa thuận",
-      summary:
-        "Thiết kế giao diện web/app, cải thiện trải nghiệm người dùng.",
-    },
-    {
-      id: 5,
-      title: "Intern Web Developer",
-      location: "TP. Hồ Chí Minh",
-      type: "Intern",
-      salary: "3 - 5 triệu",
-      summary:
-        "Tham gia dự án thực tế, được mentor và đào tạo bài bản.",
-    },
-  ];
-
-  /* =====================
-     LOAD DATA
+     FETCH DATA
   ===================== */
   useEffect(() => {
-    setTimeout(() => {
-      setJobs(mockJobs);
-      setLoading(false);
-    }, 800);
+    const fetchJobs = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/jobs`);
+
+        // 🔥 debug nếu lỗi JSON
+        if (!res.ok) {
+          const text = await res.text();
+          console.error("API ERROR:", text);
+          throw new Error("Không lấy được dữ liệu");
+        }
+
+        const data = await res.json();
+
+        // 🔥 format dữ liệu cho FE
+        const formattedJobs = (data.data || [])
+          // ✅ ẩn job hết hạn
+          .filter((job) => {
+            if (!job.deadline) return true;
+            return new Date(job.deadline) >= new Date();
+          })
+          .map((job) => ({
+            id: job.id,
+            title: job.title,
+            location: job.location,
+            type: job.type || "Full-time",
+            salary: job.salary,
+            summary: job.description
+              ? job.description.slice(0, 120) + "..."
+              : "",
+            isHot: job.isHot || false,
+          }));
+
+        setJobs(formattedJobs);
+      } catch (err) {
+        console.error(err);
+        setError("Không thể tải dữ liệu tuyển dụng");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJobs();
   }, []);
 
+  /* =====================
+     RENDER
+  ===================== */
   if (loading) return <p className="loading">Đang tải tuyển dụng...</p>;
+
+  if (error) return <p className="error">{error}</p>;
 
   return (
     <div className="recruitment">
@@ -75,37 +69,40 @@ function Recruitment() {
       <div className="recruitment-header">
         <h1>TUYỂN DỤNG</h1>
         <p>
-          Tham gia cùng chúng tôi để phát triển sự nghiệp trong môi trường chuyên
-          nghiệp và năng động.
+          Tham gia cùng chúng tôi để phát triển sự nghiệp trong môi trường
+          chuyên nghiệp và ổn định.
         </p>
       </div>
 
       {/* JOB LIST */}
       <div className="job-list">
-        {jobs.map((job) => (
+        {jobs.length === 0 ? (
+          <p>Chưa có tin tuyển dụng</p>
+        ) : (
+          jobs.map((job) => (
             <Link
-            to={`/tuyen-dung/${job.id}`}
-            className={`job-card ${job.isHot ? "hot" : ""}`}
-            key={job.id}
+              to={`/tuyen-dung/${job.id}`}
+              className={`job-card ${job.isHot ? "hot" : ""}`}
+              key={job.id}
             >
-            <div className="job-main">
+              <div className="job-main">
                 <h3>{job.title}</h3>
 
                 <div className="job-meta">
-                <span>📍 {job.location}</span>
-                <span>💼 {job.type}</span>
-                <span>💰 {job.salary}</span>
+                  <span>📍 {job.location}</span>
+                  <span>💼 {job.type}</span>
+                  <span>💰 {job.salary}</span>
                 </div>
 
-                <p className="job-desc">{job.summary}</p>
-            </div>
+              </div>
 
-            <div className="job-action">
+              <div className="job-action">
                 <button>Ứng tuyển</button>
-            </div>
+              </div>
             </Link>
-        ))}
-        </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }

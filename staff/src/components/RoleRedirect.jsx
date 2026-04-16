@@ -5,6 +5,7 @@ const HOME_BY_ROLE = {
   ADMIN: "/staff/admin",
   DOCTOR: "/staff/doctor",
   RECEPTION: "/staff/reception",
+  HUMAN_RESOURCE : "/staff/humanresource",
 };
 
 function RoleRedirect() {

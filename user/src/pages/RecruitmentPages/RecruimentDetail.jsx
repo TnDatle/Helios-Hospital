@@ -1,9 +1,14 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+const API_BASE = "http://localhost:5000/api";
+
 function RecruitmentDetail() {
   const { id } = useParams();
+
   const [job, setJob] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   /* =====================
      FORM STATE
@@ -17,88 +22,31 @@ function RecruitmentDetail() {
   });
 
   /* =====================
-     MOCK DATA
-  ===================== */
-  const mockJobs = [
-    {
-      id: "1",
-      title: "Frontend Developer (ReactJS)",
-      location: "TP. Hồ Chí Minh",
-      type: "Full-time",
-      salary: "15 - 25 triệu",
-      deadline: "30/05/2026",
-
-      description: `
-        <ul>
-          <li>Phát triển giao diện người dùng bằng ReactJS.</li>
-          <li>Phối hợp với Backend để tích hợp API.</li>
-          <li>Tối ưu hiệu năng và UX/UI.</li>
-          <li>Bảo trì và nâng cấp hệ thống.</li>
-        </ul>
-      `,
-
-      requirements: `
-        <ul>
-          <li>Tốt nghiệp Đại học/Cao đẳng CNTT.</li>
-          <li>Thành thạo HTML, CSS, JavaScript.</li>
-          <li>Có kinh nghiệm ReactJS là lợi thế.</li>
-          <li>Kỹ năng làm việc nhóm tốt.</li>
-        </ul>
-      `,
-
-      benefits: `
-        <ul>
-          <li>Lương theo ngạch/bậc + phụ cấp.</li>
-          <li>Đóng BHXH, BHYT, BHTN đầy đủ.</li>
-          <li>Nghỉ lễ, Tết theo quy định Nhà nước.</li>
-          <li>Môi trường ổn định, lâu dài.</li>
-          <li>Được đào tạo nâng cao chuyên môn.</li>
-        </ul>
-      `,
-    },
-    {
-      id: "2",
-      title: "Backend Developer (NodeJS)",
-      location: "TP. Hồ Chí Minh",
-      type: "Full-time",
-      salary: "18 - 30 triệu",
-      deadline: "15/06/2026",
-
-      description: `
-        <ul>
-          <li>Xây dựng API bằng NodeJS, Express.</li>
-          <li>Thiết kế và quản lý database.</li>
-          <li>Đảm bảo bảo mật và hiệu năng hệ thống.</li>
-          <li>Phối hợp với Frontend.</li>
-        </ul>
-      `,
-
-      requirements: `
-        <ul>
-          <li>Tốt nghiệp CNTT hoặc tương đương.</li>
-          <li>Có kinh nghiệm NodeJS.</li>
-          <li>Hiểu RESTful API.</li>
-          <li>Biết Docker là lợi thế.</li>
-        </ul>
-      `,
-
-      benefits: `
-        <ul>
-          <li>Lương + thưởng theo hiệu quả.</li>
-          <li>Đầy đủ chế độ bảo hiểm.</li>
-          <li>Thưởng lễ, Tết.</li>
-          <li>Cơ hội thăng tiến.</li>
-        </ul>
-      `,
-    },
-  ];
-
-  /* =====================
-     FETCH JOB
+     FETCH JOB DETAIL
   ===================== */
   useEffect(() => {
-    const found = mockJobs.find((item) => item.id === id);
-    setJob(found);
+    const fetchJob = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/jobs/${id}`);
+
+        if (!res.ok) {
+          const text = await res.text();
+          console.error("API ERROR:", text);
+          throw new Error("Không tìm thấy công việc");
+        }
+
+        const data = await res.json();
+
+        setJob(data.data);
+      } catch (err) {
+        console.error(err);
+        setError("Không tải được chi tiết công việc");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJob();
   }, [id]);
 
   /* =====================
@@ -121,8 +69,15 @@ function RecruitmentDetail() {
 
     alert("Nộp CV thành công (demo)");
 
-    // TODO: call API upload CV
+    // TODO: upload CV API
   };
+
+  /* =====================
+     UI STATE
+  ===================== */
+  if (loading) return <p className="loading">Đang tải...</p>;
+
+  if (error) return <p className="error">{error}</p>;
 
   if (!job) return <p className="loading">Không tìm thấy công việc</p>;
 
@@ -134,7 +89,7 @@ function RecruitmentDetail() {
 
         <div className="job-meta">
           <span>📍 {job.location}</span>
-          <span>💼 {job.type}</span>
+          <span>💼 {job.type || "Full-time"}</span>
           <span>💰 {job.salary}</span>
           <span>⏰ Hạn nộp: {job.deadline}</span>
         </div>
@@ -143,26 +98,42 @@ function RecruitmentDetail() {
       {/* =====================
           JOB CONTENT
       ===================== */}
-      <div className="job-section">
-        <h2>I. Mô tả công việc</h2>
-        <div
-          dangerouslySetInnerHTML={{ __html: job.description }}
-        />
-      </div>
 
       <div className="job-section">
-        <h2>II. Yêu cầu</h2>
-        <div
-          dangerouslySetInnerHTML={{ __html: job.requirements }}
-        />
-      </div>
+      <h2>I. Mô tả công việc</h2>
+      <ul>
+        {job.description
+          ?.split("-")
+          .filter((item) => item.trim() !== "")
+          .map((item, i) => (
+            <li key={i}>{item.trim()}</li>
+          ))}
+      </ul>
+    </div>
 
-      <div className="job-section">
-        <h2>III. Quyền lợi</h2>
-        <div
-          dangerouslySetInnerHTML={{ __html: job.benefits }}
-        />
-      </div>
+    <div className="job-section">
+      <h2>II. Yêu cầu</h2>
+      <ul>
+        {job.requirements
+          ?.split("-")
+          .filter((item) => item.trim() !== "")
+          .map((item, i) => (
+            <li key={i}>{item.trim()}</li>
+          ))}
+      </ul>
+    </div>
+
+    <div className="job-section">
+      <h2>III. Quyền lợi</h2>
+      <ul>
+        {job.benefits
+          ?.split("-")
+          .filter((item) => item.trim() !== "")
+          .map((item, i) => (
+            <li key={i}>{item.trim()}</li>
+          ))}
+      </ul>
+    </div>
 
       {/* =====================
           APPLY FORM
@@ -198,7 +169,6 @@ function RecruitmentDetail() {
             required
           />
 
-          {/* Upload CV */}
           <div className="file-input">
             <label>Upload CV (PDF/DOC)</label>
             <input
@@ -210,7 +180,6 @@ function RecruitmentDetail() {
             />
           </div>
 
-          {/* Cover Letter */}
           <textarea
             name="coverLetter"
             placeholder="Cover Letter (không bắt buộc)"

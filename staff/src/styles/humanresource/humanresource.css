@@ -1,0 +1,71 @@
+/* =========================
+   HR LAYOUT
+========================= */
+
+.hr-page-layout {
+  display: flex;
+  min-height: calc(100vh - 84px);
+  background: #f9fafb;
+}
+
+/* =========================
+   SIDEBAR – HR
+========================= */
+
+.hr-sidebar {
+  width: 240px;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  padding: 20px 16px;
+}
+
+.hr-sidebar h4 {
+  margin: 0 0 16px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1d4ed8; /* màu HR */
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+/* MENU */
+.hr-sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hr-sidebar-menu a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #374151;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+/* Hover */
+.hr-sidebar-menu a:hover {
+  background: #eef2ff;
+  color: #1d4ed8;
+}
+
+/* Active */
+.hr-sidebar-menu a.active {
+  background: #1d4ed8;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* =========================
+   CONTENT WRAPPER
+========================= */
+
+.hr-content {
+  flex: 1;
+  padding: 28px;
+  background: #f9fafb;
+}

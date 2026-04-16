@@ -1,0 +1,301 @@
+/* =========================
+   CONTAINER
+========================= */
+.hr-job-container {
+  padding: 28px 48px;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.hr-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #0f172a;
+}
+
+/* =========================
+   GRID LIST
+========================= */
+.hr-job-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: 28px;
+}
+
+/* =========================
+   CARD
+========================= */
+.hr-job-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.25s ease;
+}
+
+.hr-job-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* =========================
+   TOP
+========================= */
+.hr-job-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hr-job-top h3 {
+  font-size: 19px;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* =========================
+   BADGE
+========================= */
+.hr-badge {
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.hr-badge.active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.hr-badge.expired {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* =========================
+   INFO
+========================= */
+.hr-job-info {
+  margin: 16px 0;
+  font-size: 15px;
+  color: #374151;
+}
+
+.hr-job-info p {
+  margin: 6px 0;
+}
+
+/* =========================
+   FOOTER
+========================= */
+.hr-job-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  margin-top: 12px;
+  color: #6b7280;
+}
+
+/* =========================
+   ACTION BUTTONS
+========================= */
+.hr-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.hr-actions button {
+  border: none;
+  padding: 7px 14px;
+  font-size: 13px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+/* VIEW */
+.btn-view {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+.btn-view:hover {
+  background: #bae6fd;
+}
+
+/* EDIT */
+.btn-edit {
+  background: #fef3c7;
+  color: #92400e;
+}
+.btn-edit:hover {
+  background: #fde68a;
+}
+
+/* DELETE */
+.btn-delete {
+  background: #fee2e2;
+  color: #991b1b;
+}
+.btn-delete:hover {
+  background: #fecaca;
+}
+
+/* =========================
+   MODAL
+========================= */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+/* MODAL BOX */
+.modal {
+  background: #ffffff;
+  width: 650px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 18px;
+  padding: 26px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
+}
+
+/* =========================
+   FORM (EDIT MODE)
+========================= */
+.modal h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modal label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.modal input,
+.modal textarea {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.modal input:focus,
+.modal textarea:focus {
+  border-color: #0f766e;
+}
+
+.modal textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+/* =========================
+   ACTIONS
+========================= */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.modal-actions button {
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-actions button:first-child {
+  background: #e5e7eb;
+}
+
+.modal-actions .btn-edit {
+  background: #0f766e;
+  color: white;
+}
+.modal-actions .btn-edit:hover {
+  background: #115e59;
+}
+
+/* =========================
+   JOB VIEW (ỨNG VIÊN)
+========================= */
+.job-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* TITLE */
+.job-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* META */
+.job-meta {
+  display: flex;
+  gap: 18px;
+  font-size: 14px;
+  color: #374151;
+  flex-wrap: wrap;
+}
+
+/* SECTION */
+.job-section {
+  margin-top: 10px;
+}
+
+.job-section h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #0f766e;
+}
+
+/* CONTENT */
+.job-content {
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.7;
+  white-space: pre-line;
+}
+
+.modal {
+  animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

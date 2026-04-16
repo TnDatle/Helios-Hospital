@@ -1,0 +1,37 @@
+/* =========================
+   RESUME PAGE
+========================= */
+
+.hr-resume-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hr-cv-card {
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hr-cv-card p {
+  margin: 0;
+  font-size: 14px;
+  color: #374151;
+}
+
+.hr-cv-card a {
+  margin-top: 6px;
+  color: #1d4ed8;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.hr-cv-card a:hover {
+  text-decoration: underline;
+}

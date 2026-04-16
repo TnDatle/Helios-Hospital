@@ -1,0 +1,45 @@
+/* =========================
+   ADD JOB PAGE
+========================= */
+
+.hr-form {
+  max-width: 600px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.hr-form input,
+.hr-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  outline: none;
+}
+
+.hr-form input:focus,
+.hr-form textarea:focus {
+  border-color: #1d4ed8;
+}
+
+.hr-form textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.hr-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #1d4ed8;
+  color: white;
+  cursor: pointer;
+}
+
+.hr-btn:hover {
+  background: #1e40af;
+}

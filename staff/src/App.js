@@ -31,11 +31,15 @@ import Setting from "./pages/admin/Setting";
 
 // human resource
 import HRPage from "./pages/humanresource/HumanResource";
+import JobList from "./pages/humanresource/JobList";
+import AddJobs from "./pages/humanresource/AddJobs";
+import Resume from "./pages/humanresource/Resume";
 
 //css
 import "./styles/index.css";
 import "./styles/staff-layout.css";
 import "./styles/reception/reception.css";
+import './styles/humanresource/humanresource.css'
 import "./styles/doctor/doctor.css";
 import "./styles/admin/admin.css";
 import "./styles/login.css";
@@ -70,11 +74,10 @@ function App() {
         </Route>
 
         {/* HUMAN RESOURCE */}
-        <Route path="recuitment" element={<HRPage />}>
-          {/* <Route index element={<Schedule />} />
-          <Route path="queue" element={<Queue />} />
-          <Route path="history" element={<History />} />
-          <Route path="track" element={<Track />} /> */}
+        <Route path="humanresource" element={<HRPage />}>
+           <Route index element={<JobList />} />
+          <Route path="addjobs" element={<AddJobs />} />
+          <Route path="resume" element={<Resume />} />
         </Route>
 
         {/* ADMIN */}

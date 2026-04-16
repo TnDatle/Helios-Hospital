@@ -2,106 +2,97 @@
    CONTAINER
 ===================== */
 .job-detail {
-  max-width: 760px;
+  max-width: 900px;
   margin: 40px auto;
   padding: 0 16px 40px;
-  background: #fff;
 }
 
 /* =====================
-   HEADER
+   HEADER (CARD)
 ===================== */
+.job-header {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  margin-bottom: 20px;
+}
+
 .job-header h1 {
-  font-size: 30px;
+  font-size: 26px;
   font-weight: 700;
-  margin-bottom: 16px;
-  line-height: 1.4;
+  margin-bottom: 14px;
+  color: #0f172a;
 }
 
 /* META */
 .job-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
+  gap: 12px;
   font-size: 14px;
-  color: #666;
-  margin-bottom: 20px;
+}
+
+.job-meta span {
+  background: #f1f5f9;
+  padding: 6px 12px;
+  border-radius: 999px;
+  color: #334155;
+  font-weight: 500;
 }
 
 /* =====================
-   APPLY BOX
+   SECTION (JD / REQUIRE / BENEFIT)
 ===================== */
-.job-apply-box {
-  margin: 20px 0 30px;
+.job-section {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 22px;
+  margin-bottom: 18px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
 }
 
-.apply-btn {
-  background: #087cce;
-  color: #fff;
-  border: none;
-  padding: 12px 22px;
-  font-size: 15px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.apply-btn:hover {
-  background: #065a98;
-}
-
-/* =====================
-   CONTENT (GIỐNG BÁO)
-===================== */
-.job-content {
+.job-section h2 {
   font-size: 18px;
-  line-height: 1.75;
-  color: #222;
-  font-family: Georgia, "Times New Roman", serif;
-  text-align: justify;
+  font-weight: 700;
+  margin-bottom: 14px;
+  color: #0f766e;
+  border-left: 4px solid #0f766e;
+  padding-left: 10px;
 }
 
-/* PARAGRAPH */
-.job-content p {
-  margin-bottom: 16px;
+/* CONTENT */
+.job-section ul {
+  margin-left: 20px;
 }
 
-/* HEADINGS */
-.job-content h2 {
-  font-size: 22px;
-  font-weight: bold;
-  margin: 28px 0 14px;
-}
-
-.job-content h3 {
-  font-size: 20px;
-  margin: 24px 0 12px;
-}
-
-/* LIST */
-.job-content ul {
-  margin: 12px 0 20px 22px;
-}
-
-.job-content li {
-  margin-bottom: 6px;
+.job-section li {
+  margin-bottom: 8px;
+  line-height: 1.6;
+  color: #374151;
 }
 
 /* =====================
    APPLY SECTION
 ===================== */
 .apply-section {
-  margin-top: 40px;
-  padding-top: 20px;
-  border-top: 1px solid #eee;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 22px;
+  margin-top: 20px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
 }
 
 .apply-section h2 {
-  font-size: 22px;
-  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #0f172a;
 }
 
-/* FORM */
+/* =====================
+   FORM
+===================== */
 .apply-form {
   display: flex;
   flex-direction: column;
@@ -111,39 +102,52 @@
 /* INPUT */
 .apply-form input,
 .apply-form textarea {
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  padding: 12px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
   font-size: 14px;
-  outline: none;
+  transition: all 0.2s ease;
 }
 
 .apply-form input:focus,
 .apply-form textarea:focus {
-  border-color: #087cce;
+  border-color: #0f766e;
+  box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.15);
+  outline: none;
 }
 
 /* FILE INPUT */
 .file-input label {
-  font-size: 14px;
+  font-size: 13px;
   margin-bottom: 6px;
   display: block;
-  color: #555;
+  color: #64748b;
 }
 
 /* BUTTON */
 .apply-form button {
-  background: #087cce;
+  background: #0f766e;
   color: #fff;
   padding: 12px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
+  font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.25s;
 }
 
 .apply-form button:hover {
-  background: #065a98;
+  background: #0d5f59;
+  transform: translateY(-1px);
+}
+
+/* =====================
+   LOADING
+===================== */
+.loading {
+  text-align: center;
+  margin-top: 40px;
+  color: #64748b;
 }
 
 /* =====================
@@ -151,10 +155,11 @@
 ===================== */
 @media (max-width: 768px) {
   .job-header h1 {
-    font-size: 24px;
+    font-size: 22px;
   }
 
-  .job-content {
+  .job-section h2,
+  .apply-section h2 {
     font-size: 16px;
   }
 }
