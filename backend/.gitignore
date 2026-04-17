@@ -5,3 +5,6 @@
 
 #env key
 .env
+
+# uploads
+uploads/

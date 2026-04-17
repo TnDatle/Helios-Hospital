@@ -6,7 +6,6 @@ import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 import "./src/config/firebase.js";
 
-
 import newsRoutes from "./src/routes/news.routes.js";
 import uploadRoutes from "./src/routes/upload.routes.js";
 import doctorRoutes from "./src/routes/doctor.routes.js";
