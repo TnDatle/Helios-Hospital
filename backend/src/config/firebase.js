@@ -6,12 +6,12 @@ dotenv.config();
 
 // Check sớm cho dễ debug
 if (!process.env.FIREBASE_PRIVATE_KEY) {
-  console.error("❌ FIREBASE_PRIVATE_KEY is undefined");
+  console.error("FIREBASE_PRIVATE_KEY is undefined");
   process.exit(1);
 }
 
 if (!process.env.FIREBASE_PROJECT_ID || !process.env.FIREBASE_CLIENT_EMAIL) {
-  console.error("❌ Firebase env variables missing");
+  console.error("Firebase env variables missing");
   process.exit(1);
 }
 

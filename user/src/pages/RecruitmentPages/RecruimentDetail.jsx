@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const API_BASE = "http://localhost:5000/api";
 
@@ -10,9 +11,10 @@ function RecruitmentDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  /* =====================
-     FORM STATE
-  ===================== */
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
+  const [message, setMessage] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -22,7 +24,7 @@ function RecruitmentDetail() {
   });
 
   /* =====================
-     FETCH JOB DETAIL
+     FETCH JOB
   ===================== */
   useEffect(() => {
     const fetchJob = async () => {
@@ -30,17 +32,13 @@ function RecruitmentDetail() {
         const res = await fetch(`${API_BASE}/jobs/${id}`);
 
         if (!res.ok) {
-          const text = await res.text();
-          console.error("API ERROR:", text);
           throw new Error("Không tìm thấy công việc");
         }
 
         const data = await res.json();
-
         setJob(data.data);
       } catch (err) {
-        console.error(err);
-        setError("Không tải được chi tiết công việc");
+        setError("Không tải được công việc");
       } finally {
         setLoading(false);
       }
@@ -62,24 +60,61 @@ function RecruitmentDetail() {
     }
   };
 
-  const handleSubmit = (e) => {
+  /* =====================
+     SUBMIT
+  ===================== */
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("Form data:", form);
+    setLoadingSubmit(true);
 
-    alert("Nộp CV thành công (demo)");
+    try {
+      const formData = new FormData();
 
-    // TODO: upload CV API
+      formData.append("name", form.name);
+      formData.append("email", form.email);
+      formData.append("phone", form.phone);
+      formData.append("coverLetter", form.coverLetter);
+      formData.append("cv", form.cv);
+      formData.append("jobId", id);
+
+      const res = await fetch("http://localhost:5000/api/applications", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text);
+      }
+
+      await res.json();
+
+      //  SUCCESS TOAST
+      toast.success(" Ứng tuyển thành công!");
+
+      setForm({
+        name: "",
+        email: "",
+        phone: "",
+        cv: null,
+        coverLetter: "",
+      });
+
+    } catch (err) {
+      //  ERROR TOAST
+      toast.error("❌ " + err.message);
+    } finally {
+      setLoadingSubmit(false);
+    }
   };
 
   /* =====================
      UI STATE
   ===================== */
-  if (loading) return <p className="loading">Đang tải...</p>;
-
-  if (error) return <p className="error">{error}</p>;
-
-  if (!job) return <p className="loading">Không tìm thấy công việc</p>;
+  if (loading) return <p>Đang tải...</p>;
+  if (error) return <p>{error}</p>;
+  if (!job) return <p>Không tìm thấy công việc</p>;
 
   return (
     <div className="job-detail">
@@ -95,51 +130,50 @@ function RecruitmentDetail() {
         </div>
       </div>
 
-      {/* =====================
-          JOB CONTENT
-      ===================== */}
+      {/* CONTENT */}
+      <div className="job-section">
+        <h2>I. Mô tả công việc</h2>
+        <ul>
+          {job.description
+            ?.split("-")
+            .filter((i) => i.trim())
+            .map((item, i) => (
+              <li key={i}>{item.trim()}</li>
+            ))}
+        </ul>
+      </div>
 
       <div className="job-section">
-      <h2>I. Mô tả công việc</h2>
-      <ul>
-        {job.description
-          ?.split("-")
-          .filter((item) => item.trim() !== "")
-          .map((item, i) => (
-            <li key={i}>{item.trim()}</li>
-          ))}
-      </ul>
-    </div>
+        <h2>II. Yêu cầu</h2>
+        <ul>
+          {job.requirements
+            ?.split("-")
+            .filter((i) => i.trim())
+            .map((item, i) => (
+              <li key={i}>{item.trim()}</li>
+            ))}
+        </ul>
+      </div>
 
-    <div className="job-section">
-      <h2>II. Yêu cầu</h2>
-      <ul>
-        {job.requirements
-          ?.split("-")
-          .filter((item) => item.trim() !== "")
-          .map((item, i) => (
-            <li key={i}>{item.trim()}</li>
-          ))}
-      </ul>
-    </div>
+      <div className="job-section">
+        <h2>III. Quyền lợi</h2>
+        <ul>
+          {job.benefits
+            ?.split("-")
+            .filter((i) => i.trim())
+            .map((item, i) => (
+              <li key={i}>{item.trim()}</li>
+            ))}
+        </ul>
+      </div>
 
-    <div className="job-section">
-      <h2>III. Quyền lợi</h2>
-      <ul>
-        {job.benefits
-          ?.split("-")
-          .filter((item) => item.trim() !== "")
-          .map((item, i) => (
-            <li key={i}>{item.trim()}</li>
-          ))}
-      </ul>
-    </div>
-
-      {/* =====================
-          APPLY FORM
-      ===================== */}
+      {/* APPLY */}
       <div className="apply-section">
         <h2>Ứng tuyển vị trí này</h2>
+
+        {/* MESSAGE */}
+        {message && <p className="success">{message}</p>}
+        {errorMsg && <p className="error">{errorMsg}</p>}
 
         <form onSubmit={handleSubmit} className="apply-form">
           <input
@@ -188,7 +222,9 @@ function RecruitmentDetail() {
             rows={5}
           />
 
-          <button type="submit">Gửi ứng tuyển</button>
+          <button type="submit" disabled={loadingSubmit}>
+            {loadingSubmit ? "Đang gửi..." : "Gửi ứng tuyển"}
+          </button>
         </form>
       </div>
     </div>
