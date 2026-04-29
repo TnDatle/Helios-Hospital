@@ -1,27 +1,48 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../../styles/humanresource/joblist.css";
 
 const API_BASE = "http://localhost:5000/api";
 
 function JobList() {
   const [jobs, setJobs] = useState([]);
+  const [cvCount, setCvCount] = useState({}); // 👈 số lượng CV
 
   // modal
   const [selectedJob, setSelectedJob] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
 
+  const navigate = useNavigate();
+
   /* =========================
      FETCH
   ========================= */
   useEffect(() => {
     fetchJobs();
+    fetchApplications();
   }, []);
 
   const fetchJobs = () => {
     fetch(`${API_BASE}/jobs`)
       .then((res) => res.json())
       .then((data) => setJobs(data.data || []));
+  };
+
+  const fetchApplications = () => {
+    fetch(`${API_BASE}/applications`)
+      .then((res) => res.json())
+      .then((data) => {
+        const apps = data.data || [];
+
+        const count = apps.reduce((acc, app) => {
+          if (!acc[app.jobId]) acc[app.jobId] = 0;
+          acc[app.jobId]++;
+          return acc;
+        }, {});
+
+        setCvCount(count);
+      });
   };
 
   /* =========================
@@ -103,6 +124,9 @@ function JobList() {
                 <div className="hr-job-info">
                   <p>📍 {job.location || "Không rõ"}</p>
                   <p>💰 {job.salary || "Thỏa thuận"}</p>
+
+                  {/* 👇 SỐ CV */}
+                  <p>📄 {cvCount[job.id] || 0} ứng viên</p>
                 </div>
 
                 {/* FOOTER */}
@@ -143,6 +167,16 @@ function JobList() {
                     >
                       Xóa
                     </button>
+
+                    {/* 👇 NÚT CV */}
+                    <button
+                        className="btn-cv"
+                        onClick={() =>
+                          navigate(`/staff/humanresource/jobs/${job.id}/resumes`)
+                        }
+                      >
+                        CV ({cvCount[job.id] || 0})
+                    </button>
                   </div>
                 </div>
               </div>
@@ -157,9 +191,6 @@ function JobList() {
       {showModal && selectedJob && (
         <div className="modal-overlay">
           <div className="modal">
-            {/* =========================
-               VIEW MODE (ỨNG VIÊN)
-            ========================= */}
             {!isEdit ? (
               <div className="job-view">
                 <h1 className="job-title">{selectedJob.title}</h1>
@@ -205,9 +236,6 @@ function JobList() {
                 </div>
               </div>
             ) : (
-              /* =========================
-                 EDIT MODE (ADMIN)
-              ========================= */
               <>
                 <h2>Sửa bài tuyển dụng</h2>
 

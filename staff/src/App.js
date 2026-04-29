@@ -75,9 +75,9 @@ function App() {
 
         {/* HUMAN RESOURCE */}
         <Route path="humanresource" element={<HRPage />}>
-           <Route index element={<JobList />} />
+          <Route index element={<JobList />} />
+          <Route path="jobs/:jobId/resumes" element={<Resume />} /> 
           <Route path="addjobs" element={<AddJobs />} />
-          <Route path="resume" element={<Resume />} />
         </Route>
 
         {/* ADMIN */}

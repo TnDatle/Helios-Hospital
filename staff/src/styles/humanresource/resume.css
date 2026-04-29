@@ -1,37 +1,139 @@
-/* =========================
-   RESUME PAGE
-========================= */
-
-.hr-resume-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.hr-container {
+  padding: 20px;
 }
 
-.hr-cv-card {
-  background: #ffffff;
-  padding: 16px;
+/* HEADER */
+.resume-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.btn-back {
+  background: #ddd;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-back:hover {
+  background: #ccc;
+}
+
+/* LIST */
+.cv-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* CARD */
+.cv-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
   border-radius: 12px;
-  border: 1px solid #eee;
-
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  padding: 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  transition: 0.2s;
 }
 
-.hr-cv-card p {
+.cv-card:hover {
+  transform: translateY(-2px);
+}
+
+/* INFO */
+.cv-info h3 {
   margin: 0;
+  color: #087cce;
+}
+
+.cv-info p {
+  margin: 4px 0;
   font-size: 14px;
-  color: #374151;
 }
 
-.hr-cv-card a {
+.cover {
   margin-top: 6px;
-  color: #1d4ed8;
-  font-weight: 500;
-  text-decoration: none;
+  font-style: italic;
+  color: #555;
 }
 
-.hr-cv-card a:hover {
-  text-decoration: underline;
+/* STATUS */
+.status {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status.approved {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status.rejected {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* ACTION */
+.cv-actions {
+  display: flex;
+  align-items: center;
+}
+
+.btn-view-cv {
+  background: #087cce;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.btn-view-cv:hover {
+  background: #065a98;
+}
+
+.cv-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.btn-approve {
+  background: #28a745;
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-approve:hover {
+  background: #218838;
+}
+
+.btn-reject {
+  background: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-reject:hover {
+  background: #c82333;
 }
