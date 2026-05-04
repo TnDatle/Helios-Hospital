@@ -8,6 +8,17 @@ function Recruitment() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "";
+    const d = new Date(dateStr);
+
+    const day = String(d.getDate()).padStart(2, "0");
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const year = d.getFullYear();
+
+    return `${day}-${month}-${year}`;
+  };
+  
   /* =====================
      FETCH DATA
   ===================== */
@@ -16,7 +27,7 @@ function Recruitment() {
       try {
         const res = await fetch(`${API_BASE}/jobs`);
 
-        // 🔥 debug nếu lỗi JSON
+        // debug nếu lỗi JSON
         if (!res.ok) {
           const text = await res.text();
           console.error("API ERROR:", text);
@@ -25,9 +36,9 @@ function Recruitment() {
 
         const data = await res.json();
 
-        // 🔥 format dữ liệu cho FE
+        // format dữ liệu cho FE
         const formattedJobs = (data.data || [])
-          // ✅ ẩn job hết hạn
+          // ẩn job hết hạn
           .filter((job) => {
             if (!job.deadline) return true;
             return new Date(job.deadline) >= new Date();
@@ -38,6 +49,7 @@ function Recruitment() {
             location: job.location,
             type: job.type || "Full-time",
             salary: job.salary,
+            deadline: job.deadline,
             summary: job.description
               ? job.description.slice(0, 120) + "..."
               : "",
@@ -97,6 +109,9 @@ function Recruitment() {
               </div>
 
               <div className="job-action">
+                <span className="deadline">
+                   Hạn: {formatDate(job.deadline)}
+                </span>
                 <button>Ứng tuyển</button>
               </div>
             </Link>

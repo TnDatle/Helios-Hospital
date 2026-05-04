@@ -6,7 +6,7 @@ export default function StepDepartment({ onSelect }) {
   
   const filteredDepartments = departments.filter((dep) =>
     dep.name !== "Y Dược" && dep.name !== "Xét Nghiệm" &&
-    dep.name !== "Gây Mê Hồi Sức" && dep.name !== "Hồi Sức Tích Cực & Chống Độc"
+    dep.name !== "Gây Mê Hồi Sức" && dep.name !== "Hồi Sức Tích Cực & Chống Độc"  && dep.name !== "Cấp Cứu"
   );
 
   useEffect(() => {

@@ -91,6 +91,8 @@ export default function Schedule() {
 
       {/* ===== CONTENT ===== */}
       <div className="container">
+       <p style={{ marginBottom: "10px", color: "rgb(252, 0, 0)" }}> * Lịch khám sẽ được cố định hàng tuần và sẽ thay đổi theo lịch công tác của bác sĩ</p>
+
         {loading && <p>Đang tải lịch khám…</p>}
 
         {!loading && groups.length === 0 && (

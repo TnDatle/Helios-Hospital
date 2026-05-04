@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import StaffLayout from "./layouts/StaffLayout";
 import RoleRedirect from "./components/RoleRedirect";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // pages
 import Login from "./pages/auth/Login";
@@ -16,7 +17,7 @@ import DoctorPage from "./pages/doctor/DoctorPage";
 import Schedule from "./pages/doctor/Schedule";
 import Queue from "./pages/doctor/Queue";
 import History from "./pages/doctor/History";
-import Track from "./pages/doctor/Track"
+import Track from "./pages/doctor/Track";
 
 // admin
 import AdminPage from "./pages/admin/AdminPage";
@@ -35,11 +36,11 @@ import JobList from "./pages/humanresource/JobList";
 import AddJobs from "./pages/humanresource/AddJobs";
 import Resume from "./pages/humanresource/Resume";
 
-//css
+// css
 import "./styles/index.css";
 import "./styles/staff-layout.css";
 import "./styles/reception/reception.css";
-import './styles/humanresource/humanresource.css'
+import "./styles/humanresource/humanresource.css";
 import "./styles/doctor/doctor.css";
 import "./styles/admin/admin.css";
 import "./styles/login.css";
@@ -53,20 +54,41 @@ function App() {
       {/* LOGIN */}
       <Route path="/staff/login" element={<Login />} />
 
-      {/* STAFF */}
-      <Route path="/staff" element={<StaffLayout />}>
-        {/*  QUAN TRỌNG: redirect khi vào /staff */}
+      {/* STAFF (phải login mới vào được) */}
+      <Route
+        path="/staff"
+        element={
+          <ProtectedRoute>
+            <StaffLayout />
+          </ProtectedRoute>
+        }
+      >
+        {/* redirect theo role */}
         <Route index element={<RoleRedirect />} />
 
         {/* RECEPTION */}
-        <Route path="reception" element={<ReceptionPage />}>
-           <Route index element={<Register />} />
-           <Route path="walk-in" element={<WalkIn />} />
-           <Route path="search-patient" element={<SearchPatient />} />
+        <Route
+          path="reception"
+          element={
+            <ProtectedRoute allowedRoles={["RECEPTION"]}>
+              <ReceptionPage />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Register />} />
+          <Route path="walk-in" element={<WalkIn />} />
+          <Route path="search-patient" element={<SearchPatient />} />
         </Route>
 
         {/* DOCTOR */}
-        <Route path="doctor" element={<DoctorPage />}>
+        <Route
+          path="doctor"
+          element={
+            <ProtectedRoute allowedRoles={["DOCTOR"]}>
+              <DoctorPage />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<Schedule />} />
           <Route path="queue" element={<Queue />} />
           <Route path="history" element={<History />} />
@@ -74,14 +96,28 @@ function App() {
         </Route>
 
         {/* HUMAN RESOURCE */}
-        <Route path="humanresource" element={<HRPage />}>
+        <Route
+          path="humanresource"
+          element={
+            <ProtectedRoute allowedRoles={["HUMAN_RESOURCE"]}>
+              <HRPage />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<JobList />} />
-          <Route path="jobs/:jobId/resumes" element={<Resume />} /> 
+          <Route path="jobs/:jobId/resumes" element={<Resume />} />
           <Route path="addjobs" element={<AddJobs />} />
         </Route>
 
         {/* ADMIN */}
-        <Route path="admin" element={<AdminPage />}>
+        <Route
+          path="admin"
+          element={
+            <ProtectedRoute allowedRoles={["ADMIN"]}>
+              <AdminPage />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<Dashboard />} />
           <Route path="users" element={<Users />} />
           <Route path="departments" element={<Department />} />
@@ -93,6 +129,7 @@ function App() {
         </Route>
       </Route>
 
+      {/* 404 */}
       <Route path="*" element={<div>404</div>} />
     </Routes>
   );
